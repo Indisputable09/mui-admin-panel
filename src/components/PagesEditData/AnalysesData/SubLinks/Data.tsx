@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  IconButton,
-  InputLabel,
-  Switch,
-} from '@mui/material';
+import { Checkbox, FormControlLabel, InputLabel, Switch } from '@mui/material';
 import StyledField from '../../../Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import MultipleAutocomplete from '../../../Inputs/MultipleAutocomplete';
