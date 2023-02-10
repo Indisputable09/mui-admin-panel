@@ -8,7 +8,20 @@ interface IEditorProps {
 }
 
 const Editor: React.FC<IEditorProps> = props => {
-  return <CKEditor {...props} />;
+  return (
+    <CKEditor
+      {...props}
+      config={{
+        stylesSet: [
+          {
+            name: 'Checkmark list',
+            element: 'ul',
+            attributes: { class: 'checkMark' },
+          },
+        ],
+      }}
+    />
+  );
 };
 
 export default Editor;

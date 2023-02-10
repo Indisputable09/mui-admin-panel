@@ -1,12 +1,16 @@
-import React from 'react';
 import { InputLabel, List, ListItem, Typography } from '@mui/material';
-import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
+import React from 'react';
 import StyledField from '../../../Inputs/StyledField';
+import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 
-interface ISEOProps {
+interface IContentProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
+    name: {
+      code: string;
+      value: string;
+    }[];
     metaTitle: {
       code: string;
       value: string;
@@ -15,15 +19,22 @@ interface ISEOProps {
       code: string;
       value: string;
     }[];
-    url: string;
+    shortDescription: {
+      code: string;
+      value: string;
+    }[];
+    description: {
+      code: string;
+      value: string;
+    }[];
   };
   languages: { name: string; id: number; code: string }[];
 }
 
-export const SEO: React.FC<ISEOProps> = ({
+export const Content: React.FC<IContentProps> = ({
+  setFieldsValues,
   darkTheme,
   fieldsValues,
-  setFieldsValues,
   languages,
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
@@ -56,7 +67,6 @@ export const SEO: React.FC<ISEOProps> = ({
         }
       });
     };
-
   return (
     <>
       <List className={classes.languagesList}>
@@ -81,6 +91,30 @@ export const SEO: React.FC<ISEOProps> = ({
           );
         })}
       </List>
+      {fieldsValues.name.map((item, index) => {
+        return (
+          <React.Fragment key={index}>
+            {item.code === languageCode && (
+              <InputLabel
+                htmlFor="name"
+                className={cx(classes.label, darkTheme ? 'dark' : null)}
+              >
+                Назва
+                <StyledField
+                  id="name"
+                  multiline
+                  variant="outlined"
+                  sx={{ width: '100%', mt: '16px' }}
+                  required
+                  darkTheme={darkTheme}
+                  value={item.value}
+                  onChange={handleFieldsChange('name', index)}
+                />
+              </InputLabel>
+            )}
+          </React.Fragment>
+        );
+      })}
       {fieldsValues.metaTitle.map((title, index) => {
         return (
           <React.Fragment key={index}>
@@ -129,20 +163,54 @@ export const SEO: React.FC<ISEOProps> = ({
           </React.Fragment>
         );
       })}
-      <InputLabel
-        htmlFor="url"
-        className={cx(classes.label, darkTheme ? 'dark' : null)}
-      >
-        URL
-        <StyledField
-          id="url"
-          variant="outlined"
-          sx={{ width: '100%', mt: '16px' }}
-          darkTheme={darkTheme}
-          value={fieldsValues.url}
-          onChange={handleFieldsChange()}
-        />
-      </InputLabel>
+      {fieldsValues.shortDescription.map((item, index) => {
+        return (
+          <React.Fragment key={index}>
+            {item.code === languageCode && (
+              <InputLabel
+                htmlFor="shortDescription"
+                className={cx(classes.label, darkTheme ? 'dark' : null)}
+              >
+                Короткий опис
+                <StyledField
+                  id="shortDescription"
+                  multiline
+                  variant="outlined"
+                  sx={{ width: '100%', mt: '16px' }}
+                  required
+                  darkTheme={darkTheme}
+                  value={item.value}
+                  onChange={handleFieldsChange('shortDescription', index)}
+                />
+              </InputLabel>
+            )}
+          </React.Fragment>
+        );
+      })}
+      {fieldsValues.description.map((item, index) => {
+        return (
+          <React.Fragment key={index}>
+            {item.code === languageCode && (
+              <InputLabel
+                htmlFor="description"
+                className={cx(classes.label, darkTheme ? 'dark' : null)}
+              >
+                Опис
+                <StyledField
+                  id="description"
+                  multiline
+                  variant="outlined"
+                  sx={{ width: '100%', mt: '16px' }}
+                  required
+                  darkTheme={darkTheme}
+                  value={item.value}
+                  onChange={handleFieldsChange('description', index)}
+                />
+              </InputLabel>
+            )}
+          </React.Fragment>
+        );
+      })}
     </>
   );
 };

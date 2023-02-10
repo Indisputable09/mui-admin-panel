@@ -759,5 +759,57 @@ export const usePagesDataCommonStyles = makeStyles<void>()(
         transition: 'all 250ms ease-out',
       },
     },
+    newsImgBlock: {
+      display: 'flex',
+      justifyContent: 'start',
+      alignItems: 'center',
+    },
+    newsImgBlockButton: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: '60px',
+      height: '60px',
+      '&[disabled]': {
+        opacity: '0.4',
+        color: 'inherit',
+      },
+    },
+    addImgIcon: {
+      width: '32px',
+      height: '32px',
+      color: '#000000DE',
+      transition: 'all 250ms ease-out',
+      '&.dark': {
+        color: '#fff',
+      },
+    },
+    editIcon: {
+      width: '32px',
+      height: '32px',
+      transition: 'all 250ms ease-out',
+      color: '#000000DE',
+      '&.dark': {
+        color: '#FFFFFF',
+      },
+      'button:hover > &': {
+        color: '#219653',
+        filter: 'drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.25))',
+      },
+      'button:hover > &.dark, button:focus > &.dark': {
+        filter: 'drop-shadow(2px 2px 0px rgba(255, 255, 255, 0.25))',
+      },
+    },
+    deleteIcon: {
+      width: '32px',
+      height: '32px',
+      transition: 'color 250ms ease-out',
+      'button:hover > &, button:focus > &': {
+        color: '#EB5757',
+        filter: 'drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.25))',
+      },
+      'button:hover > &.dark, button:focus > &.dark': {
+        filter: 'drop-shadow(2px 2px 0px rgba(255, 255, 255, 0.25))',
+      },
+    },
   })
 );

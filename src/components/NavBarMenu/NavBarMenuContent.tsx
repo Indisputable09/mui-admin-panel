@@ -14,6 +14,8 @@ import CitiesPage from '../../Pages/CitiesPage';
 import CitiesData from '../PagesEditData/CitiesData';
 import LanguagesPage from '../../Pages/LanguagesPage';
 import LanguagesData from '../PagesEditData/LanguagesData';
+import NewsPage from '../../Pages/NewsPage';
+import NewsData from '../PagesEditData/NewsData';
 
 export const navBarMenuItems = [
   {
@@ -80,10 +82,12 @@ export const navBarMenuItems = [
       //   name: 'Рекламні оголошення',
       //   link: '/content/advertisements',
       // },
-      // {
-      //   name: 'Новини',
-      //   link: '/content/news',
-      // },
+      {
+        name: 'Новини',
+        link: '/content/news',
+        Component: NewsPage,
+        DataComponent: NewsData,
+      },
       // {
       //   name: 'Вакансії',
       //   link: '/content/vacancies',

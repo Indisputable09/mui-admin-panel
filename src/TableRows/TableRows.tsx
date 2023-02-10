@@ -252,6 +252,93 @@ export const FAQRows = [
   },
 ];
 
+export const newsRows = [
+  {
+    id: 0,
+    image: img1,
+    name: 'Some text0',
+    active: true,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 1,
+    image: img1,
+    name: 'Some text1',
+    active: true,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 2,
+    image: img1,
+    name: 'Some text2',
+    active: true,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 3,
+    image: img1,
+    name: 'Some text3',
+    active: false,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 4,
+    image: img1,
+    name: 'Some text4',
+    active: true,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 5,
+    image: img1,
+    name: 'Some text5',
+    active: false,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 6,
+    image: img1,
+    name: 'Some text6',
+    active: true,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 7,
+    image: img1,
+    name: 'Some text7',
+    active: true,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 8,
+    image: img1,
+    name: 'Some text8',
+    active: true,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 9,
+    image: img1,
+    name: 'Some text9',
+    active: true,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 10,
+    image: img1,
+    name: 'Some text 10',
+    active: true,
+    creationDate: '2023-01-19',
+  },
+  {
+    id: 11,
+    image: img1,
+    name: 'Some text 11',
+    active: true,
+    creationDate: '2023-01-19',
+  },
+];
+
 export const languagesRows = [
   {
     id: 1,

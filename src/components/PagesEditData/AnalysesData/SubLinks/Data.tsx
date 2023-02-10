@@ -1,5 +1,12 @@
 import React from 'react';
-import { Checkbox, FormControlLabel, InputLabel, Switch } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+  InputLabel,
+  Switch,
+} from '@mui/material';
 import StyledField from '../../../Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import MultipleAutocomplete from '../../../Inputs/MultipleAutocomplete';
@@ -9,6 +16,7 @@ interface IDataProps {
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
     category: string[];
+    code: string;
     deadline: string;
     published: boolean;
     makeAtHome: boolean;
@@ -65,6 +73,20 @@ export const Data: React.FC<IDataProps> = ({
             });
           }}
           value={fieldsValues.category}
+        />
+      </InputLabel>
+      <InputLabel
+        htmlFor="code"
+        className={cx(classes.label, darkTheme ? 'dark' : null)}
+      >
+        Код
+        <StyledField
+          id="code"
+          variant="outlined"
+          sx={{ width: '100%', mt: '16px' }}
+          darkTheme={darkTheme}
+          value={fieldsValues.code}
+          onChange={handleInputsChange}
         />
       </InputLabel>
       <InputLabel

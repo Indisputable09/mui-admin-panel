@@ -12,7 +12,6 @@ interface IBasicProps {
       code: string;
       value: string;
     }[];
-    url: string;
     code: string;
     tabs: { id: string; label: string; name: string; description: string }[];
   };
@@ -131,38 +130,6 @@ export const Basic: React.FC<IBasicProps> = ({
           </React.Fragment>
         );
       })}
-      <InputLabel
-        htmlFor="url"
-        className={cx(classes.label, darkTheme ? 'dark' : null)}
-      >
-        URL
-        <StyledField
-          id="url"
-          variant="outlined"
-          sx={{ width: '100%', mt: '16px' }}
-          darkTheme={darkTheme}
-          value={fieldsValues.url}
-          onChange={handleFieldsChange()}
-        />
-      </InputLabel>
-      <InputLabel
-        htmlFor="code"
-        className={cx(
-          classes.label,
-          darkTheme ? 'dark' : null,
-          'noBottomMargin'
-        )}
-      >
-        Код
-        <StyledField
-          id="code"
-          variant="outlined"
-          sx={{ width: '100%', mt: '16px' }}
-          darkTheme={darkTheme}
-          value={fieldsValues.code}
-          onChange={handleFieldsChange()}
-        />
-      </InputLabel>
       {fieldsValues.tabs.map((tab, index) => {
         return (
           <React.Fragment key={index}>
@@ -171,7 +138,7 @@ export const Basic: React.FC<IBasicProps> = ({
               className={cx(
                 classes.label,
                 darkTheme ? 'dark' : null,
-                'topMargin'
+                index === 0 ? null : 'topMargin'
               )}
             >
               {tab.label}

@@ -171,6 +171,68 @@ export const analysesPagesColumns: GridColDef[] = [
   },
 ];
 
+export const newsColumns: GridColDef[] = [
+  {
+    field: 'id',
+    headerName: 'ID',
+    width: 50,
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'image',
+    headerName: 'Зображення',
+    width: 110,
+    editable: false,
+    headerAlign: 'center',
+    align: 'center',
+    renderCell: params => {
+      return (
+        <div>
+          <img src={params.row.image} alt={params.row.name} width="60" />
+        </div>
+      );
+    },
+  },
+  {
+    field: 'name',
+    headerName: 'Назва',
+    width: 910,
+    flex: 1,
+    editable: false,
+  },
+  {
+    field: 'active',
+    headerName: 'Активна',
+    width: 80,
+    editable: false,
+    renderCell: params => {
+      return <ControlledSwitch status={params.row.active} />;
+    },
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'creationDate',
+    headerName: 'Дата створення',
+    width: 150,
+    editable: false,
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'actions',
+    headerName: 'Дії',
+    editable: false,
+    sortable: false,
+    headerAlign: 'center',
+    align: 'center',
+    disableColumnMenu: true,
+    renderCell: params => <BasicActions id={params.row.id} />,
+    width: 120,
+  },
+];
+
 export const languagesColumns: GridColDef[] = [
   {
     field: 'id',
