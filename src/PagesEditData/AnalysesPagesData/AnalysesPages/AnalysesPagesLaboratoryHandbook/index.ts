@@ -1,0 +1,1 @@
+export { AnalysesPagesLaboratoryHandbook } from './AnalysesPagesLaboratoryHandbook';

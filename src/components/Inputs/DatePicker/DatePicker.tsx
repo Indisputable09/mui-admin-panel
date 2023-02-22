@@ -7,7 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker as ViewsDatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'dayjs/locale/uk';
 import StyledField from '../StyledField';
-import { usePagesDataCommonStyles } from '../../PagesEditData/PagesDataCommon/PagesDataCommon.styles';
+import { usePagesDataCommonStyles } from '../../../PagesEditData/PagesDataCommon/PagesDataCommon.styles';
 
 interface IDatePickerProps {
   darkTheme: boolean;

@@ -7,7 +7,17 @@ import { manufacturersColumns } from '../TableColumns/TableColumns';
 import { manufacturersRows } from '../TableRows/TableRows';
 import { useGlobalContext } from '../hooks/GlobalContext';
 
-const ManufacturersPage: React.FC = () => {
+interface IManufacturersPageProps {
+  link: string;
+  pageName: string;
+  parentPageName: string;
+}
+
+const ManufacturersPage: React.FC<IManufacturersPageProps> = ({
+  link,
+  pageName,
+  parentPageName,
+}) => {
   const { classes, cx } = useNavBarStyles();
   const { darkTheme } = useGlobalContext();
   return (
@@ -15,15 +25,16 @@ const ManufacturersPage: React.FC = () => {
       <CollapsedBreadcrumbs
         darkTheme={darkTheme}
         linksData={{
-          link: '/products/manufacturers',
-          pageName: 'Виробники',
+          link,
+          pageName,
+          parentPageName,
         }}
       />
       <Typography
         component="h2"
         className={cx(classes.title, darkTheme ? 'dark' : null)}
       >
-        Виробники
+        {pageName}
       </Typography>
       <TableComponent
         darkTheme={darkTheme}

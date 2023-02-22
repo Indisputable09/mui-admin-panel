@@ -18,7 +18,9 @@ import { Checkbox, CheckboxProps } from '@mui/material';
 export interface IRow {
   id: number;
   image?: string;
-  name: string;
+  name?: string;
+  from?: string;
+  to?: string;
   price?: number;
   discount?: number;
   status?: boolean;
@@ -49,7 +51,7 @@ const TableComponent: React.FC<ITableComponentProps> = ({
 }) => {
   const [filter, setFilter] = React.useState<string>('');
   const [selectedRows, setSelectedRows] = React.useState<IRow[]>([]);
-  const [pageSize, setPageSize] = React.useState<number>(5);
+  const [pageSize, setPageSize] = React.useState<number>(20);
 
   const handleChangeFilter = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -59,9 +61,13 @@ const TableComponent: React.FC<ITableComponentProps> = ({
 
   const createFilter = () => {
     const normalizedFilterValue = filter.toLocaleLowerCase();
-    const filteredRows = rows.filter(row =>
-      row.name.toLocaleLowerCase().includes(normalizedFilterValue)
-    );
+    const filteredRows = rows.filter(row => {
+      if (row.name) {
+        return row.name.toLocaleLowerCase().includes(normalizedFilterValue);
+      } else if (row.from) {
+        return row.from.toLocaleLowerCase().includes(normalizedFilterValue);
+      } else return row;
+    });
     return filteredRows;
   };
 
@@ -129,8 +135,8 @@ const TableComponent: React.FC<ITableComponentProps> = ({
         autoHeight
         pageSize={pageSize}
         onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-        rowsPerPageOptions={[5, 10, 15, 20]}
-        // rowsPerPageOptions={[20, 50, 100, 300]}
+        // rowsPerPageOptions={[5, 10, 15, 20]}
+        rowsPerPageOptions={[20, 50, 100, 300]}
         className={cx(classes.dataGrid, darkTheme ? 'dark' : null)}
         components={{ BaseCheckbox: MyCheckbox, ColumnMenu: MyColumnMenu }}
         pagination

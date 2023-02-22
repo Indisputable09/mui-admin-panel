@@ -3,7 +3,7 @@ import { Autocomplete, Box, Chip } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import StyledField from '../StyledField';
 import { useMultipleAutocompleteStyles } from './MultipleAutocomplete.styles';
-import { StyledCustomPaper } from '../../PagesEditData/AnalysesData/AnalysesData.styles';
+import { StyledCustomPaper } from '../../../PagesEditData/AnalysesData/AnalysesData.styles';
 
 interface IMultipleAutocompleteProps {
   id: string;

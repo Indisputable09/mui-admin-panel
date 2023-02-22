@@ -7,7 +7,17 @@ import { privacyPolicyRows } from '../TableRows/TableRows';
 import { privacyPolicyColumns } from '../TableColumns/TableColumns';
 import { useGlobalContext } from '../hooks/GlobalContext';
 
-const PrivacyPolicyPage: React.FC = () => {
+interface IPrivacyPolicyPageProps {
+  link: string;
+  pageName: string;
+  parentPageName: string;
+}
+
+const PrivacyPolicyPage: React.FC<IPrivacyPolicyPageProps> = ({
+  link,
+  pageName,
+  parentPageName,
+}) => {
   const { classes, cx } = useNavBarStyles();
   const { darkTheme } = useGlobalContext();
 
@@ -16,15 +26,16 @@ const PrivacyPolicyPage: React.FC = () => {
       <CollapsedBreadcrumbs
         darkTheme={darkTheme}
         linksData={{
-          link: '/content/privacyPolicy',
-          pageName: 'Політика конфіденційності',
+          link,
+          pageName,
+          parentPageName,
         }}
       />
       <Typography
         component="h2"
         className={cx(classes.title, darkTheme ? 'dark' : null)}
       >
-        Політика конфіденційності
+        {pageName}
       </Typography>
       <TableComponent
         darkTheme={darkTheme}

@@ -7,15 +7,43 @@ const allRoutes = navBarMenuItems.map(mainItem => {
       return [
         {
           path: link,
-          component: <Component pageName={name} link={link} />,
+          component: (
+            <Component
+              pageName={name}
+              link={link}
+              parentPageName={mainItem.name}
+            />
+          ),
         },
         {
           path: `${link}/:id/edit`,
-          component: <DataComponent initialLink={link} pageName={name} />,
+          component: DataComponent ? (
+            <DataComponent
+              initialLink={link}
+              pageName={name}
+              parentPageName={mainItem.name}
+            />
+          ) : null,
         },
         {
           path: `${link}/add`,
-          component: <DataComponent initialLink={link} pageName={name} />,
+          component: DataComponent ? (
+            <DataComponent
+              initialLink={link}
+              pageName={name}
+              parentPageName={mainItem.name}
+            />
+          ) : null,
+        },
+        {
+          path: `${link}/:id/:pagesLinkName/edit`,
+          component: DataComponent ? (
+            <DataComponent
+              initialLink={link}
+              pageName={name}
+              parentPageName={mainItem.name}
+            />
+          ) : null,
         },
       ];
     });

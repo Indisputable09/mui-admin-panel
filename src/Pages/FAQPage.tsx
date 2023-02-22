@@ -5,27 +5,36 @@ import { useNavBarStyles } from '../components/NavBar/NavBar.styles';
 import TableComponent from '../components/TableComponent';
 import { FAQRows } from '../TableRows/TableRows';
 import { FAQColumns } from '../TableColumns/TableColumns';
+import { useGlobalContext } from '../hooks/GlobalContext';
 
 interface IFAQPageProps {
-  darkTheme: boolean;
+  pageName: string;
+  link: string;
+  parentPageName: string;
 }
 
-const FAQPage: React.FC<IFAQPageProps> = ({ darkTheme }) => {
+const FAQPage: React.FC<IFAQPageProps> = ({
+  pageName,
+  link,
+  parentPageName,
+}) => {
   const { classes, cx } = useNavBarStyles();
+  const { darkTheme } = useGlobalContext();
   return (
     <>
       <CollapsedBreadcrumbs
         darkTheme={darkTheme}
         linksData={{
-          link: '/products/FAQ',
-          pageName: 'FAQ`s',
+          link,
+          pageName,
+          parentPageName,
         }}
       />
       <Typography
         component="h2"
         className={cx(classes.title, darkTheme ? 'dark' : null)}
       >
-        FAQ`s
+        {pageName}
       </Typography>
       <TableComponent
         darkTheme={darkTheme}

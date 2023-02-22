@@ -10,9 +10,14 @@ import { useGlobalContext } from '../hooks/GlobalContext';
 interface IAnalysesPageProps {
   pageName: string;
   link: string;
+  parentPageName: string;
 }
 
-const AnalysesPage: React.FC<IAnalysesPageProps> = ({ pageName, link }) => {
+const AnalysesPage: React.FC<IAnalysesPageProps> = ({
+  pageName,
+  link,
+  parentPageName,
+}) => {
   const { classes, cx } = useNavBarStyles();
   const { darkTheme } = useGlobalContext();
 
@@ -23,6 +28,7 @@ const AnalysesPage: React.FC<IAnalysesPageProps> = ({ pageName, link }) => {
         linksData={{
           link,
           pageName,
+          parentPageName,
         }}
       />
       <Typography

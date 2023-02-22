@@ -1,6 +1,6 @@
 import { Autocomplete as MuiAutocomplete } from '@mui/material';
 import { useGlobalContext } from '../../../hooks/GlobalContext';
-import { StyledCustomPaper } from '../../PagesEditData/AnalysesData/AnalysesData.styles';
+import { StyledCustomPaper } from '../../../PagesEditData/AnalysesData/AnalysesData.styles';
 import StyledField from '../StyledField';
 
 interface IAutocompleteProps {

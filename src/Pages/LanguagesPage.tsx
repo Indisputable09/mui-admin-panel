@@ -10,9 +10,14 @@ import { useGlobalContext } from '../hooks/GlobalContext';
 interface ILanguagesPageProps {
   link: string;
   pageName: string;
+  parentPageName: string;
 }
 
-const LanguagesPage: React.FC<ILanguagesPageProps> = ({ pageName, link }) => {
+const LanguagesPage: React.FC<ILanguagesPageProps> = ({
+  pageName,
+  link,
+  parentPageName,
+}) => {
   const { classes, cx } = useNavBarStyles();
   const { darkTheme } = useGlobalContext();
   return (
@@ -22,6 +27,7 @@ const LanguagesPage: React.FC<ILanguagesPageProps> = ({ pageName, link }) => {
         linksData={{
           link,
           pageName,
+          parentPageName,
         }}
       />
       <Typography

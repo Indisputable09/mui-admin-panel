@@ -15,6 +15,7 @@ interface ICrumbsProps {
     link: string;
     name?: string | null;
     pageName: string;
+    parentPageName: string;
   };
   darkTheme: boolean;
 }
@@ -32,7 +33,7 @@ const CollapsedBreadcrumbs: React.FC<ICrumbsProps> = ({
       sx={{ mb: 3, color: '#fff' }}
     >
       <Breadcrumbs
-        maxItems={3}
+        maxItems={4}
         aria-label="breadcrumb"
         separator={
           <ArrowForwardIcon
@@ -62,6 +63,12 @@ const CollapsedBreadcrumbs: React.FC<ICrumbsProps> = ({
         )} */}
         {/* {productData && (
           <> */}
+        <Link
+          to={linksData.link}
+          className={cx(classes.mainLink, darkTheme ? 'dark' : null)}
+        >
+          {linksData.parentPageName}
+        </Link>
         <Link
           to={linksData.link}
           className={cx(classes.mainLink, darkTheme ? 'dark' : null)}

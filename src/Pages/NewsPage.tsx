@@ -10,9 +10,14 @@ import { useGlobalContext } from '../hooks/GlobalContext';
 interface INewsPageProps {
   pageName: string;
   link: string;
+  parentPageName: string;
 }
 
-const NewsPage: React.FC<INewsPageProps> = ({ pageName, link }) => {
+const NewsPage: React.FC<INewsPageProps> = ({
+  pageName,
+  link,
+  parentPageName,
+}) => {
   const { classes, cx } = useNavBarStyles();
   const { darkTheme } = useGlobalContext();
 
@@ -23,6 +28,7 @@ const NewsPage: React.FC<INewsPageProps> = ({ pageName, link }) => {
         linksData={{
           link,
           pageName,
+          parentPageName,
         }}
       />
       <Typography

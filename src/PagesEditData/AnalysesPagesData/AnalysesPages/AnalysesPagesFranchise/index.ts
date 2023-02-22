@@ -1,0 +1,1 @@
+export { AnalysesPagesFranchise } from './AnalysesPagesFranchise';

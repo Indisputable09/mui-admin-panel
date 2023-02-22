@@ -11,11 +11,13 @@ import { Link } from 'react-router-dom';
 interface IBasicActionsProps {
   id: string;
   onlyEdit?: boolean;
+  pagesLinkName?: string;
 }
 
 const BasicActions: React.FC<IBasicActionsProps> = ({
   id,
   onlyEdit = false,
+  pagesLinkName,
 }) => {
   const { darkTheme } = useGlobalContext();
   const [openDeleteModal, setOpenDeleteModal] = React.useState<boolean>(false);
@@ -33,7 +35,7 @@ const BasicActions: React.FC<IBasicActionsProps> = ({
   return (
     <>
       <Box sx={{ display: 'flex', gap: 1 }}>
-        <Link to={`${id}/edit`}>
+        <Link to={pagesLinkName ? `${id}/${pagesLinkName}/edit` : `${id}/edit`}>
           <IconButton
             sx={{ display: 'flex', justifyContent: 'center', marginLeft: 0 }}
             size="large"

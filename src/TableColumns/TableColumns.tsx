@@ -157,6 +157,7 @@ export const analysesPagesColumns: GridColDef[] = [
     width: 910,
     flex: 1,
     editable: false,
+    sortable: false,
   },
   {
     field: 'action',
@@ -166,7 +167,13 @@ export const analysesPagesColumns: GridColDef[] = [
     headerAlign: 'center',
     align: 'center',
     disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} onlyEdit />,
+    renderCell: params => (
+      <BasicActions
+        id={params.row.id}
+        onlyEdit
+        pagesLinkName={params.row.linkName}
+      />
+    ),
     width: 120,
   },
 ];
@@ -467,6 +474,41 @@ export const privacyPolicyColumns: GridColDef[] = [
   {
     field: 'name',
     headerName: 'Назва',
+    width: 910,
+    flex: 1,
+    editable: false,
+  },
+  {
+    field: 'actions',
+    headerName: 'Дії',
+    editable: false,
+    sortable: false,
+    disableColumnMenu: true,
+    renderCell: params => <BasicActions id={params.row.id} />,
+    width: 120,
+    headerAlign: 'center',
+    align: 'center',
+  },
+];
+
+export const redirectsColumns: GridColDef[] = [
+  {
+    field: 'id',
+    headerName: 'ID',
+    width: 50,
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'from',
+    headerName: 'Від',
+    width: 910,
+    flex: 1,
+    editable: false,
+  },
+  {
+    field: 'to',
+    headerName: 'Куди',
     width: 910,
     flex: 1,
     editable: false,

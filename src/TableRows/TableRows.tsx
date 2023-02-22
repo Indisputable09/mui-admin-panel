@@ -183,34 +183,25 @@ export const analysesPackagesRows = [
 ];
 
 export const analysesPagesRows = [
-  { id: 0, name: 'Сторінка 0' },
-  { id: 1, name: 'Сторінка 1' },
-  { id: 2, name: 'Сторінка 2' },
-  { id: 3, name: 'Сторінка 3' },
-  { id: 4, name: 'Сторінка 4' },
-  { id: 5, name: 'Сторінка 5' },
-  { id: 6, name: 'Сторінка 6' },
-  { id: 7, name: 'Сторінка 7' },
-  { id: 8, name: 'Сторінка 8' },
-  { id: 9, name: 'Сторінка 9' },
-  { id: 10, name: 'Сторінка 10' },
-  { id: 11, name: 'Сторінка 11' },
-  { id: 12, name: 'Сторінка 12' },
-  { id: 13, name: 'Сторінка 13' },
-  { id: 14, name: 'Сторінка 14' },
-  { id: 15, name: 'Сторінка 15' },
-  { id: 16, name: 'Сторінка 16' },
-  { id: 17, name: 'Сторінка 17' },
-  { id: 18, name: 'Сторінка 18' },
-  { id: 19, name: 'Сторінка 19' },
-  { id: 20, name: 'Сторінка 20' },
-  { id: 21, name: 'Сторінка 21' },
-  { id: 22, name: 'Сторінка 22' },
-  { id: 23, name: 'Сторінка 23' },
-  { id: 24, name: 'Сторінка 24' },
-  { id: 25, name: 'Сторінка 25' },
-  { id: 26, name: 'Сторінка 26' },
-  { id: 27, name: 'Сторінка 27' },
+  { id: 0, name: 'Головна', linkName: 'main' },
+  { id: 1, name: 'Аналізи та ціни', linkName: 'analysesAndPrices' },
+  { id: 2, name: 'Пакети досліджень', linkName: 'examinationsPackages' },
+  { id: 3, name: 'Аналізи вдома', linkName: 'analysesAtHome' },
+  { id: 4, name: 'COVID - 19', linkName: 'covid19' },
+  { id: 5, name: 'Акції', linkName: 'actions' },
+  { id: 6, name: 'Лабораторний довідник', linkName: 'laboratoryHandbook' },
+  { id: 7, name: 'Співпраця', linkName: 'coworking' },
+  { id: 8, name: 'Франшиза', linkName: 'franchise' },
+  { id: 9, name: 'Про лабораторію', linkName: 'aboutLaboratory' },
+  { id: 10, name: 'Найчастіші запитання', linkName: 'FAQ' },
+  { id: 11, name: 'Відгуки', linkName: 'feedbacks' },
+  { id: 12, name: 'Політика якості', linkName: 'qualityPolitics' },
+  { id: 13, name: 'Вакансії', linkName: 'vacancies' },
+  { id: 14, name: 'Новини', linkName: 'news' },
+  { id: 15, name: 'Політика конфедонційності', linkName: 'privacyPolicy' },
+  { id: 16, name: 'Угода користувача', linkName: 'termsOfUse' },
+  { id: 17, name: 'Контакти', linkName: 'contacts' },
+  { id: 18, name: '404', linkName: '404' },
 ];
 
 export const FAQRows = [
@@ -534,6 +525,54 @@ export const privacyPolicyRows = [
   {
     id: 9,
     name: 'Політика конфіденційності',
+  },
+];
+
+export const redirectsRows = [
+  {
+    id: 1,
+    from: '/services/solnichney-ochki 5',
+    to: '/services/solnichney-ochki',
+  },
+  {
+    id: 2,
+    from: '/services/solnichney-ochki',
+    to: '/services/solnichney-ochki',
+  },
+  {
+    id: 3,
+    from: '/services/solnichney-ochki',
+    to: '/services/solnichney-ochki',
+  },
+  {
+    id: 4,
+    from: '/services/solnichney-ochki',
+    to: '/services/solnichney-ochki',
+  },
+  {
+    id: 5,
+    from: '/services/solnichney-ochki',
+    to: '/services/solnichney-ochki',
+  },
+  {
+    id: 6,
+    from: '/services/solnichney-ochki',
+    to: '/services/solnichney-ochki',
+  },
+  {
+    id: 7,
+    from: '/services/solnichney-ochki',
+    to: '/services/solnichney-ochki',
+  },
+  {
+    id: 8,
+    from: '/services/solnichney-ochki',
+    to: '/services/solnichney-ochki',
+  },
+  {
+    id: 9,
+    from: '/services/solnichney-ochki',
+    to: '/services/solnichney-ochki',
   },
 ];
 

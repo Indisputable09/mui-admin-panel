@@ -4,18 +4,25 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AnalysesPage from '../../Pages/AnalysesPage';
 import Dashboard from '../../Pages/Dashboard';
-import AnalysesData from '../PagesEditData/AnalysesData';
+import AnalysesData from '../../PagesEditData/AnalysesData';
 import AnalysesCategoriesPage from '../../Pages/AnalysesCategoriesPage';
-import AnalysesCategoryData from '../PagesEditData/AnalysesCategoryData';
+import AnalysesCategoryData from '../../PagesEditData/AnalysesCategoryData';
 import AnalysesPackagesPage from '../../Pages/AnalysesPackagesPage';
-import AnalysesPackagesData from '../PagesEditData/AnalysesPackagesData';
+import AnalysesPackagesData from '../../PagesEditData/AnalysesPackagesData';
 import AnalysesPagesPage from '../../Pages/AnalysesPagesPage';
 import CitiesPage from '../../Pages/CitiesPage';
-import CitiesData from '../PagesEditData/CitiesData';
+import CitiesData from '../../PagesEditData/CitiesData';
 import LanguagesPage from '../../Pages/LanguagesPage';
-import LanguagesData from '../PagesEditData/LanguagesData';
+import LanguagesData from '../../PagesEditData/LanguagesData';
 import NewsPage from '../../Pages/NewsPage';
-import NewsData from '../PagesEditData/NewsData';
+import NewsData from '../../PagesEditData/NewsData';
+import AnalysesPagesData from '../../PagesEditData/AnalysesPagesData';
+import FAQPage from '../../Pages/FAQPage';
+import FAQData from '../../PagesEditData/FAQData';
+import RobotsTxtData from '../../PagesEditData/RobotsTxtData';
+import RedirectsPage from '../../Pages/RedirectsPage';
+import RedirectsData from '../../PagesEditData/RedirectsData';
+import GTMData from '../../PagesEditData/GTMData';
 
 export const navBarMenuItems = [
   {
@@ -68,12 +75,14 @@ export const navBarMenuItems = [
         name: 'Сторінки',
         link: '/content/pages',
         Component: AnalysesPagesPage,
-        DataComponent: AnalysesPackagesData,
+        DataComponent: AnalysesPagesData,
       },
-      // {
-      //   name: 'FAQ',
-      //   link: '/content/FAQ',
-      // },
+      {
+        name: 'FAQ',
+        link: '/content/FAQ',
+        Component: FAQPage,
+        DataComponent: FAQData,
+      },
       // {
       //   name: 'Відгуки',
       //   link: '/content/feedbacks',
@@ -112,14 +121,17 @@ export const navBarMenuItems = [
         Component: CitiesPage,
         DataComponent: CitiesData,
       },
-      // {
-      //   name: 'Robots.txt',
-      //   link: '/settings/robots',
-      // },
-      // {
-      //   name: 'Редіректи',
-      //   link: '/settings/redirects',
-      // },
+      {
+        name: 'Robots.txt',
+        link: '/settings/robots',
+        Component: RobotsTxtData,
+      },
+      {
+        name: 'Редіректи',
+        link: '/settings/redirects',
+        Component: RedirectsPage,
+        DataComponent: RedirectsData,
+      },
       // {
       //   name: 'Користувачі',
       //   link: '/settings/users',
@@ -128,6 +140,11 @@ export const navBarMenuItems = [
       //   name: 'Shortcodes',
       //   link: '/settings/shortcodes',
       // },
+      {
+        name: 'GTM',
+        link: '/settings/GTM',
+        Component: GTMData,
+      },
     ],
   },
 ];

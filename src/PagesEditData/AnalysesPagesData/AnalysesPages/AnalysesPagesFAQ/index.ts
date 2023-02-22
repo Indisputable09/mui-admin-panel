@@ -1,0 +1,1 @@
+export { AnalysesPagesFAQ } from './AnalysesPagesFAQ';

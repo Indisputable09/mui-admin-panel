@@ -1,0 +1,1 @@
+export { AnalysesPagesPrivacyPolicy } from './AnalysesPagesPrivacyPolicy';
