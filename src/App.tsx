@@ -28,7 +28,7 @@ export const App: React.FC = () => {
           openDrawer={openDrawer}
           darkTheme={darkTheme}
         />
-        <BrowserRouter>
+        <BrowserRouter basename="/mui-admin-panel/">
           <Routes>
             <Route
               path="/"
