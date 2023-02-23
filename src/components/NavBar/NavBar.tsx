@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import { useNavBarStyles } from './NavBar.styles';
 import NavBarMenu from '../NavBarMenu';
 import { Box } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 interface INavBarProps {
   toggleDrawer: (open: boolean) => void;
@@ -20,6 +20,8 @@ const NavBar: React.FC<INavBarProps> = ({
   darkTheme,
 }) => {
   const { classes, cx } = useNavBarStyles();
+  const location = useLocation();
+  console.log('location:', location);
 
   return (
     <div className={cx('App', classes.root)}>
