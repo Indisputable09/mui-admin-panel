@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Button,
-  Divider,
-  InputLabel,
-  List,
-  ListItem,
-  Typography,
-} from '@mui/material';
+import { Button, Divider, InputLabel } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
