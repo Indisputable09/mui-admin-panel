@@ -1,1 +1,1 @@
-export { AnalysesPagesAnalysesAtHome } from './AnalysesPagesCovid19';
+export { AnalysesPagesAnalysesAtHome } from './AnalysesPagesAnalysesAtHome';

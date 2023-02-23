@@ -1,3 +1,3 @@
-export { Description } from './Description';
-export { Gallery } from './Gallery';
+export { Basic } from './Basic';
+export { Data } from './Data';
 export { SEO } from './SEO';

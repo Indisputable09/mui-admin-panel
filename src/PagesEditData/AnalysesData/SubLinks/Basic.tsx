@@ -228,29 +228,6 @@ export const Basic: React.FC<IBasicProps> = ({
                 </React.Fragment>
               );
             })}
-            {/* <InputLabel
-              htmlFor={tab.id}
-              className={cx(
-                classes.label,
-                darkTheme ? 'dark' : null,
-                index === 0 ? null : 'topMargin'
-              )}
-            >
-              {tab.label}
-              <StyledField
-                id={tab.id}
-                variant="outlined"
-                sx={{ width: '100%', mt: '16px' }}
-                darkTheme={darkTheme}
-                value={tab.name}
-                onChange={handleTabsChange('name', index)}
-              />
-            </InputLabel>
-            <Editor
-              debug={false}
-              initData={tab.description}
-              onChange={handleTabsChange('description', index)}
-            /> */}
           </React.Fragment>
         );
       })}

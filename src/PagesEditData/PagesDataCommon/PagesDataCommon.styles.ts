@@ -496,6 +496,7 @@ export const usePagesDataCommonStyles = makeStyles<void>()(
       color: '#000000DE',
       width: '44px',
       marginLeft: 'auto',
+      marginTop: '8px',
       transition: 'all 250ms ease-out',
       '&.dark': {
         color: '#fff',
@@ -796,8 +797,9 @@ export const usePagesDataCommonStyles = makeStyles<void>()(
         transition: 'all 250ms ease-out',
       },
     },
-    bannerImagesBlock: { display: 'flex', gap: '20%' },
+    bannerImagesBlock: { display: 'flex', gap: '20%', flexWrap: 'wrap' },
     newsImgBlock: {
+      width: '350px',
       display: 'flex',
       justifyContent: 'start',
       alignItems: 'center',

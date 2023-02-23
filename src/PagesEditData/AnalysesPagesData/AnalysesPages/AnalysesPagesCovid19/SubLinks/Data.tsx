@@ -1,6 +1,8 @@
 import React from 'react';
 import {
   Box,
+  Button,
+  Divider,
   IconButton,
   InputLabel,
   List,
@@ -11,19 +13,18 @@ import ColorizeIcon from '@mui/icons-material/Colorize';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import { SketchPicker } from 'react-color';
-import StyledField from '../../../../../components/Inputs/StyledField';
 import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
+import StyledField from '../../../../../components/Inputs/StyledField';
+import Editor from '../../../../../components/Inputs/Editor';
+import { nanoid } from 'nanoid';
 
-interface IBannerProps {
+interface IDataProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    banner: {
+    data: {
       id: string;
-      img: string;
-      mobileImg: string;
       primaryText: {
         id: string;
         color: string;
@@ -40,12 +41,23 @@ interface IBannerProps {
           value: string;
         }[];
       };
+      banners: {
+        id: string;
+        name: {
+          code: string;
+          value: string;
+        }[];
+        description: {
+          code: string;
+          value: string;
+        }[];
+      }[];
     };
   };
   languages: { name: string; id: number; code: string }[];
 }
 
-export const Banner: React.FC<IBannerProps> = ({
+export const Data: React.FC<IDataProps> = ({
   darkTheme,
   setFieldsValues,
   fieldsValues,
@@ -67,6 +79,31 @@ export const Banner: React.FC<IBannerProps> = ({
     setOpenColorPicker({ subIndex, open: true });
   };
 
+  const handleAddClick = () => {
+    setFieldsValues((prevState: any) => {
+      return {
+        ...prevState,
+        data: {
+          ...prevState.data,
+          banners: [
+            ...prevState.data.banners,
+            {
+              id: nanoid(),
+              name: [
+                { code: 'uk', value: 'ukr' },
+                { code: 'en', value: 'eng' },
+              ],
+              description: [
+                { code: 'uk', value: 'ukr' },
+                { code: 'en', value: 'eng' },
+              ],
+            },
+          ],
+        },
+      };
+    });
+  };
+
   const handleCloseColorPicker = () => {
     setOpenColorPicker({ subIndex: null, open: false });
   };
@@ -75,10 +112,26 @@ export const Banner: React.FC<IBannerProps> = ({
     setLanguageCode(code as string);
   };
 
+  const handleDeleteBannerClick = (id: string) => {
+    const filteredData = fieldsValues.data.banners.filter(
+      (item: any) => item.id !== id
+    );
+    setOpenColorPicker({ subIndex: null, open: false });
+    setFieldsValues((prevState: typeof fieldsValues) => {
+      return {
+        ...prevState,
+        data: {
+          ...prevState.data,
+          banners: filteredData,
+        },
+      };
+    });
+  };
+
   const handleFieldsChange =
     (key: string, valuesIndex?: number) => (e: React.ChangeEvent) => {
       setFieldsValues((prevState: any) => {
-        const newValues = prevState.banner[key].text.map(
+        const newValues = prevState.data[key].text.map(
           (subItem: any, subIndex: number) => {
             if (subIndex === valuesIndex) {
               return {
@@ -92,12 +145,54 @@ export const Banner: React.FC<IBannerProps> = ({
         );
         return {
           ...prevState,
-          banner: {
-            ...prevState.banner,
+          data: {
+            ...prevState.data,
             [key]: {
-              ...prevState.banner[key],
+              ...prevState.data[key],
               text: newValues,
             },
+          },
+        };
+      });
+    };
+
+  const handleBannerChange =
+    (index: number, key: string, valuesIndex?: number) => (e: any) => {
+      setFieldsValues((prevState: any) => {
+        const newArray = prevState.data.banners.map((item: any, i: number) => {
+          if (index === i) {
+            const newValues = item[key].map(
+              (subItem: any, subIndex: number) => {
+                if (subIndex === valuesIndex) {
+                  if (e.hasOwnProperty('editor')) {
+                    return {
+                      ...subItem,
+                      value: e.editor.getData(),
+                    };
+                  } else {
+                    return {
+                      ...subItem,
+                      value: (e.target as HTMLInputElement).value,
+                    };
+                  }
+                } else {
+                  return subItem;
+                }
+              }
+            );
+            return {
+              ...item,
+              [key]: [...newValues],
+            };
+          } else {
+            return item;
+          }
+        });
+        return {
+          ...prevState,
+          data: {
+            ...prevState.data,
+            banners: newArray,
           },
         };
       });
@@ -107,10 +202,10 @@ export const Banner: React.FC<IBannerProps> = ({
     setFieldsValues((prevState: typeof fieldsValues) => {
       return {
         ...prevState,
-        banner: {
-          ...prevState.banner,
+        data: {
+          ...prevState.data,
           [key]: {
-            ...prevState.banner[key],
+            ...prevState.data[key],
             color: color.hex,
           },
         },
@@ -142,145 +237,7 @@ export const Banner: React.FC<IBannerProps> = ({
           );
         })}
       </List>
-      <Box className={cx(classes.bannerImagesBlock)}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-          }}
-        >
-          <Box>
-            <Typography component="h2" className={classes.descriptionText}>
-              Зображення
-            </Typography>
-          </Box>
-          <Box className={cx(classes.newsImgBlock)}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '200px',
-                height: '150px',
-                marginRight: '30px',
-                border: '1px solid grey',
-              }}
-            >
-              {fieldsValues.banner.img ? null : (
-                <IconButton onClick={() => console.log('Add img')}>
-                  <AddIcon
-                    className={cx(
-                      classes.addImageIcon,
-                      darkTheme ? 'dark' : null
-                    )}
-                  />
-                </IconButton>
-              )}
-            </Box>
-            {fieldsValues.banner.img ? (
-              <Box sx={{ display: 'flex', gap: 3 }}>
-                <IconButton
-                  className={cx(classes.newsImgBlockButton)}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="edit"
-                  onClick={() => console.log('Edit img')}
-                >
-                  <EditIcon
-                    className={cx(classes.editIcon, darkTheme ? 'dark' : null)}
-                  />
-                </IconButton>
-                <IconButton
-                  className={cx(classes.newsImgBlockButton)}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="delete"
-                  onClick={() => console.log('Delete img')}
-                >
-                  <DeleteIcon
-                    className={cx(
-                      classes.deleteIcon,
-                      darkTheme ? 'dark' : null
-                    )}
-                  />
-                </IconButton>
-              </Box>
-            ) : null}
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-          }}
-        >
-          <Box>
-            <Typography component="h2" className={classes.descriptionText}>
-              Зображення для мобільної версії
-            </Typography>
-          </Box>
-          <Box className={cx(classes.newsImgBlock)}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '200px',
-                height: '150px',
-                marginRight: '30px',
-                border: '1px solid grey',
-              }}
-            >
-              {fieldsValues.banner.mobileImg ? null : (
-                <IconButton onClick={() => console.log('Add img')}>
-                  <AddIcon
-                    className={cx(
-                      classes.addImageIcon,
-                      darkTheme ? 'dark' : null
-                    )}
-                  />
-                </IconButton>
-              )}
-            </Box>
-            {fieldsValues.banner.mobileImg ? (
-              <Box sx={{ display: 'flex', gap: 3 }}>
-                <IconButton
-                  className={cx(classes.newsImgBlockButton)}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="edit"
-                  onClick={() => console.log('Edit img')}
-                >
-                  <EditIcon
-                    className={cx(classes.editIcon, darkTheme ? 'dark' : null)}
-                  />
-                </IconButton>
-                <IconButton
-                  className={cx(classes.newsImgBlockButton)}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="delete"
-                  onClick={() => console.log('Delete img')}
-                >
-                  <DeleteIcon
-                    className={cx(
-                      classes.deleteIcon,
-                      darkTheme ? 'dark' : null
-                    )}
-                  />
-                </IconButton>
-              </Box>
-            ) : null}
-          </Box>
-        </Box>
-      </Box>
-      {fieldsValues.banner.primaryText.text.map((item, textIndex) => {
+      {fieldsValues.data.primaryText.text.map((item, textIndex) => {
         return (
           <React.Fragment key={textIndex}>
             {item.code === languageCode && (
@@ -327,7 +284,7 @@ export const Banner: React.FC<IBannerProps> = ({
                   </Typography>
                   <Box
                     sx={{
-                      backgroundColor: `${fieldsValues.banner.primaryText.color}`,
+                      backgroundColor: `${fieldsValues.data.primaryText.color}`,
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
@@ -350,7 +307,7 @@ export const Banner: React.FC<IBannerProps> = ({
                           classes.colorPicker,
                           darkTheme ? 'dark' : null
                         )}
-                        color={fieldsValues.banner.primaryText.color}
+                        color={fieldsValues.data.primaryText.color}
                         onChangeComplete={handleColorChange('primaryText')}
                         disableAlpha
                       />
@@ -374,7 +331,7 @@ export const Banner: React.FC<IBannerProps> = ({
           </React.Fragment>
         );
       })}
-      {fieldsValues.banner.additionalText.text.map((item, textIndex) => {
+      {fieldsValues.data.additionalText.text.map((item, textIndex) => {
         return (
           <React.Fragment key={textIndex}>
             {item.code === languageCode && (
@@ -424,7 +381,7 @@ export const Banner: React.FC<IBannerProps> = ({
                   </Typography>
                   <Box
                     sx={{
-                      backgroundColor: `${fieldsValues.banner.additionalText.color}`,
+                      backgroundColor: `${fieldsValues.data.additionalText.color}`,
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
@@ -447,7 +404,7 @@ export const Banner: React.FC<IBannerProps> = ({
                           classes.colorPicker,
                           darkTheme ? 'dark' : null
                         )}
-                        color={fieldsValues.banner.additionalText.color}
+                        color={fieldsValues.data.additionalText.color}
                         onChangeComplete={handleColorChange('additionalText')}
                         disableAlpha
                       />
@@ -471,6 +428,89 @@ export const Banner: React.FC<IBannerProps> = ({
           </React.Fragment>
         );
       })}
+      {fieldsValues.data.banners.map((item, index) => {
+        return (
+          <React.Fragment key={index}>
+            <Divider
+              className={cx(
+                classes.pricesBottomDivider,
+                darkTheme ? 'dark' : null,
+                'topMargin'
+              )}
+            />
+            {item.name.map((title, titleIndex) => {
+              return (
+                <React.Fragment key={titleIndex}>
+                  {title.code === languageCode && (
+                    <InputLabel
+                      htmlFor="name"
+                      className={cx(
+                        classes.label,
+                        darkTheme ? 'dark' : null,
+                        'topMargin'
+                      )}
+                    >
+                      Назва блоку
+                      <StyledField
+                        id="name"
+                        multiline
+                        variant="outlined"
+                        sx={{ width: '100%', mt: '16px' }}
+                        required
+                        darkTheme={darkTheme}
+                        value={title.value}
+                        onChange={handleBannerChange(index, 'name', titleIndex)}
+                      />
+                    </InputLabel>
+                  )}
+                </React.Fragment>
+              );
+            })}
+            <Typography component="h2" className={classes.descriptionText}>
+              Опис блоку
+            </Typography>
+            {item.description.map((description, descriptionIndex) => {
+              return (
+                <React.Fragment key={descriptionIndex}>
+                  {description.code === languageCode && (
+                    <Editor
+                      debug={false}
+                      initData={description.value}
+                      onChange={handleBannerChange(
+                        index,
+                        'description',
+                        descriptionIndex
+                      )}
+                    />
+                  )}
+                </React.Fragment>
+              );
+            })}
+            {fieldsValues.data.banners.length > 1 ? (
+              <IconButton
+                className={cx(classes.deleteBanner, darkTheme ? 'dark' : null)}
+                onClick={() => handleDeleteBannerClick(item.id)}
+              >
+                <DeleteIcon sx={{ width: '28px', height: '28px' }} />
+              </IconButton>
+            ) : null}
+          </React.Fragment>
+        );
+      })}
+      <Divider
+        className={cx(
+          classes.pricesBottomDivider,
+          darkTheme ? 'dark' : null,
+          'topMargin'
+        )}
+      />
+      <Button
+        onClick={handleAddClick}
+        variant="contained"
+        className={cx(classes.addButton, darkTheme ? 'dark' : null)}
+      >
+        <AddIcon /> Додати
+      </Button>
     </>
   );
 };

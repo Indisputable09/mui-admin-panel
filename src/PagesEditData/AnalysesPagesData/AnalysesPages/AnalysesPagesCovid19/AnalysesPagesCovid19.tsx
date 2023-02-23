@@ -5,7 +5,8 @@ import { analysesPagesRows } from '../../../../TableRows/TableRows';
 import PagesDataCommon from '../../../PagesDataCommon';
 import Modal from '../../../../components/Modal';
 import { useGlobalContext } from '../../../../hooks/GlobalContext';
-import { Basic, SEO } from './SubLinks';
+import { Basic, SEO, Data } from './SubLinks';
+import { nanoid } from 'nanoid';
 
 interface IAnalysesPagesCovid19Props {
   initialLink: string;
@@ -20,7 +21,8 @@ const languages = [
 
 const links = [
   { name: 'загальне', id: 1 },
-  { name: 'seo', id: 2 },
+  { name: 'дані', id: 2 },
+  { name: 'seo', id: 3 },
 ];
 
 export const AnalysesPagesCovid19: React.FC<IAnalysesPagesCovid19Props> = ({
@@ -38,10 +40,41 @@ export const AnalysesPagesCovid19: React.FC<IAnalysesPagesCovid19Props> = ({
   const chosenPackage = analysesPagesRows.find(row => row.id === Number(id));
 
   const [fieldsValues, setFieldsValues] = React.useState({
-    name: [
-      { code: 'uk', value: 'ukr' },
-      { code: 'en', value: 'eng' },
-    ],
+    image: '',
+    mobileImage: '',
+    analyses: [],
+    data: {
+      id: nanoid(),
+      primaryText: {
+        id: nanoid(),
+        color: '#ffffff',
+        text: [
+          { code: 'uk', value: 'ukr' },
+          { code: 'en', value: 'eng' },
+        ],
+      },
+      additionalText: {
+        id: nanoid(),
+        color: '#ffffff',
+        text: [
+          { code: 'uk', value: 'ukr' },
+          { code: 'en', value: 'eng' },
+        ],
+      },
+      banners: [
+        {
+          id: nanoid(),
+          name: [
+            { code: 'uk', value: 'ukr' },
+            { code: 'en', value: 'eng' },
+          ],
+          description: [
+            { code: 'uk', value: 'ukr' },
+            { code: 'en', value: 'eng' },
+          ],
+        },
+      ],
+    },
     metaTitle: [
       { code: 'uk', value: 'ukr' },
       { code: 'en', value: 'eng' },
@@ -106,10 +139,17 @@ export const AnalysesPagesCovid19: React.FC<IAnalysesPagesCovid19Props> = ({
             darkTheme={darkTheme}
             setFieldsValues={setFieldsValues}
             fieldsValues={fieldsValues}
-            languages={languages}
           />
         )}
         {linkId === 2 && (
+          <Data
+            darkTheme={darkTheme}
+            setFieldsValues={setFieldsValues}
+            fieldsValues={fieldsValues}
+            languages={languages}
+          />
+        )}
+        {linkId === 3 && (
           <SEO
             darkTheme={darkTheme}
             setFieldsValues={setFieldsValues}

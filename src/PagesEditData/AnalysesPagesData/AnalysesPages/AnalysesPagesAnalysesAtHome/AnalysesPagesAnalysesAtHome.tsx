@@ -5,7 +5,8 @@ import { analysesPagesRows } from '../../../../TableRows/TableRows';
 import PagesDataCommon from '../../../PagesDataCommon';
 import Modal from '../../../../components/Modal';
 import { useGlobalContext } from '../../../../hooks/GlobalContext';
-import { Basic, SEO } from './SubLinks';
+import { Basic, Data, SEO } from './SubLinks';
+import { nanoid } from 'nanoid';
 
 interface IAnalysesPagesAnalysesAtHomeProps {
   initialLink: string;
@@ -20,7 +21,8 @@ const languages = [
 
 const links = [
   { name: 'загальне', id: 1 },
-  { name: 'seo', id: 2 },
+  { name: 'дані', id: 2 },
+  { name: 'seo', id: 3 },
 ];
 
 export const AnalysesPagesAnalysesAtHome: React.FC<
@@ -36,10 +38,92 @@ export const AnalysesPagesAnalysesAtHome: React.FC<
   const chosenPackage = analysesPagesRows.find(row => row.id === Number(id));
 
   const [fieldsValues, setFieldsValues] = React.useState({
-    name: [
-      { code: 'uk', value: 'ukr' },
-      { code: 'en', value: 'eng' },
+    images: [
+      { label: 'Зображення у банері', image: '' },
+      { label: 'Зображення у банері (моб)', image: '' },
+      { label: 'Зображення крок 1', image: '' },
+      { label: 'Зображення крок 2', image: '' },
+      { label: 'Зображення крок 3', image: '' },
+      { label: 'Зображення крок 4', image: '' },
+      { label: 'Зображення біля опису', image: '' },
     ],
+    weekdaysOrdersSchedule: '',
+    weekendOrdersSchedule: '',
+    weekdaysDrivingSchedule: '',
+    weekendDrivingSchedule: '',
+    data: {
+      id: nanoid(),
+      primaryText: {
+        id: nanoid(),
+        color: '#ffffff',
+        text: [
+          { code: 'uk', value: 'ukr' },
+          { code: 'en', value: 'eng' },
+        ],
+      },
+      additionalText: {
+        id: nanoid(),
+        color: '#ffffff',
+        text: [
+          { code: 'uk', value: 'ukr' },
+          { code: 'en', value: 'eng' },
+        ],
+      },
+      steps: [
+        {
+          id: nanoid(),
+          title: [
+            { code: 'uk', value: 'ukr' },
+            { code: 'en', value: 'eng' },
+          ],
+          description: [
+            { code: 'uk', value: 'ukr' },
+            { code: 'en', value: 'eng' },
+          ],
+          label: 'Крок 1',
+        },
+        {
+          id: nanoid(),
+          title: [
+            { code: 'uk', value: 'ukr' },
+            { code: 'en', value: 'eng' },
+          ],
+          description: [
+            { code: 'uk', value: 'ukr' },
+            { code: 'en', value: 'eng' },
+          ],
+          label: 'Крок 2',
+        },
+        {
+          id: nanoid(),
+          title: [
+            { code: 'uk', value: 'ukr' },
+            { code: 'en', value: 'eng' },
+          ],
+          description: [
+            { code: 'uk', value: 'ukr' },
+            { code: 'en', value: 'eng' },
+          ],
+          label: 'Крок 3',
+        },
+        {
+          id: nanoid(),
+          title: [
+            { code: 'uk', value: 'ukr' },
+            { code: 'en', value: 'eng' },
+          ],
+          description: [
+            { code: 'uk', value: 'ukr' },
+            { code: 'en', value: 'eng' },
+          ],
+          label: 'Крок 4',
+        },
+      ],
+      description: [
+        { code: 'uk', value: 'ukr' },
+        { code: 'en', value: 'eng' },
+      ],
+    },
     metaTitle: [
       { code: 'uk', value: 'ukr' },
       { code: 'en', value: 'eng' },
@@ -104,10 +188,17 @@ export const AnalysesPagesAnalysesAtHome: React.FC<
             darkTheme={darkTheme}
             setFieldsValues={setFieldsValues}
             fieldsValues={fieldsValues}
-            languages={languages}
           />
         )}
         {linkId === 2 && (
+          <Data
+            darkTheme={darkTheme}
+            setFieldsValues={setFieldsValues}
+            fieldsValues={fieldsValues}
+            languages={languages}
+          />
+        )}
+        {linkId === 3 && (
           <SEO
             darkTheme={darkTheme}
             setFieldsValues={setFieldsValues}

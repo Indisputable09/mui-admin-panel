@@ -1,29 +1,36 @@
 import React from 'react';
-import { Box, IconButton, InputLabel, Typography } from '@mui/material';
+import { Box, Button, Divider, IconButton, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
-import MultipleAutocomplete from '../../../../../components/Inputs/MultipleAutocomplete';
+import { nanoid } from 'nanoid';
 
-interface IBasicProps {
+interface IGalleryProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
     image: string;
     mobileImage: string;
-    analyses: string[];
+    gallery: { id: string; image: string }[];
   };
 }
 
-const analyses = ['category1', 'category2', 'category3', 'Mobile phone'];
-
-export const Basic: React.FC<IBasicProps> = ({
+export const Data: React.FC<IGalleryProps> = ({
   darkTheme,
   setFieldsValues,
   fieldsValues,
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
+
+  const handleAddClick = () => {
+    setFieldsValues((prevState: any) => {
+      return {
+        ...prevState,
+        gallery: [...prevState.gallery, { id: nanoid(), image: '' }],
+      };
+    });
+  };
 
   return (
     <>
@@ -165,27 +172,104 @@ export const Basic: React.FC<IBasicProps> = ({
           </Box>
         </Box>
       </Box>
-      <InputLabel
-        htmlFor="category"
-        className={cx(classes.label, darkTheme ? 'dark' : null, 'topMargin')}
+      <Divider
+        className={cx(
+          classes.pricesBottomDivider,
+          darkTheme ? 'dark' : null,
+          'topMargin'
+        )}
+      />
+      {fieldsValues.gallery.map((item, index) => {
+        return (
+          <Box
+            key={item.id}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              marginTop: index === 0 ? 0 : '16px',
+            }}
+          >
+            <Box>
+              <Typography component="h2" className={classes.descriptionText}>
+                Зображення
+              </Typography>
+            </Box>
+            <Box className={cx(classes.newsImgBlock)}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '200px',
+                  height: '150px',
+                  marginRight: '30px',
+                  border: '1px solid grey',
+                }}
+              >
+                {item.image ? null : (
+                  <IconButton onClick={() => console.log('Add img')}>
+                    <AddIcon
+                      className={cx(
+                        classes.addImageIcon,
+                        darkTheme ? 'dark' : null
+                      )}
+                    />
+                  </IconButton>
+                )}
+              </Box>
+              {item.image ? (
+                <Box sx={{ display: 'flex', gap: 3 }}>
+                  <IconButton
+                    className={cx(classes.newsImgBlockButton)}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="edit"
+                    onClick={() => console.log('Edit img')}
+                  >
+                    <EditIcon
+                      className={cx(
+                        classes.editIcon,
+                        darkTheme ? 'dark' : null
+                      )}
+                    />
+                  </IconButton>
+                  <IconButton
+                    className={cx(classes.newsImgBlockButton)}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="delete"
+                    onClick={() => console.log('Delete img')}
+                  >
+                    <DeleteIcon
+                      className={cx(
+                        classes.deleteIcon,
+                        darkTheme ? 'dark' : null
+                      )}
+                    />
+                  </IconButton>
+                </Box>
+              ) : null}
+            </Box>
+          </Box>
+        );
+      })}
+      <Divider
+        className={cx(
+          classes.pricesBottomDivider,
+          darkTheme ? 'dark' : null,
+          'topMargin'
+        )}
+      />
+      <Button
+        onClick={handleAddClick}
+        variant="contained"
+        className={cx(classes.addButton, darkTheme ? 'dark' : null)}
       >
-        Аналізи
-        <MultipleAutocomplete
-          list={analyses}
-          darkTheme={darkTheme}
-          id="category"
-          className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
-          onChange={(e: any, values: string[]) => {
-            setFieldsValues((prevState: any) => {
-              return {
-                ...prevState,
-                analyses: values,
-              };
-            });
-          }}
-          value={fieldsValues.analyses}
-        />
-      </InputLabel>
+        <AddIcon /> Додати
+      </Button>
     </>
   );
 };

@@ -6,7 +6,7 @@ import { analysesPagesRows } from '../../../../TableRows/TableRows';
 import PagesDataCommon from '../../../PagesDataCommon';
 import Modal from '../../../../components/Modal';
 import { useGlobalContext } from '../../../../hooks/GlobalContext';
-import { Description, Gallery, SEO } from './SubLinks';
+import { Basic, Data, SEO } from './SubLinks';
 
 interface IAnalysesPagesQualityPoliticsProps {
   initialLink: string;
@@ -39,7 +39,6 @@ const AnalysesPagesQualityPolitics: React.FC<
   const chosenPage = analysesPagesRows.find(row => row.id === Number(id));
 
   const [fieldsValues, setFieldsValues] = React.useState({
-    image: '',
     title: [
       { code: 'uk', value: 'ukr value' },
       { code: 'en', value: 'eng value' },
@@ -48,6 +47,8 @@ const AnalysesPagesQualityPolitics: React.FC<
       { code: 'uk', value: 'ukr value' },
       { code: 'en', value: 'eng value' },
     ],
+    image: '',
+    mobileImage: '',
     gallery: [{ id: nanoid(), image: '' }],
     metaTitle: [
       { code: 'uk', value: 'ukr' },
@@ -109,7 +110,7 @@ const AnalysesPagesQualityPolitics: React.FC<
         }}
       >
         {linkId === 1 && (
-          <Description
+          <Basic
             darkTheme={darkTheme}
             setFieldsValues={setFieldsValues}
             fieldsValues={fieldsValues}
@@ -117,7 +118,7 @@ const AnalysesPagesQualityPolitics: React.FC<
           />
         )}
         {linkId === 2 && (
-          <Gallery
+          <Data
             darkTheme={darkTheme}
             setFieldsValues={setFieldsValues}
             fieldsValues={fieldsValues}

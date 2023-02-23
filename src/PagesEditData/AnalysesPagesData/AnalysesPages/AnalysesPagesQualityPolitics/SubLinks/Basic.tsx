@@ -1,15 +1,10 @@
 import React from 'react';
 import {
-  Box,
-  IconButton,
   InputLabel,
   List,
   ListItem,
   Typography,
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import StyledField from '../../../../../components/Inputs/StyledField';
 import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
 import Editor from '../../../../../components/Inputs/Editor';
@@ -18,14 +13,13 @@ interface IDescriptionProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    image: string;
     title: { code: string; value: string }[];
     description: { code: string; value: string }[];
   };
   languages: { id: number; code: string; name: string }[];
 }
 
-export const Description: React.FC<IDescriptionProps> = ({
+export const Basic: React.FC<IDescriptionProps> = ({
   darkTheme,
   setFieldsValues,
   fieldsValues,
@@ -92,76 +86,6 @@ export const Description: React.FC<IDescriptionProps> = ({
           );
         })}
       </List>
-      <Box className={cx(classes.bannerImagesBlock)}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-          }}
-        >
-          <Box>
-            <Typography component="h2" className={classes.descriptionText}>
-              Зображення
-            </Typography>
-          </Box>
-          <Box className={cx(classes.newsImgBlock)}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '200px',
-                height: '150px',
-                marginRight: '30px',
-                border: '1px solid grey',
-              }}
-            >
-              {fieldsValues.image ? null : (
-                <IconButton onClick={() => console.log('Add img')}>
-                  <AddIcon
-                    className={cx(
-                      classes.addImageIcon,
-                      darkTheme ? 'dark' : null
-                    )}
-                  />
-                </IconButton>
-              )}
-            </Box>
-            {fieldsValues.image ? (
-              <Box sx={{ display: 'flex', gap: 3 }}>
-                <IconButton
-                  className={cx(classes.newsImgBlockButton)}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="edit"
-                  onClick={() => console.log('Edit img')}
-                >
-                  <EditIcon
-                    className={cx(classes.editIcon, darkTheme ? 'dark' : null)}
-                  />
-                </IconButton>
-                <IconButton
-                  className={cx(classes.newsImgBlockButton)}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="delete"
-                  onClick={() => console.log('Delete img')}
-                >
-                  <DeleteIcon
-                    className={cx(
-                      classes.deleteIcon,
-                      darkTheme ? 'dark' : null
-                    )}
-                  />
-                </IconButton>
-              </Box>
-            ) : null}
-          </Box>
-        </Box>
-      </Box>
       {fieldsValues.title.map((title, index) => {
         return (
           <React.Fragment key={index}>
