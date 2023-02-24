@@ -1,5 +1,4 @@
 import React from 'react';
-import { Dayjs } from 'dayjs';
 import {
   Box,
   FormControlLabel,
@@ -11,33 +10,32 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import StyledField from '../../../components/Inputs/StyledField';
+import { Dayjs } from 'dayjs';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
-import DatePicker from '../../../components/Inputs/DatePicker';
 import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
+import DatePicker from '../../../components/Inputs/DatePicker';
 
-interface IDataProps {
+interface IGalleryProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    image: any;
+    image: string;
+    analyses: string[];
+    endDate: Date | Dayjs | null;
     published: boolean;
-    publicationDate: Date | Dayjs | null;
-    url: string;
-    recommendedNews: string[];
   };
 }
 
 const categories = ['category1', 'category2', 'category3', 'Mobile phone'];
 
-export const Data: React.FC<IDataProps> = ({
-  fieldsValues,
-  setFieldsValues,
+export const Data: React.FC<IGalleryProps> = ({
   darkTheme,
+  setFieldsValues,
+  fieldsValues,
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
 
-  const handleCreationDateChange = (
+  const handleEndDateChange = (
     name: string,
     newValue?: Date | Dayjs | null
   ) => {
@@ -58,15 +56,6 @@ export const Data: React.FC<IDataProps> = ({
         };
       });
     };
-
-  const handleFieldsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldsValues((prevState: any) => {
-      return {
-        ...prevState,
-        [e.target.id]: (e.target as HTMLInputElement).value,
-      };
-    });
-  };
 
   const handleAutocompleteChange =
     (key: string) => (e: any, values: string[]) => {
@@ -146,26 +135,26 @@ export const Data: React.FC<IDataProps> = ({
         </Box>
       </Box>
       <InputLabel
-        htmlFor="url"
+        htmlFor="analyses"
         className={cx(classes.label, darkTheme ? 'dark' : null, 'topMargin')}
       >
-        URL
-        <StyledField
-          id="url"
-          variant="outlined"
-          sx={{ width: '100%', mt: '16px' }}
+        Аналізи
+        <MultipleAutocomplete
+          list={categories}
           darkTheme={darkTheme}
-          value={fieldsValues.url}
-          onChange={handleFieldsChange}
+          id="analyses"
+          className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
+          onChange={handleAutocompleteChange('analyses')}
+          value={fieldsValues.analyses}
         />
       </InputLabel>
       <DatePicker
         noMaxDate
-        label="Дата публікації"
         darkTheme={darkTheme}
-        value={fieldsValues.publicationDate}
+        label="Дата закінчення"
+        value={fieldsValues.endDate}
         onChange={(newValue: Date | Dayjs | null) => {
-          handleCreationDateChange('publicationDate', newValue);
+          handleEndDateChange('endDate', newValue);
         }}
       />
       <FormControlLabel
@@ -180,20 +169,6 @@ export const Data: React.FC<IDataProps> = ({
           />
         }
       />
-      <InputLabel
-        htmlFor="recommendedNews"
-        className={cx(classes.label, darkTheme ? 'dark' : null)}
-      >
-        Рекомендовані новини
-        <MultipleAutocomplete
-          list={categories}
-          darkTheme={darkTheme}
-          id="recommendedNews"
-          className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
-          onChange={handleAutocompleteChange('recommendedNews')}
-          value={fieldsValues.recommendedNews}
-        />
-      </InputLabel>
     </>
   );
 };

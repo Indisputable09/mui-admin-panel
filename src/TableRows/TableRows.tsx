@@ -200,7 +200,51 @@ export const analysesPagesRows = [
   { id: 18, name: '404', linkName: '404' },
 ];
 
+export const advertisementsRows = [
+  { id: 0, name: 'Оголошення над хедером', linkName: 'headerAdvertisement' },
+  { id: 1, name: 'Оголошення в каталозі', linkName: 'catalogAdvertisement' },
+];
+
 export const FAQRows = [
+  {
+    id: 1,
+    name: 'Тут буде довге питання, щоб зрозуміти, як все працює. Якщо так сподобається - то ми так і залишимо. Сподіваюсь, що все сподобається!',
+  },
+  {
+    id: 2,
+    name: 'Рандомне питання 2',
+  },
+  {
+    id: 3,
+    name: 'Рандомне питання 3',
+  },
+  {
+    id: 4,
+    name: 'Рандомне питання 4',
+  },
+  {
+    id: 5,
+    name: 'Рандомне питання 5',
+  },
+  {
+    id: 6,
+    name: 'Рандомне питання 6',
+  },
+  {
+    id: 7,
+    name: 'Рандомне питання 7',
+  },
+  {
+    id: 8,
+    name: 'Рандомне питання 8',
+  },
+  {
+    id: 9,
+    name: 'Рандомне питання 9',
+  },
+];
+
+export const vacanciesRows = [
   {
     id: 1,
     name: 'Тут буде довге питання, щоб зрозуміти, як все працює. Якщо так сподобається - то ми так і залишимо. Сподіваюсь, що все сподобається!',
@@ -323,6 +367,168 @@ export const newsRows = [
     name: 'Some text 11',
     active: true,
     creationDate: '2023-01-19',
+  },
+];
+
+export const actionsRows = [
+  {
+    id: 0,
+    image: img1,
+    name: 'Some text0',
+    active: true,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 1,
+    image: img1,
+    name: 'Some text1',
+    active: true,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 2,
+    image: img1,
+    name: 'Some text2',
+    active: true,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 3,
+    image: img1,
+    name: 'Some text3',
+    active: false,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 4,
+    image: img1,
+    name: 'Some text4',
+    active: true,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 5,
+    image: img1,
+    name: 'Some text5',
+    active: false,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 6,
+    image: img1,
+    name: 'Some text6',
+    active: true,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 7,
+    image: img1,
+    name: 'Some text7',
+    active: true,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 8,
+    image: img1,
+    name: 'Some text8',
+    active: true,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 9,
+    image: img1,
+    name: 'Some text9',
+    active: true,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 10,
+    image: img1,
+    name: 'Some text 10',
+    active: true,
+    endDate: '2023-01-19',
+  },
+  {
+    id: 11,
+    image: img1,
+    name: 'Some text 11',
+    active: true,
+    endDate: '2023-01-19',
+  },
+];
+
+export const feedbacksRows = [
+  {
+    id: 0,
+    name: 'Константин Лиходеев',
+    active: true,
+    date: '2023-01-19',
+  },
+  {
+    id: 1,
+    name: 'Ольга Мазур',
+    active: true,
+    date: '2023-01-19',
+  },
+  {
+    id: 2,
+    name: 'Николай',
+    active: true,
+    date: '2023-01-19',
+  },
+  {
+    id: 3,
+    name: 'Some text3',
+    active: false,
+    date: '2023-01-19',
+  },
+  {
+    id: 4,
+    name: 'Some text4',
+    active: true,
+    date: '2023-01-19',
+  },
+  {
+    id: 5,
+    name: 'Some text5',
+    active: false,
+    date: '2023-01-19',
+  },
+  {
+    id: 6,
+    name: 'Some text6',
+    active: true,
+    date: '2023-01-19',
+  },
+  {
+    id: 7,
+    name: 'Some text7',
+    active: true,
+    date: '2023-01-19',
+  },
+  {
+    id: 8,
+    name: 'Some text8',
+    active: true,
+    date: '2023-01-19',
+  },
+  {
+    id: 9,
+    name: 'Some text9',
+    active: true,
+    date: '2023-01-19',
+  },
+  {
+    id: 10,
+    name: 'Some text 10',
+    active: true,
+    date: '2023-01-19',
+  },
+  {
+    id: 11,
+    name: 'Some text 11',
+    active: true,
+    date: '2023-01-19',
   },
 ];
 

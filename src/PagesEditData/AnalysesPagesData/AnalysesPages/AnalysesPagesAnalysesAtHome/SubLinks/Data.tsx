@@ -125,10 +125,6 @@ export const Data: React.FC<IDataProps> = ({
                     value: (e.target as HTMLInputElement).value,
                   };
                 }
-                //   return {
-                //     ...subItem,
-                //     value: (e.target as HTMLInputElement).value,
-                //   };
               } else {
                 return subItem;
               }

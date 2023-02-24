@@ -24,6 +24,7 @@ interface IPagesDataCommonProps {
   visibilityIcon?: boolean;
   noDeleteIcon?: boolean;
   noBackIcon?: boolean;
+  noSaveIcon?: boolean;
 }
 
 const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
@@ -36,6 +37,7 @@ const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
   visibilityIcon = false,
   noDeleteIcon = false,
   noBackIcon = false,
+  noSaveIcon = false,
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
   const { darkTheme } = useGlobalContext();
@@ -74,16 +76,18 @@ const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
               <VisibilityIcon />
             </IconButton>
           )}
-          <IconButton
-            className={classes.button}
-            size="small"
-            edge="start"
-            color="inherit"
-            aria-label="save"
-            onClick={() => handleClickOpenModal('save')}
-          >
-            <SaveIcon />
-          </IconButton>
+          {noSaveIcon ? null : (
+            <IconButton
+              className={classes.button}
+              size="small"
+              edge="start"
+              color="inherit"
+              aria-label="save"
+              onClick={() => handleClickOpenModal('save')}
+            >
+              <SaveIcon />
+            </IconButton>
+          )}
           {noDeleteIcon ? null : (
             <IconButton
               className={classes.button}

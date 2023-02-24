@@ -23,6 +23,15 @@ import RobotsTxtData from '../../PagesEditData/RobotsTxtData';
 import RedirectsPage from '../../Pages/RedirectsPage';
 import RedirectsData from '../../PagesEditData/RedirectsData';
 import GTMData from '../../PagesEditData/GTMData';
+import AdvertisementsPage from '../../Pages/AdvertisementsPage';
+import AdvertisementsData from '../../PagesEditData/AdvertisementsData';
+import ActionsPage from '../../Pages/ActionsPage';
+import ActionsData from '../../PagesEditData/ActionsData';
+import VacanciesPage from '../../Pages/VacanciesPage';
+import VacanciesData from '../../PagesEditData/VacanciesData';
+import ShortcodesData from '../../PagesEditData/ShortcodesData';
+import FeedbacksPage from '../../Pages/FeedbacksPage';
+import FeedbacksData from '../../PagesEditData/FeedbacksData';
 
 export const navBarMenuItems = [
   {
@@ -57,12 +66,12 @@ export const navBarMenuItems = [
         Component: AnalysesPackagesPage,
         DataComponent: AnalysesPackagesData,
       },
-      // {
-      //   name: 'Акції',
-      //   link: '/catalog/actions',
-      //   Component: AnalysesPage,
-      //   DataComponent: AnalysesData,
-      // },
+      {
+        name: 'Акції',
+        link: '/catalog/actions',
+        Component: ActionsPage,
+        DataComponent: ActionsData,
+      },
     ],
   },
   {
@@ -83,24 +92,30 @@ export const navBarMenuItems = [
         Component: FAQPage,
         DataComponent: FAQData,
       },
-      // {
-      //   name: 'Відгуки',
-      //   link: '/content/feedbacks',
-      // },
-      // {
-      //   name: 'Рекламні оголошення',
-      //   link: '/content/advertisements',
-      // },
+      {
+        name: 'Відгуки',
+        link: '/content/feedbacks',
+        Component: FeedbacksPage,
+        DataComponent: FeedbacksData,
+      },
+      {
+        name: 'Рекламні оголошення',
+        link: '/content/advertisements',
+        Component: AdvertisementsPage,
+        DataComponent: AdvertisementsData,
+      },
       {
         name: 'Новини',
         link: '/content/news',
         Component: NewsPage,
         DataComponent: NewsData,
       },
-      // {
-      //   name: 'Вакансії',
-      //   link: '/content/vacancies',
-      // },
+      {
+        name: 'Вакансії',
+        link: '/content/vacancies',
+        Component: VacanciesPage,
+        DataComponent: VacanciesData,
+      },
     ],
   },
   {
@@ -136,14 +151,15 @@ export const navBarMenuItems = [
       //   name: 'Користувачі',
       //   link: '/settings/users',
       // },
-      // {
-      //   name: 'Shortcodes',
-      //   link: '/settings/shortcodes',
-      // },
       {
         name: 'GTM',
         link: '/settings/GTM',
         Component: GTMData,
+      },
+      {
+        name: 'Shortcodes',
+        link: '/settings/shortcodes',
+        Component: ShortcodesData,
       },
     ],
   },

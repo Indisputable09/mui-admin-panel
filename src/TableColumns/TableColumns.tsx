@@ -178,6 +178,34 @@ export const analysesPagesColumns: GridColDef[] = [
   },
 ];
 
+export const advertisementsColumns: GridColDef[] = [
+  {
+    field: 'name',
+    headerName: 'Назва',
+    width: 910,
+    flex: 1,
+    editable: false,
+    sortable: false,
+  },
+  {
+    field: 'action',
+    headerName: 'Дія',
+    editable: false,
+    sortable: false,
+    headerAlign: 'center',
+    align: 'center',
+    disableColumnMenu: true,
+    renderCell: params => (
+      <BasicActions
+        id={params.row.id}
+        onlyEdit
+        pagesLinkName={params.row.linkName}
+      />
+    ),
+    width: 120,
+  },
+];
+
 export const newsColumns: GridColDef[] = [
   {
     field: 'id',
@@ -240,6 +268,115 @@ export const newsColumns: GridColDef[] = [
   },
 ];
 
+export const actionsColumns: GridColDef[] = [
+  {
+    field: 'id',
+    headerName: 'ID',
+    width: 50,
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'image',
+    headerName: 'Зображення',
+    width: 110,
+    editable: false,
+    headerAlign: 'center',
+    align: 'center',
+    renderCell: params => {
+      return (
+        <div>
+          <img src={params.row.image} alt={params.row.name} width="60" />
+        </div>
+      );
+    },
+  },
+  {
+    field: 'name',
+    headerName: 'Назва',
+    width: 910,
+    flex: 1,
+    editable: false,
+  },
+  {
+    field: 'active',
+    headerName: 'Активна',
+    width: 80,
+    editable: false,
+    renderCell: params => {
+      return <ControlledSwitch status={params.row.active} />;
+    },
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'endDate',
+    headerName: 'Дата закінчення',
+    width: 150,
+    editable: false,
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'actions',
+    headerName: 'Дії',
+    editable: false,
+    sortable: false,
+    headerAlign: 'center',
+    align: 'center',
+    disableColumnMenu: true,
+    renderCell: params => <BasicActions id={params.row.id} />,
+    width: 120,
+  },
+];
+
+export const feedbacksColumns: GridColDef[] = [
+  {
+    field: 'id',
+    headerName: 'ID',
+    width: 50,
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'name',
+    headerName: 'Назва',
+    width: 910,
+    flex: 1,
+    editable: false,
+  },
+  {
+    field: 'active',
+    headerName: 'Активна',
+    width: 80,
+    editable: false,
+    renderCell: params => {
+      return <ControlledSwitch status={params.row.active} />;
+    },
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'date',
+    headerName: 'Дата',
+    width: 150,
+    editable: false,
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'actions',
+    headerName: 'Дії',
+    editable: false,
+    sortable: false,
+    headerAlign: 'center',
+    align: 'center',
+    disableColumnMenu: true,
+    renderCell: params => <BasicActions id={params.row.id} />,
+    width: 120,
+  },
+];
+
 export const languagesColumns: GridColDef[] = [
   {
     field: 'id',
@@ -269,6 +406,34 @@ export const languagesColumns: GridColDef[] = [
 ];
 
 export const FAQColumns: GridColDef[] = [
+  {
+    field: 'id',
+    headerName: 'ID',
+    width: 50,
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'name',
+    headerName: 'Назва',
+    width: 910,
+    flex: 1,
+    editable: false,
+  },
+  {
+    field: 'actions',
+    headerName: 'Дії',
+    editable: false,
+    sortable: false,
+    disableColumnMenu: true,
+    renderCell: params => <BasicActions id={params.row.id} />,
+    width: 120,
+    headerAlign: 'center',
+    align: 'center',
+  },
+];
+
+export const vacanciesColumns: GridColDef[] = [
   {
     field: 'id',
     headerName: 'ID',

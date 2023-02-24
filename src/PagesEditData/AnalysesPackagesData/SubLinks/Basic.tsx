@@ -223,11 +223,6 @@ export const Basic: React.FC<IBasicProps> = ({
                         'description',
                         descriptionIndex
                       )}
-                      // onChange={handleTabsChange(
-                      //   index,
-                      //   'description',
-                      //   descriptionIndex
-                      // )}
                     />
                   )}
                 </React.Fragment>

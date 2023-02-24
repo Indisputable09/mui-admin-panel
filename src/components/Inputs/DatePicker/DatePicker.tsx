@@ -12,6 +12,7 @@ import { usePagesDataCommonStyles } from '../../../PagesEditData/PagesDataCommon
 interface IDatePickerProps {
   darkTheme: boolean;
   noLabel?: boolean;
+  label: string;
   noMaxDate?: boolean;
   className?: any;
   value?: Date | Dayjs | null;
@@ -23,6 +24,7 @@ interface IDatePickerProps {
 
 const DatePicker: React.FC<IDatePickerProps> = ({
   darkTheme,
+  label,
   noLabel = false,
   noMaxDate = false,
   className,
@@ -55,7 +57,7 @@ const DatePicker: React.FC<IDatePickerProps> = ({
               <InputLabel
                 className={cx(classes.noMarginLabel, darkTheme ? 'dark' : null)}
               >
-                Дата публікації
+                {label}
                 <StyledField
                   {...params}
                   helperText={null}

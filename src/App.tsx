@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Header from './components/Header';
 import NavBar from './components/NavBar';
 import { GlobalContext } from './hooks/GlobalContext';
 import Dashboard from './Pages/Dashboard';
+import LoginPage from './Pages/LoginPage';
 import { routes } from './routes';
 
 export const App: React.FC = () => {
@@ -23,13 +23,9 @@ export const App: React.FC = () => {
   return (
     <>
       <GlobalContext.Provider value={{ darkTheme }}>
-        <Header
-          toggleDrawer={toggleDrawer}
-          openDrawer={openDrawer}
-          darkTheme={darkTheme}
-        />
         <BrowserRouter basename='/mui-admin-panel/'>
           <Routes>
+            <Route path="/login" element={<LoginPage />} />
             <Route
               path="/"
               element={

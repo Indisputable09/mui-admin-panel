@@ -45,7 +45,7 @@ const GTMData: React.FC<IGTMDataProps> = ({
   return (
     <>
       <PagesDataCommon
-        chosenRowItem={{ name: 'GTM', id: nanoid() }}
+        chosenRowItem={{ name: pageName, id: nanoid() }}
         handleClickOpenModal={handleClickOpenModal}
         linksData={{
           link,
