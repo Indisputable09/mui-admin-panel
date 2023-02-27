@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Checkbox from '@mui/material/Checkbox';
+import { authUser } from '../services/auth';
 
 interface LoginPageProps {}
 
@@ -34,6 +35,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    authUser({ email, password });
     console.log('Send data to server');
   };
 
