@@ -7,28 +7,31 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import LoginIcon from '@mui/icons-material/Login';
 import Button from '@mui/material/Button';
 import { useHeaderStyles } from './Header.styles';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Link } from 'react-router-dom';
 
 interface HeaderProps {
   toggleDrawer: (open: boolean) => void;
   openDrawer: boolean;
   darkTheme: boolean;
+  setLoggedIn: (user: boolean) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
   toggleDrawer,
   openDrawer,
   darkTheme,
+  setLoggedIn,
 }) => {
   const { classes, cx } = useHeaderStyles();
-  const [auth, setAuth] = React.useState(true);
 
   const handleClickAuth = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAuth(!auth);
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    setLoggedIn(false);
   };
 
   return (
@@ -50,80 +53,68 @@ const Header: React.FC<HeaderProps> = ({
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/my-test-with-mui/"
-            className={cx(classes.logo, darkTheme ? 'dark' : null)}
+            component="p"
+            // className={cx(classes.logo, darkTheme ? 'dark' : null)}
           >
-            LOGO
-          </Typography>
-          {auth ? (
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                ml: 'auto',
-              }}
+            <Link
+              to="/dashboard"
+              className={cx(classes.logo, darkTheme ? 'dark' : null)}
             >
-              <Button
-                variant="outlined"
-                className={cx(classes.cashButton, darkTheme ? 'dark' : null)}
-              >
-                Очистити кеш
-              </Button>
-              <IconButton
-                aria-label="show new notifications"
-                color="inherit"
-                className={cx(
-                  classes.headerNotificationsButton,
-                  darkTheme ? 'dark' : null
-                )}
-              >
-                <Badge badgeContent={17} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-                className={cx(
-                  classes.headerAccountIconButton,
-                  darkTheme ? 'dark' : null
-                )}
-              >
-                <AccountCircle style={{ width: '40px', height: '40px' }} />
-              </IconButton>
+              LOGO
+            </Link>
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              ml: 'auto',
+            }}
+          >
+            <Button
+              variant="outlined"
+              className={cx(classes.cashButton, darkTheme ? 'dark' : null)}
+            >
+              Очистити кеш
+            </Button>
+            <IconButton
+              aria-label="show new notifications"
+              color="inherit"
+              className={cx(
+                classes.headerNotificationsButton,
+                darkTheme ? 'dark' : null
+              )}
+            >
+              <Badge badgeContent={17} color="error">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              color="inherit"
+              className={cx(
+                classes.headerAccountIconButton,
+                darkTheme ? 'dark' : null
+              )}
+            >
+              <AccountCircle style={{ width: '40px', height: '40px' }} />
+            </IconButton>
 
-              <Box className={classes.credentials}>
-                <Typography
-                  component="p"
-                  className={cx(classes.userName, darkTheme ? 'dark' : null)}
-                >
-                  Austin Robertson
-                </Typography>
-                <Typography
-                  component="p"
-                  className={cx(classes.userEmail, darkTheme ? 'dark' : null)}
-                >
-                  user@mail.com
-                </Typography>
-              </Box>
-              <IconButton
-                aria-label="logout"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleClickAuth}
-                color="inherit"
-                className={cx(
-                  classes.headerLoginButton,
-                  darkTheme ? 'dark' : null
-                )}
+            <Box className={classes.credentials}>
+              <Typography
+                component="p"
+                className={cx(classes.userName, darkTheme ? 'dark' : null)}
               >
-                <LogoutIcon />
-              </IconButton>
+                Austin Robertson
+              </Typography>
+              <Typography
+                component="p"
+                className={cx(classes.userEmail, darkTheme ? 'dark' : null)}
+              >
+                user@mail.com
+              </Typography>
             </Box>
-          ) : (
             <IconButton
               aria-label="logout"
               aria-controls="menu-appbar"
@@ -131,13 +122,13 @@ const Header: React.FC<HeaderProps> = ({
               onClick={handleClickAuth}
               color="inherit"
               className={cx(
-                classes.headerLogoutButton,
+                classes.headerLoginButton,
                 darkTheme ? 'dark' : null
               )}
             >
-              <LoginIcon />
+              <LogoutIcon />
             </IconButton>
-          )}
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>

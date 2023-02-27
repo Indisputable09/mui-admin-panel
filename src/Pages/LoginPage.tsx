@@ -13,11 +13,13 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Checkbox from '@mui/material/Checkbox';
 import { authUser } from '../services/auth';
 
-interface LoginPageProps {}
+interface LoginPageProps {
+  setLoggedIn: (user: boolean) => void;
+}
 
 const theme = createTheme();
 
-const LoginPage: React.FC<LoginPageProps> = () => {
+const LoginPage: React.FC<LoginPageProps> = ({ setLoggedIn }) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [remember, setRemember] = React.useState(false);
@@ -33,15 +35,33 @@ const LoginPage: React.FC<LoginPageProps> = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    authUser({ email, password });
-    console.log('Send data to server');
+    try {
+      const user: { status: string; message: string; token: string } =
+        await authUser({ email, password });
+      if (remember) {
+        localStorage.setItem('token', user.token);
+      } else {
+        sessionStorage.setItem('token', user.token);
+      }
+      setLoggedIn(true);
+    } catch (error) {}
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
+  const handleKeyPress = async (e: React.KeyboardEvent<HTMLFormElement>) => {
     if ('Enter' === e.key) {
-      console.log('Send data to server');
+      e.preventDefault();
+      try {
+        const user: { status: string; message: string; token: string } =
+          await authUser({ email, password });
+        if (remember) {
+          localStorage.setItem('token', user.token);
+        } else {
+          sessionStorage.setItem('token', user.token);
+        }
+        setLoggedIn(true);
+      } catch (error) {}
     }
   };
 

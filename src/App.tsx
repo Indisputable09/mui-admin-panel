@@ -5,11 +5,18 @@ import { GlobalContext } from './hooks/GlobalContext';
 import Dashboard from './Pages/Dashboard';
 import LoginPage from './Pages/LoginPage';
 import { routes } from './routes';
+import PrivateRoute from './routes/PrivateRoute';
+import PublicRoute from './routes/PublicRoute';
 
 export const App: React.FC = () => {
   const [openDrawer, setOpenDrawer] = React.useState<boolean>(true);
   const [darkTheme, setDarkTheme] = React.useState<boolean>(
     localStorage.getItem('THEME_MODE') === 'dark' ? true : false ?? false
+  );
+  const [loggedIn, setLoggedIn] = React.useState<boolean>(
+    localStorage.getItem('token') || sessionStorage.getItem('token')
+      ? true
+      : false
   );
 
   const handleThemeClick = () => {
@@ -23,18 +30,20 @@ export const App: React.FC = () => {
   return (
     <>
       <GlobalContext.Provider value={{ darkTheme }}>
-        <BrowserRouter basename='/mui-admin-panel/'>
+        <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
             <Route
               path="/"
               element={
-                <NavBar
-                  toggleDrawer={toggleDrawer}
-                  openDrawer={openDrawer}
-                  handleThemeClick={handleThemeClick}
-                  darkTheme={darkTheme}
-                />
+                <PrivateRoute user={loggedIn} redirectTo={'/login'}>
+                  <NavBar
+                    toggleDrawer={toggleDrawer}
+                    openDrawer={openDrawer}
+                    handleThemeClick={handleThemeClick}
+                    darkTheme={darkTheme}
+                    setLoggedIn={setLoggedIn}
+                  />
+                </PrivateRoute>
               }
             >
               <Route index element={<Dashboard />} />
@@ -44,6 +53,16 @@ export const App: React.FC = () => {
               })}
               <Route path="*" element={<h1>Error when no link is found</h1>} />
             </Route>
+
+            <Route
+              path="/login"
+              element={
+                <PublicRoute restricted redirectTo="/dashboard" user={loggedIn}>
+                  <LoginPage setLoggedIn={setLoggedIn} />
+                </PublicRoute>
+              }
+            />
+            <Route path="*" element={<h1>Error when no link is found</h1>} />
           </Routes>
         </BrowserRouter>
       </GlobalContext.Provider>

@@ -12,6 +12,7 @@ interface INavBarProps {
   openDrawer: boolean;
   handleThemeClick: () => void;
   darkTheme: boolean;
+  setLoggedIn: (user: boolean) => void;
 }
 
 const NavBar: React.FC<INavBarProps> = ({
@@ -19,6 +20,7 @@ const NavBar: React.FC<INavBarProps> = ({
   openDrawer,
   handleThemeClick,
   darkTheme,
+  setLoggedIn,
 }) => {
   const { classes, cx } = useNavBarStyles();
   const location = useLocation();
@@ -30,6 +32,7 @@ const NavBar: React.FC<INavBarProps> = ({
         toggleDrawer={toggleDrawer}
         openDrawer={openDrawer}
         darkTheme={darkTheme}
+        setLoggedIn={setLoggedIn}
       />
       <div className={cx('App', classes.root)}>
         <CssBaseline />
