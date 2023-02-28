@@ -237,18 +237,18 @@ export const newsColumns: GridColDef[] = [
     editable: false,
   },
   {
-    field: 'active',
+    field: 'published',
     headerName: 'Активна',
     width: 80,
     editable: false,
     renderCell: params => {
-      return <ControlledSwitch status={params.row.active} />;
+      return <ControlledSwitch status={params.row.published} />;
     },
     headerAlign: 'center',
     align: 'center',
   },
   {
-    field: 'creationDate',
+    field: 'publicationDate',
     headerName: 'Дата створення',
     width: 150,
     editable: false,

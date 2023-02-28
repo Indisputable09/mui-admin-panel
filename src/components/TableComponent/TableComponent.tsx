@@ -30,7 +30,8 @@ export interface IRow {
 interface ITableComponentProps {
   darkTheme: boolean;
   columns: GridColDef[];
-  rows: IRow[];
+  rows: IRow[] | null;
+  // rows: any;
   page?: string;
   noCheckAll?: boolean;
   noCopy?: boolean;
@@ -61,21 +62,27 @@ const TableComponent: React.FC<ITableComponentProps> = ({
 
   const createFilter = () => {
     const normalizedFilterValue = filter.toLocaleLowerCase();
-    const filteredRows = rows.filter(row => {
-      if (row.name) {
-        return row.name.toLocaleLowerCase().includes(normalizedFilterValue);
-      } else if (row.from) {
-        return row.from.toLocaleLowerCase().includes(normalizedFilterValue);
-      } else return row;
-    });
-    return filteredRows;
+    if (rows) {
+      const filteredRows = rows.filter((row: any) => {
+        if (row.name) {
+          return row.name.toLocaleLowerCase().includes(normalizedFilterValue);
+        } else if (row.from) {
+          return row.from.toLocaleLowerCase().includes(normalizedFilterValue);
+        } else return row;
+      });
+      return filteredRows;
+    }
   };
 
   const filteredRows = createFilter();
 
   const onRowsSelectionHandler = (ids: number[]) => {
-    const selectedRowsData = ids.map(id => rows.find(row => row.id === id));
-    setSelectedRows(selectedRowsData as IRow[]);
+    if (rows) {
+      const selectedRowsData = ids.map(id =>
+        rows.find((row: any) => row.id === id)
+      );
+      setSelectedRows(selectedRowsData as IRow[]);
+    }
   };
 
   const { classes, cx } = useTableComponentStyles();
@@ -144,7 +151,8 @@ const TableComponent: React.FC<ITableComponentProps> = ({
         // columnVisibilityModel={{
         //   image: showImgColumn,
         // }}
-        rows={filteredRows}
+        // rows={rows || []}
+        rows={filteredRows || []}
         columns={columns}
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}

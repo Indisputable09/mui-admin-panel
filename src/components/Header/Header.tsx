@@ -12,6 +12,8 @@ import { useHeaderStyles } from './Header.styles';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link } from 'react-router-dom';
+import { fetchUserData, token } from '../../services/authAPI';
+import Modal from '../Modal';
 
 interface HeaderProps {
   toggleDrawer: (open: boolean) => void;
@@ -27,12 +29,42 @@ const Header: React.FC<HeaderProps> = ({
   setLoggedIn,
 }) => {
   const { classes, cx } = useHeaderStyles();
+  const [userData, setUserData] = React.useState<{
+    email: string;
+    name: string;
+  }>({ email: '', name: '' });
+  const [openLogOutModal, setOpenLogOutModal] = React.useState<boolean>(false);
+
+  const handleClickOpenModal = () => {
+    setOpenLogOutModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenLogOutModal(false);
+  };
 
   const handleClickAuth = (event: React.MouseEvent<HTMLButtonElement>) => {
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
-    setLoggedIn(false);
+    handleClickOpenModal();
   };
+
+  React.useEffect(() => {
+    if (localStorage.getItem('token')) {
+      const userToken = localStorage.getItem('token');
+      token.set(userToken);
+    } else if (sessionStorage.getItem('token')) {
+      const userToken = sessionStorage.getItem('token');
+      token.set(userToken);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const userCredentials = await fetchUserData();
+      console.log('userCredentials:', userCredentials);
+      setUserData(userCredentials);
+    };
+    fetchData();
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -106,13 +138,13 @@ const Header: React.FC<HeaderProps> = ({
                 component="p"
                 className={cx(classes.userName, darkTheme ? 'dark' : null)}
               >
-                Austin Robertson
+                {userData.name}
               </Typography>
               <Typography
                 component="p"
                 className={cx(classes.userEmail, darkTheme ? 'dark' : null)}
               >
-                user@mail.com
+                {userData.email}
               </Typography>
             </Box>
             <IconButton
@@ -131,6 +163,14 @@ const Header: React.FC<HeaderProps> = ({
           </Box>
         </Toolbar>
       </AppBar>
+      {openLogOutModal && (
+        <Modal
+          shouldOpenModal={openLogOutModal}
+          handleCloseModal={handleCloseModal}
+          setLoggedIn={setLoggedIn}
+          type={'logout'}
+        />
+      )}
     </Box>
   );
 };

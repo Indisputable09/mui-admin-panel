@@ -15,7 +15,7 @@ interface IDatePickerProps {
   label: string;
   noMaxDate?: boolean;
   className?: any;
-  value?: Date | Dayjs | null;
+  value?: Date | Dayjs | null | string;
   onChange: (
     newValue: Date | Dayjs | null,
     keyboardInputValue?: string | undefined

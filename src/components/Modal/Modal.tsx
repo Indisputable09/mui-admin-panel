@@ -5,6 +5,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
+import { toast } from 'react-toastify';
+import { token } from '../../services/authAPI';
 import { useNavigate } from 'react-router-dom';
 
 const Transition = React.forwardRef(function Transition(
@@ -22,6 +24,7 @@ interface IModalProps {
   type?: string;
   link?: string;
   dataToSend?: any;
+  setLoggedIn?: (user: boolean) => void;
 }
 
 const Modal: React.FC<IModalProps> = ({
@@ -30,6 +33,7 @@ const Modal: React.FC<IModalProps> = ({
   type = 'delete',
   link,
   dataToSend,
+  setLoggedIn,
 }) => {
   const navigate = useNavigate();
 
@@ -41,6 +45,13 @@ const Modal: React.FC<IModalProps> = ({
     }
     if (link) {
       navigate(link);
+    }
+    if (type === 'logout' && setLoggedIn) {
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
+      token.unset();
+      setLoggedIn(false);
+      toast.success('Ви успішно вийшли!');
     }
   };
 
@@ -64,6 +75,7 @@ const Modal: React.FC<IModalProps> = ({
           {type === 'save' && 'Ви впевнені, що хочете зберегти?'}
           {type === 'back' &&
             'Змінені дані не будуть збережені. Бажаєте покинути сторінку?'}
+          {type === 'logout' && 'Ви впевнені, що хочете вийти?'}
         </DialogTitle>
         <DialogActions sx={{}}>
           <Button

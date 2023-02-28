@@ -2,11 +2,13 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { Basic, Data, SEO } from './Sublinks';
 import Modal from '../../components/Modal';
-import { useLocation, useParams } from 'react-router-dom';
-import { newsRows } from '../../TableRows/TableRows';
+import { useParams } from 'react-router-dom';
 import PagesDataCommon from '../PagesDataCommon';
 import { useGlobalContext } from '../../hooks/GlobalContext';
-import dayjs from 'dayjs';
+import { fetchNewsById } from '../../services/newsAPI';
+import { INews } from '../../types/newsTypes';
+import Loader from '../../components/Loader';
+import { Status } from '../../constants';
 
 interface IAnalysesDataProps {
   initialLink: string;
@@ -30,80 +32,68 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
   pageName,
   parentPageName,
 }) => {
+  const { idle, pending, resolved, rejected } = Status;
+  const currentDay = new Date().toISOString().slice(0, 10);
   const { darkTheme } = useGlobalContext();
   const [linkId, setLinkId] = React.useState<number>(1);
   const [openBackModal, setOpenBackModal] = React.useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = React.useState<boolean>(false);
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
+  const [status, setStatus] = React.useState(idle);
+  const [fieldsValues, setFieldsValues] = React.useState<INews>({
+    name: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    shortDescription: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    description: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    image: null,
+    published: false,
+    publicationDate: currentDay,
+    url: '',
+    recommendedNews: null,
+    metaTitle: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    metaDescription: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    indexed: true,
+  });
+  const [chosenNewsName, setChosenNewsName] = React.useState<string>('');
 
   const { id } = useParams();
-  const location = useLocation();
-  const activePath = location.pathname.split('/');
-  const chosenAction = activePath[activePath.length - 1];
-  const chosenNews = newsRows.find(row => row.id === Number(id));
 
-  const currentDay = dayjs(new Date().toISOString().slice(0, 10));
+  React.useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        try {
+          setStatus(pending);
+          const newsById = await fetchNewsById(id as string);
+          setFieldsValues(newsById);
+          setStatus(resolved);
+        } catch (error) {
+          setStatus(rejected);
+        }
+      };
+      fetchData();
+    }
+  }, [id, pending, rejected, resolved]);
 
-  const [fieldsValues, setFieldsValues] = React.useState(
-    chosenNews && chosenAction === 'edit'
-      ? {
-          name: [
-            { code: 'uk', value: 'ukr value' },
-            { code: 'en', value: 'eng value' },
-          ],
-          shortDescription: [
-            { code: 'uk', value: 'ukr shortDescription' },
-            { code: 'en', value: 'eng shortDescription' },
-          ],
-          description: [
-            { code: 'uk', value: 'ukr description' },
-            { code: 'en', value: 'eng description' },
-          ],
-          image: null,
-          published: false,
-          publicationDate: currentDay.toDate(),
-          url: 'url',
-          recommendedNews: [],
-          metaTitle: [
-            { code: 'uk', value: 'ukr metaTitle' },
-            { code: 'en', value: 'eng metaTitle' },
-          ],
-          metaDescription: [
-            { code: 'uk', value: 'ukr metaDescription' },
-            { code: 'en', value: 'eng metaDescription' },
-          ],
-          indexed: true,
-        }
-      : {
-          name: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          shortDescription: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          description: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          image: null,
-          published: false,
-          publicationDate: currentDay.toDate(),
-          url: 'url',
-          recommendedNews: [],
-          metaTitle: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          metaDescription: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          indexed: true,
-        }
-  );
-  console.log('fieldsValues', fieldsValues);
+  React.useEffect(() => {
+    if (fieldsValues) {
+      const ukName = fieldsValues.name.find(item => item.code === 'uk');
+      setChosenNewsName(ukName!.value);
+    }
+  }, [fieldsValues]);
 
   const handleClickOpenModal = (variant: string) => {
     if (variant === 'back') {
@@ -127,77 +117,81 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
 
   return (
     <Box>
-      <PagesDataCommon
-        chosenRowItem={chosenNews}
-        handleClickOpenModal={handleClickOpenModal}
-        links={links}
-        linkId={linkId}
-        handleClickLink={handleClickLink}
-        linksData={{
-          link: initialLink,
-          name: chosenNews ? chosenNews.name : null,
-          pageName,
-          parentPageName,
-        }}
-        visibilityIcon
-      />
-      <Box
-        component="form"
-        noValidate
-        autoComplete="off"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          pt: '24px',
-          pb: '48px',
-        }}
-      >
-        {linkId === 1 && (
-          <Basic
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-            languages={languages}
+      {status === pending && <Loader />}
+      {status !== pending && status !== rejected && (
+        <>
+          <PagesDataCommon
+            handleClickOpenModal={handleClickOpenModal}
+            links={links}
+            linkId={linkId}
+            handleClickLink={handleClickLink}
+            linksData={{
+              link: initialLink,
+              name: chosenNewsName ? chosenNewsName : null,
+              pageName,
+              parentPageName,
+            }}
+            visibilityIcon
           />
-        )}
-        {linkId === 2 && (
-          <Data
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-          />
-        )}
-        {linkId === 3 && (
-          <SEO
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-            languages={languages}
-          />
-        )}
-      </Box>
-      {openBackModal && (
-        <Modal
-          shouldOpenModal={openBackModal}
-          handleCloseModal={handleCloseModal}
-          type={'back'}
-          link={initialLink}
-        />
-      )}
-      {openDeleteModal && (
-        <Modal
-          shouldOpenModal={openDeleteModal}
-          handleCloseModal={handleCloseModal}
-          type={'delete'}
-        />
-      )}
-      {openSaveModal && (
-        <Modal
-          shouldOpenModal={openSaveModal}
-          handleCloseModal={handleCloseModal}
-          type={'save'}
-          dataToSend={fieldsValues}
-        />
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              pt: '24px',
+              pb: '48px',
+            }}
+          >
+            {linkId === 1 && (
+              <Basic
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+                languages={languages}
+              />
+            )}
+            {linkId === 2 && (
+              <Data
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+              />
+            )}
+            {linkId === 3 && (
+              <SEO
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+                languages={languages}
+              />
+            )}
+          </Box>
+          {openBackModal && (
+            <Modal
+              shouldOpenModal={openBackModal}
+              handleCloseModal={handleCloseModal}
+              type={'back'}
+              link={initialLink}
+            />
+          )}
+          {openDeleteModal && (
+            <Modal
+              shouldOpenModal={openDeleteModal}
+              handleCloseModal={handleCloseModal}
+              type={'delete'}
+            />
+          )}
+          {openSaveModal && (
+            <Modal
+              shouldOpenModal={openSaveModal}
+              handleCloseModal={handleCloseModal}
+              type={'save'}
+              dataToSend={fieldsValues}
+            />
+          )}
+        </>
       )}
     </Box>
   );

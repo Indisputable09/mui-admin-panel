@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.min.css';
 import NavBar from './components/NavBar';
+import Toast from './components/Toast';
 import { GlobalContext } from './hooks/GlobalContext';
 import Dashboard from './Pages/Dashboard';
 import LoginPage from './Pages/LoginPage';
@@ -30,7 +32,8 @@ export const App: React.FC = () => {
   return (
     <>
       <GlobalContext.Provider value={{ darkTheme }}>
-        <BrowserRouter basename="/mui-admin-panel/">
+        <Toast />
+        <BrowserRouter>
           <Routes>
             <Route
               path="/"

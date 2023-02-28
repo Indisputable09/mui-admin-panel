@@ -10,7 +10,7 @@ import { usePagesDataCommonStyles } from './PagesDataCommon.styles';
 import { useGlobalContext } from '../../hooks/GlobalContext';
 
 interface IPagesDataCommonProps {
-  chosenRowItem: any;
+  chosenRowItem?: any;
   handleClickOpenModal: (variant: string) => void;
   linkId?: number;
   links?: { name: string; id: number }[];
@@ -28,7 +28,7 @@ interface IPagesDataCommonProps {
 }
 
 const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
-  chosenRowItem,
+  // chosenRowItem,
   handleClickOpenModal,
   linkId,
   links,
@@ -41,14 +41,15 @@ const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
   const { darkTheme } = useGlobalContext();
+
   return (
     <>
       <Box className={classes.panel}>
         <Box>
           <CollapsedBreadcrumbs linksData={linksData} darkTheme={darkTheme} />
-          {chosenRowItem && (
+          {linksData && (
             <Typography component="h2" className={classes.productTitle}>
-              {chosenRowItem.name || chosenRowItem.from}
+              {linksData.name}
             </Typography>
           )}
         </Box>

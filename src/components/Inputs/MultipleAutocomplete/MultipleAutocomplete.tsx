@@ -11,7 +11,7 @@ interface IMultipleAutocompleteProps {
   className?: string;
   darkTheme: boolean;
   onChange: (e: any, values: string[]) => void;
-  value: string[];
+  value: string[] | null;
 }
 
 const MultipleAutocomplete: React.FC<IMultipleAutocompleteProps> = ({
@@ -30,7 +30,7 @@ const MultipleAutocomplete: React.FC<IMultipleAutocompleteProps> = ({
 
   const handleDelete = (e: React.MouseEvent, itemToDelete: string) => {
     e.preventDefault();
-    const remainingItems = value.filter(item => item !== itemToDelete);
+    const remainingItems = value!.filter(item => item !== itemToDelete);
     onChange(e, remainingItems);
   };
 
@@ -42,9 +42,7 @@ const MultipleAutocomplete: React.FC<IMultipleAutocompleteProps> = ({
       options={list}
       className={className}
       onChange={handleChange}
-      value={value}
-      //   getOptionLabel={option => option.title}
-      //   defaultValue={[top100Films[13]]}
+      value={value ? value : []}
       renderInput={params => (
         <StyledField {...params} variant="outlined" darkTheme={darkTheme} />
       )}

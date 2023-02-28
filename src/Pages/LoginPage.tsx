@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Checkbox from '@mui/material/Checkbox';
-import { authUser } from '../services/auth';
+import { authUser } from '../services/authAPI';
 
 interface LoginPageProps {
   setLoggedIn: (user: boolean) => void;

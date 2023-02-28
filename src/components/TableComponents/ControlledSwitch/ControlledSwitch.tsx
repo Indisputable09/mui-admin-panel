@@ -9,21 +9,12 @@ interface IControlledSwitchProps {
 
 const ControlledSwitch: React.FC<IControlledSwitchProps> = ({ status }) => {
   const { darkTheme } = useGlobalContext();
-  // const [checked, setChecked] = React.useState<boolean>(
-  //   status === 'Active' ? true : false
-  // );
-  const [checked, setChecked] = React.useState<boolean>(status);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-  };
 
   const { classes, cx } = useControlledSwitchStyles();
 
   return (
     <Switch
-      checked={checked}
-      onChange={handleChange}
+      checked={status}
       inputProps={{ 'aria-label': 'controlled' }}
       color="success"
       className={cx(classes.switch, darkTheme ? 'dark' : null)}

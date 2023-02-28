@@ -22,9 +22,9 @@ interface IDataProps {
   fieldsValues: {
     image: any;
     published: boolean;
-    publicationDate: Date | Dayjs | null;
+    publicationDate: Date | Dayjs | null | string;
     url: string;
-    recommendedNews: string[];
+    recommendedNews: string[] | null;
   };
 }
 
@@ -44,7 +44,7 @@ export const Data: React.FC<IDataProps> = ({
     setFieldsValues((prevState: any) => {
       return {
         ...prevState,
-        [name]: newValue,
+        [name]: newValue?.toISOString().slice(0, 10),
       };
     });
   };
@@ -104,7 +104,16 @@ export const Data: React.FC<IDataProps> = ({
               border: '1px solid grey',
             }}
           >
-            {fieldsValues.image ? null : (
+            {fieldsValues.image ? (
+              <>
+                <img
+                  src={fieldsValues.image}
+                  alt={'test'}
+                  width="100%"
+                  height="100%"
+                />
+              </>
+            ) : (
               <IconButton onClick={() => console.log('Add img')}>
                 <AddIcon
                   className={cx(
@@ -135,7 +144,14 @@ export const Data: React.FC<IDataProps> = ({
                 edge="start"
                 color="inherit"
                 aria-label="delete"
-                onClick={() => console.log('Delete img')}
+                onClick={() => {
+                  return setFieldsValues((prevState: any) => {
+                    return {
+                      ...prevState,
+                      image: '',
+                    };
+                  });
+                }}
               >
                 <DeleteIcon
                   className={cx(classes.deleteIcon, darkTheme ? 'dark' : null)}
