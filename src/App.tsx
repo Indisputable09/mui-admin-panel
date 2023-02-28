@@ -33,7 +33,7 @@ export const App: React.FC = () => {
     <>
       <GlobalContext.Provider value={{ darkTheme }}>
         <Toast />
-        <BrowserRouter>
+        <BrowserRouter basename="/mui-admin-panel/">
           <Routes>
             <Route
               path="/"
