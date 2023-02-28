@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { InputLabel, List, ListItem, Typography } from '@mui/material';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../components/Inputs/StyledField';
@@ -34,6 +35,10 @@ export const Basic: React.FC<IBasicProps> = ({
   const [languageCode, setLanguageCode] = React.useState<string>(
     languages[0].code
   );
+
+  const location = useLocation();
+  const activePath = location.pathname.split('/');
+  const chosenAction = activePath[activePath.length - 1];
 
   const handleLanguageClick = (code: string) => {
     setLanguageCode(code as string);
@@ -143,12 +148,27 @@ export const Basic: React.FC<IBasicProps> = ({
       {fieldsValues.description.map((item, index) => {
         return (
           <React.Fragment key={index}>
-            {item.code === languageCode && (
-              <Editor
-                debug={false}
-                initData={item.value}
-                onChange={handleFieldsChange('description', index)}
-              />
+            {!!item.value && chosenAction === 'edit' && (
+              <React.Fragment>
+                {item.code === languageCode && (
+                  <Editor
+                    debug={false}
+                    initData={item.value}
+                    onChange={handleFieldsChange('description', index)}
+                  />
+                )}
+              </React.Fragment>
+            )}
+            {chosenAction === 'add' && (
+              <React.Fragment>
+                {item.code === languageCode && (
+                  <Editor
+                    debug={false}
+                    initData={item.value}
+                    onChange={handleFieldsChange('description', index)}
+                  />
+                )}
+              </React.Fragment>
             )}
           </React.Fragment>
         );
