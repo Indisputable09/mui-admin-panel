@@ -47,3 +47,10 @@ export const handleDeleteNews = async (id: string) => {
     toast.error('Щось пішло не так. Спробуйте ще раз');
   }
 };
+
+export const addNewNews = async (data: INews) => {
+  try {
+    const response = await axios.post('/news', data);
+    return response.data.data;
+  } catch (error) {}
+};
