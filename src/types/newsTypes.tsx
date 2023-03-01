@@ -8,7 +8,7 @@ export interface INews {
   published: boolean;
   publicationDate: Date | Dayjs | null | string;
   url: string;
-  recommendedNews: string[] | null;
+  recommendedNews: number[] | null;
   metaTitle: { code: string; value: string }[];
   metaDescription: { code: string; value: string }[];
   indexed: boolean;

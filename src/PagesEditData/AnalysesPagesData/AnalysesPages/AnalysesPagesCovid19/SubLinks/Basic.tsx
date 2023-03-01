@@ -1,10 +1,15 @@
 import React from 'react';
-import { Box, IconButton, InputLabel, Typography } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  // InputLabel,
+  Typography,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
-import MultipleAutocomplete from '../../../../../components/Inputs/MultipleAutocomplete';
+// import MultipleAutocomplete from '../../../../../components/Inputs/MultipleAutocomplete';
 
 interface IBasicProps {
   darkTheme: boolean;
@@ -15,8 +20,6 @@ interface IBasicProps {
     analyses: string[];
   };
 }
-
-const analyses = ['category1', 'category2', 'category3', 'Mobile phone'];
 
 export const Basic: React.FC<IBasicProps> = ({
   darkTheme,
@@ -165,7 +168,7 @@ export const Basic: React.FC<IBasicProps> = ({
           </Box>
         </Box>
       </Box>
-      <InputLabel
+      {/* <InputLabel
         htmlFor="category"
         className={cx(classes.label, darkTheme ? 'dark' : null, 'topMargin')}
       >
@@ -185,7 +188,7 @@ export const Basic: React.FC<IBasicProps> = ({
           }}
           value={fieldsValues.analyses}
         />
-      </InputLabel>
+      </InputLabel> */}
     </>
   );
 };

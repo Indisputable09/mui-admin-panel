@@ -2,7 +2,7 @@ import React from 'react';
 import { Checkbox, FormControlLabel, InputLabel, Switch } from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
-import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
+// import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
 
 interface IDataProps {
   darkTheme: boolean;
@@ -15,7 +15,6 @@ interface IDataProps {
     makeAtHome: boolean;
   };
 }
-const categories = ['category1', 'category2', 'category3', 'Mobile phone'];
 
 export const Data: React.FC<IDataProps> = ({
   darkTheme,
@@ -45,7 +44,7 @@ export const Data: React.FC<IDataProps> = ({
 
   return (
     <>
-      <InputLabel
+      {/* <InputLabel
         htmlFor="category"
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
@@ -67,7 +66,7 @@ export const Data: React.FC<IDataProps> = ({
           }}
           value={fieldsValues.category}
         />
-      </InputLabel>
+      </InputLabel> */}
       <InputLabel
         htmlFor="url"
         className={cx(classes.label, darkTheme ? 'dark' : null)}

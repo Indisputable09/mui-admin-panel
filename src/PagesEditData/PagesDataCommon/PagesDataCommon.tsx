@@ -93,6 +93,7 @@ const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
               aria-label="save"
               onClick={() => handleClickOpenModal('save')}
               disabled={!dataWasChanged}
+              type="submit"
             >
               <SaveIcon />
             </IconButton>

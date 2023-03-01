@@ -3,7 +3,7 @@ import {
   Box,
   FormControlLabel,
   IconButton,
-  InputLabel,
+  // InputLabel,
   Switch,
   Typography,
 } from '@mui/material';
@@ -12,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Dayjs } from 'dayjs';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
-import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
+// import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
 import DatePicker from '../../../components/Inputs/DatePicker';
 
 interface IGalleryProps {
@@ -25,8 +25,6 @@ interface IGalleryProps {
     published: boolean;
   };
 }
-
-const categories = ['category1', 'category2', 'category3', 'Mobile phone'];
 
 export const Data: React.FC<IGalleryProps> = ({
   darkTheme,
@@ -57,15 +55,15 @@ export const Data: React.FC<IGalleryProps> = ({
       });
     };
 
-  const handleAutocompleteChange =
-    (key: string) => (e: any, values: string[]) => {
-      setFieldsValues((prevState: any) => {
-        return {
-          ...prevState,
-          [key]: values,
-        };
-      });
-    };
+  // const handleAutocompleteChange =
+  //   (key: string) => (e: any, values: string[]) => {
+  //     setFieldsValues((prevState: any) => {
+  //       return {
+  //         ...prevState,
+  //         [key]: values,
+  //       };
+  //     });
+  //   };
 
   return (
     <>
@@ -134,7 +132,7 @@ export const Data: React.FC<IGalleryProps> = ({
           ) : null}
         </Box>
       </Box>
-      <InputLabel
+      {/* <InputLabel
         htmlFor="analyses"
         className={cx(classes.label, darkTheme ? 'dark' : null, 'topMargin')}
       >
@@ -147,7 +145,7 @@ export const Data: React.FC<IGalleryProps> = ({
           onChange={handleAutocompleteChange('analyses')}
           value={fieldsValues.analyses}
         />
-      </InputLabel>
+      </InputLabel> */}
       <DatePicker
         noMaxDate
         darkTheme={darkTheme}

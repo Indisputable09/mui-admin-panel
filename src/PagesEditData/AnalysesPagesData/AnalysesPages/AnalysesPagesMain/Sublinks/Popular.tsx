@@ -1,7 +1,7 @@
 import React from 'react';
-import { InputLabel } from '@mui/material';
-import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
-import MultipleAutocomplete from '../../../../../components/Inputs/MultipleAutocomplete';
+// import { InputLabel } from '@mui/material';
+// import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
+// import MultipleAutocomplete from '../../../../../components/Inputs/MultipleAutocomplete';
 
 interface IPopularProps {
   darkTheme: boolean;
@@ -14,28 +14,26 @@ interface IPopularProps {
   };
 }
 
-const categories = ['category1', 'category2', 'category3', 'Mobile phone'];
-
 export const Popular: React.FC<IPopularProps> = ({
   darkTheme,
   setFieldsValues,
   fieldsValues,
 }) => {
-  const { classes, cx } = usePagesDataCommonStyles();
+  // const { classes, cx } = usePagesDataCommonStyles();
 
-  const handleAutocompleteChange =
-    (key: string) => (e: any, values: string[]) => {
-      setFieldsValues((prevState: any) => {
-        return {
-          ...prevState,
-          [key]: values,
-        };
-      });
-    };
+  // const handleAutocompleteChange =
+  //   (key: string) => (e: any, values: string[]) => {
+  //     setFieldsValues((prevState: any) => {
+  //       return {
+  //         ...prevState,
+  //         [key]: values,
+  //       };
+  //     });
+  //   };
 
   return (
     <>
-      <InputLabel
+      {/* <InputLabel
         htmlFor="popularAnalyses"
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
@@ -48,8 +46,8 @@ export const Popular: React.FC<IPopularProps> = ({
           onChange={handleAutocompleteChange('popularAnalyses')}
           value={fieldsValues.popularAnalyses}
         />
-      </InputLabel>
-      <InputLabel
+      </InputLabel> */}
+      {/* <InputLabel
         htmlFor="popularAnalysesPackages"
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
@@ -62,8 +60,8 @@ export const Popular: React.FC<IPopularProps> = ({
           onChange={handleAutocompleteChange('popularAnalysesPackages')}
           value={fieldsValues.popularAnalysesPackages}
         />
-      </InputLabel>
-      <InputLabel
+      </InputLabel> */}
+      {/* <InputLabel
         htmlFor="actions"
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
@@ -76,8 +74,8 @@ export const Popular: React.FC<IPopularProps> = ({
           onChange={handleAutocompleteChange('actions')}
           value={fieldsValues.actions}
         />
-      </InputLabel>
-      <InputLabel
+      </InputLabel> */}
+      {/* <InputLabel
         htmlFor="news"
         className={cx(
           classes.label,
@@ -94,7 +92,7 @@ export const Popular: React.FC<IPopularProps> = ({
           onChange={handleAutocompleteChange('news')}
           value={fieldsValues.news}
         />
-      </InputLabel>
+      </InputLabel> */}
     </>
   );
 };

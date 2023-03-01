@@ -7,7 +7,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { toast } from 'react-toastify';
 import { token } from '../../services/authAPI';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useGlobalContext } from '../../hooks/GlobalContext';
 
 const Transition = React.forwardRef(function Transition(
@@ -26,7 +26,8 @@ interface IModalProps {
   link?: string;
   dataToSend?: any;
   setLoggedIn?: (user: boolean) => void;
-  handleSendData?: () => void;
+  handleEditData?: () => void;
+  handlePostData?: () => void;
   handleDeleteData?: () => void;
   dataWasChanged?: boolean;
 }
@@ -38,19 +39,31 @@ const Modal: React.FC<IModalProps> = ({
   link,
   dataToSend,
   setLoggedIn,
-  handleSendData,
+  handleEditData,
+  handlePostData,
   handleDeleteData,
   dataWasChanged,
 }) => {
   const navigate = useNavigate();
   const { rerenderComponent, setRerenderComponent } = useGlobalContext();
+  const location = useLocation();
+  const activePath = location.pathname.split('/');
+  const chosenAction = activePath[activePath.length - 1];
+
+  const handleSave = async () => {
+    try {
+      if (chosenAction === 'edit') {
+        handleEditData!();
+      } else {
+        handlePostData!();
+      }
+    } catch (error) {}
+  };
 
   const handleAgreeClick = async () => {
     handleCloseModal();
-    if (dataToSend && handleSendData) {
-      try {
-        handleSendData();
-      } catch (error) {}
+    if (dataToSend && handleEditData && handlePostData) {
+      handleSave();
     }
     if (link) {
       navigate(link);

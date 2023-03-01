@@ -3,25 +3,36 @@ import { Checkbox, FormControlLabel, InputLabel, Switch } from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
+import { fetchRecommendedNews } from '../../../services/newsAPI';
+import { useParams } from 'react-router-dom';
 
 interface IDataProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    category: string[];
+    category: number[] | null;
     url: string;
     code: string;
     published: boolean;
     makeAtHome: boolean;
   };
 }
-const categories = ['category1', 'category2', 'category3', 'Mobile phone'];
 
 export const Data: React.FC<IDataProps> = ({
   darkTheme,
   setFieldsValues,
   fieldsValues,
 }) => {
+  const [categoriesList, setCategoriesList] = React.useState([]);
+  const { id } = useParams();
+  React.useEffect(() => {
+    const getCategories = async () => {
+      const list = await fetchRecommendedNews(id);
+      setCategoriesList(list);
+    };
+    getCategories();
+  }, [id]);
+
   const handlePublishedChange =
     (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setFieldsValues((prevState: any) => {
@@ -41,6 +52,26 @@ export const Data: React.FC<IDataProps> = ({
     });
   };
 
+  const handleAutocompleteChange =
+    (key: string) => (e: any, values: { id: number; value: string }[]) => {
+      const chosenIds = values.map(item => item.id);
+      setFieldsValues((prevState: any) => {
+        return {
+          ...prevState,
+          [key]: chosenIds,
+        };
+      });
+    };
+
+  const getAutocompleteValue = () => {
+    const array = categoriesList.filter((item: any) =>
+      fieldsValues.category?.includes(item.id)
+    );
+    return array.map((obj: { id: number; value: string }) => obj.value);
+  };
+
+  const autocompleteValue = getAutocompleteValue();
+
   const { classes, cx } = usePagesDataCommonStyles();
 
   return (
@@ -53,19 +84,20 @@ export const Data: React.FC<IDataProps> = ({
           Категорія<span style={{ color: 'red', fontSize: '20px' }}>*</span>
         </div>
         <MultipleAutocomplete
-          list={categories}
+          list={categoriesList}
           darkTheme={darkTheme}
           id="category"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
-          onChange={(e: any, values: string[]) => {
-            setFieldsValues((prevState: any) => {
-              return {
-                ...prevState,
-                category: values,
-              };
-            });
-          }}
-          value={fieldsValues.category}
+          onChange={handleAutocompleteChange('category')}
+          // onChange={(e: any, values: string[]) => {
+          //   setFieldsValues((prevState: any) => {
+          //     return {
+          //       ...prevState,
+          //       category: values,
+          //     };
+          //   });
+          // }}
+          value={autocompleteValue}
         />
       </InputLabel>
       <InputLabel

@@ -7,10 +7,11 @@ import { StyledCustomPaper } from '../../../PagesEditData/AnalysesData/AnalysesD
 
 interface IMultipleAutocompleteProps {
   id: string;
-  list: string[];
+  // list: string[] ;
+  list: { id: number; value: string }[];
   className?: string;
   darkTheme: boolean;
-  onChange: (e: any, values: string[]) => void;
+  onChange: (e: any, values: { id: number; value: string }[]) => void;
   value: string[] | null;
 }
 
@@ -25,13 +26,17 @@ const MultipleAutocomplete: React.FC<IMultipleAutocompleteProps> = ({
   const { classes, cx } = useMultipleAutocompleteStyles();
 
   const handleChange = (event: any, values: string[]) => {
-    onChange(event, values as string[]);
+    const filteredArray = list.filter(item => values.includes(item.value));
+    onChange(event, filteredArray);
   };
 
   const handleDelete = (e: React.MouseEvent, itemToDelete: string) => {
     e.preventDefault();
     const remainingItems = value!.filter(item => item !== itemToDelete);
-    onChange(e, remainingItems);
+    const filteredArray = list.filter(item =>
+      remainingItems.includes(item.value)
+    );
+    onChange(e, filteredArray);
   };
 
   return (
@@ -39,7 +44,7 @@ const MultipleAutocomplete: React.FC<IMultipleAutocompleteProps> = ({
       multiple
       id={id}
       noOptionsText={<p>Відсутні результати</p>}
-      options={list}
+      options={list.map(item => item.value)}
       className={className}
       onChange={handleChange}
       value={value ? value : []}

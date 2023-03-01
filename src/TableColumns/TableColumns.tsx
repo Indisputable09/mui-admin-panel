@@ -269,7 +269,6 @@ export const newsColumns: GridColDef[] = [
         <BasicActions
           id={params.row.id}
           handleDeleteData={() => handleDeleteNews(params.row.id)}
-          // link=
         />
       );
     },

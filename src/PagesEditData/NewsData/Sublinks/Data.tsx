@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import {
   Box,
   FormControlLabel,
@@ -15,6 +15,8 @@ import StyledField from '../../../components/Inputs/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import DatePicker from '../../../components/Inputs/DatePicker';
 import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
+import { fetchRecommendedNews } from '../../../services/newsAPI';
+import { useParams } from 'react-router-dom';
 
 interface IDataProps {
   darkTheme: boolean;
@@ -24,11 +26,9 @@ interface IDataProps {
     published: boolean;
     publicationDate: Date | Dayjs | null | string;
     url: string;
-    recommendedNews: string[] | null;
+    recommendedNews: number[] | null;
   };
 }
-
-const categories = ['category1', 'category2', 'category3', 'Mobile phone'];
 
 export const Data: React.FC<IDataProps> = ({
   fieldsValues,
@@ -36,6 +36,16 @@ export const Data: React.FC<IDataProps> = ({
   darkTheme,
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
+  const { id } = useParams();
+  const [recommendedNewsList, setRecommendedNewsList] = React.useState([]);
+
+  React.useEffect(() => {
+    const getRecommendedNews = async () => {
+      const list = await fetchRecommendedNews(id);
+      setRecommendedNewsList(list);
+    };
+    getRecommendedNews();
+  }, [id]);
 
   const handleCreationDateChange = (
     name: string,
@@ -44,7 +54,7 @@ export const Data: React.FC<IDataProps> = ({
     setFieldsValues((prevState: any) => {
       return {
         ...prevState,
-        [name]: newValue?.toISOString().slice(0, 10),
+        [name]: dayjs(newValue).format('YYYY-MM-DDTHH:mm:ssZ[Z]').slice(0, 10),
       };
     });
   };
@@ -69,14 +79,24 @@ export const Data: React.FC<IDataProps> = ({
   };
 
   const handleAutocompleteChange =
-    (key: string) => (e: any, values: string[]) => {
+    (key: string) => (e: any, values: { id: number; value: string }[]) => {
+      const chosenIds = values.map(item => item.id);
       setFieldsValues((prevState: any) => {
         return {
           ...prevState,
-          [key]: values,
+          [key]: chosenIds,
         };
       });
     };
+
+  const getAutocompleteValue = () => {
+    const array = recommendedNewsList.filter((item: any) =>
+      fieldsValues.recommendedNews?.includes(item.id)
+    );
+    return array.map((obj: { id: number; value: string }) => obj.value);
+  };
+
+  const autocompleteValue = getAutocompleteValue();
 
   return (
     <>
@@ -167,6 +187,7 @@ export const Data: React.FC<IDataProps> = ({
       >
         URL
         <StyledField
+          required
           id="url"
           variant="outlined"
           sx={{ width: '100%', mt: '16px' }}
@@ -202,12 +223,15 @@ export const Data: React.FC<IDataProps> = ({
       >
         Рекомендовані новини
         <MultipleAutocomplete
-          list={categories}
+          list={recommendedNewsList}
+          // list={recommendedNewsList.map(
+          //   (item: { id: number; value: string }) => item.value
+          // )}
           darkTheme={darkTheme}
           id="recommendedNews"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
           onChange={handleAutocompleteChange('recommendedNews')}
-          value={fieldsValues.recommendedNews}
+          value={autocompleteValue}
         />
       </InputLabel>
     </>

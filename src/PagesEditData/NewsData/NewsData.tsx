@@ -9,6 +9,7 @@ import {
   fetchNewsById,
   handleDeleteNews,
   handleSendData,
+  handleAddNews,
 } from '../../services/newsAPI';
 import { INews } from '../../types/newsTypes';
 import Loader from '../../components/Loader';
@@ -63,6 +64,7 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
     publicationDate: currentDay,
     url: '',
     recommendedNews: null,
+    // recommendedNews: [10, 11],
     metaTitle: [
       { code: 'uk', value: '' },
       { code: 'en', value: '' },
@@ -204,7 +206,8 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
               handleCloseModal={handleCloseModal}
               type={'save'}
               dataToSend={fieldsValues}
-              handleSendData={() => handleSendData(id as string, fieldsValues)}
+              handleEditData={() => handleSendData(id as string, fieldsValues)}
+              handlePostData={() => handleAddNews(fieldsValues)}
             />
           )}
         </>
