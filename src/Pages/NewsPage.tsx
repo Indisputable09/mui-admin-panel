@@ -22,7 +22,7 @@ const NewsPage: React.FC<INewsPageProps> = ({
 }) => {
   const { idle, pending, resolved, rejected } = Status;
   const { classes, cx } = useNavBarStyles();
-  const { darkTheme } = useGlobalContext();
+  const { darkTheme, rerenderComponent } = useGlobalContext();
   const [status, setStatus] = React.useState(idle);
   const [newsRows, setNewsRows] = React.useState(null);
 
@@ -38,15 +38,15 @@ const NewsPage: React.FC<INewsPageProps> = ({
       }
     };
     fetchData();
-  }, [pending, rejected, resolved]);
+  }, [pending, rejected, resolved, rerenderComponent]);
 
-  let today = new Date()
-    .toISOString()
-    .slice(0, 10)
-    .split('-')
-    .reverse()
-    .join('-');
-  console.log('today:', today);
+  // let today = new Date()
+  //   .toISOString()
+  //   .slice(0, 10)
+  //   .split('-')
+  //   .reverse()
+  //   .join('-');
+  // console.log('today:', today);
 
   return (
     <>

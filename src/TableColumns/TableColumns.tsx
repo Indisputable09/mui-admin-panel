@@ -7,6 +7,7 @@ import BasicActions from '../components/TableComponents/BasicActions';
 import PriceCell from '../components/TableComponents/PriceCell';
 import VisibilityAction from '../components/TableComponents/VisibilityAction';
 import OrderStatus from '../components/TableComponents/OrderStatus';
+import { handleDeleteNews } from '../services/newsAPI';
 
 export const analysesColumns: GridColDef[] = [
   {
@@ -263,7 +264,15 @@ export const newsColumns: GridColDef[] = [
     headerAlign: 'center',
     align: 'center',
     disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
+    renderCell: params => {
+      return (
+        <BasicActions
+          id={params.row.id}
+          handleDeleteData={() => handleDeleteNews(params.row.id)}
+          // link=
+        />
+      );
+    },
     width: 120,
   },
 ];

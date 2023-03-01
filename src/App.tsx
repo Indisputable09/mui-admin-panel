@@ -21,6 +21,8 @@ export const App: React.FC = () => {
       : false
   );
 
+  const [rerenderComponent, setRerenderComponent] = React.useState(false);
+
   const handleThemeClick = () => {
     setDarkTheme(!darkTheme);
   };
@@ -31,7 +33,9 @@ export const App: React.FC = () => {
 
   return (
     <>
-      <GlobalContext.Provider value={{ darkTheme }}>
+      <GlobalContext.Provider
+        value={{ darkTheme, rerenderComponent, setRerenderComponent }}
+      >
         <Toast />
         <BrowserRouter basename="/mui-admin-panel/">
           <Routes>

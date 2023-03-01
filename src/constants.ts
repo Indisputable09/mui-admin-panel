@@ -12,3 +12,8 @@ export const Status = {
   resolved: 'RESOLVED',
   rejected: 'REJECTED',
 };
+
+export const haveSameData = function (obj1: any, obj2: any) {
+  const result = JSON.stringify(obj1) === JSON.stringify(obj2);
+  return result;
+};

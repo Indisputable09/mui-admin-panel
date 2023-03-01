@@ -8,6 +8,7 @@ import { Box, Divider, List, ListItem, Typography } from '@mui/material';
 import CollapsedBreadcrumbs from '../../components/Crumbs';
 import { usePagesDataCommonStyles } from './PagesDataCommon.styles';
 import { useGlobalContext } from '../../hooks/GlobalContext';
+import { useNavigate } from 'react-router-dom';
 
 interface IPagesDataCommonProps {
   chosenRowItem?: any;
@@ -25,10 +26,11 @@ interface IPagesDataCommonProps {
   noDeleteIcon?: boolean;
   noBackIcon?: boolean;
   noSaveIcon?: boolean;
+  dataWasChanged?: boolean;
 }
 
 const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
-  // chosenRowItem,
+  dataWasChanged,
   handleClickOpenModal,
   linkId,
   links,
@@ -41,6 +43,7 @@ const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
   const { darkTheme } = useGlobalContext();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -61,7 +64,11 @@ const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
               edge="start"
               color="inherit"
               aria-label="back"
-              onClick={() => handleClickOpenModal('back')}
+              onClick={() =>
+                dataWasChanged
+                  ? handleClickOpenModal('back')
+                  : navigate(linksData.link)
+              }
             >
               <ArrowBackIcon />
             </IconButton>
@@ -85,6 +92,7 @@ const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
               color="inherit"
               aria-label="save"
               onClick={() => handleClickOpenModal('save')}
+              disabled={!dataWasChanged}
             >
               <SaveIcon />
             </IconButton>

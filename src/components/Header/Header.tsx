@@ -60,7 +60,6 @@ const Header: React.FC<HeaderProps> = ({
   React.useEffect(() => {
     const fetchData = async () => {
       const userCredentials = await fetchUserData();
-      console.log('userCredentials:', userCredentials);
       setUserData(userCredentials);
     };
     fetchData();

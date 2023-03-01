@@ -8,6 +8,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { toast } from 'react-toastify';
 import { token } from '../../services/authAPI';
 import { useNavigate } from 'react-router-dom';
+import { useGlobalContext } from '../../hooks/GlobalContext';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -25,6 +26,9 @@ interface IModalProps {
   link?: string;
   dataToSend?: any;
   setLoggedIn?: (user: boolean) => void;
+  handleSendData?: () => void;
+  handleDeleteData?: () => void;
+  dataWasChanged?: boolean;
 }
 
 const Modal: React.FC<IModalProps> = ({
@@ -34,14 +38,19 @@ const Modal: React.FC<IModalProps> = ({
   link,
   dataToSend,
   setLoggedIn,
+  handleSendData,
+  handleDeleteData,
+  dataWasChanged,
 }) => {
   const navigate = useNavigate();
+  const { rerenderComponent, setRerenderComponent } = useGlobalContext();
 
-  const handleAgreeClick = () => {
-    console.log('Agreed, do some action');
+  const handleAgreeClick = async () => {
     handleCloseModal();
-    if (dataToSend) {
-      console.log(`Send to server: `, dataToSend);
+    if (dataToSend && handleSendData) {
+      try {
+        handleSendData();
+      } catch (error) {}
     }
     if (link) {
       navigate(link);
@@ -52,6 +61,13 @@ const Modal: React.FC<IModalProps> = ({
       token.unset();
       setLoggedIn(false);
       toast.success('Ви успішно вийшли!');
+    }
+    if (type === 'delete' && handleDeleteData && link) {
+      try {
+        setRerenderComponent(!rerenderComponent);
+        handleDeleteData();
+        navigate(link);
+      } catch (error) {}
     }
   };
 

@@ -6,21 +6,25 @@ import { Box } from '@mui/material';
 import { useGlobalContext } from '../../../hooks/GlobalContext';
 import { useBasicActionsStyles } from './BasicActions.styles';
 import Modal from '../../Modal';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 interface IBasicActionsProps {
   id: string;
   onlyEdit?: boolean;
   pagesLinkName?: string;
+  handleDeleteData?: () => void;
 }
 
 const BasicActions: React.FC<IBasicActionsProps> = ({
   id,
   onlyEdit = false,
   pagesLinkName,
+  handleDeleteData,
 }) => {
   const { darkTheme } = useGlobalContext();
   const [openDeleteModal, setOpenDeleteModal] = React.useState<boolean>(false);
+
+  const location = useLocation();
 
   const handleClickOpenModal = () => {
     setOpenDeleteModal(true);
@@ -68,6 +72,8 @@ const BasicActions: React.FC<IBasicActionsProps> = ({
           shouldOpenModal={openDeleteModal}
           handleCloseModal={handleCloseModal}
           type={'delete'}
+          link={location.pathname}
+          handleDeleteData={handleDeleteData}
         />
       )}
     </>

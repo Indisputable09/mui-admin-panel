@@ -5,10 +5,14 @@ import Modal from '../../components/Modal';
 import { useParams } from 'react-router-dom';
 import PagesDataCommon from '../PagesDataCommon';
 import { useGlobalContext } from '../../hooks/GlobalContext';
-import { fetchNewsById } from '../../services/newsAPI';
+import {
+  fetchNewsById,
+  handleDeleteNews,
+  handleSendData,
+} from '../../services/newsAPI';
 import { INews } from '../../types/newsTypes';
 import Loader from '../../components/Loader';
-import { Status } from '../../constants';
+import { haveSameData, Status } from '../../constants';
 
 interface IAnalysesDataProps {
   initialLink: string;
@@ -40,7 +44,8 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
   const [openDeleteModal, setOpenDeleteModal] = React.useState<boolean>(false);
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
   const [status, setStatus] = React.useState(idle);
-  const [fieldsValues, setFieldsValues] = React.useState<INews>({
+  const [dataWasChanged, setDataWasChanged] = React.useState<boolean>(false);
+  const [initialData, setInitialData] = React.useState<INews>({
     name: [
       { code: 'uk', value: '' },
       { code: 'en', value: '' },
@@ -68,9 +73,14 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
     ],
     indexed: true,
   });
+  const [fieldsValues, setFieldsValues] = React.useState<INews>(initialData);
   const [chosenNewsName, setChosenNewsName] = React.useState<string>('');
 
   const { id } = useParams();
+
+  React.useEffect(() => {
+    setDataWasChanged(!haveSameData(initialData, fieldsValues));
+  }, [fieldsValues, initialData]);
 
   React.useEffect(() => {
     if (id) {
@@ -79,6 +89,7 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
           setStatus(pending);
           const newsById = await fetchNewsById(id as string);
           setFieldsValues(newsById);
+          setInitialData(newsById);
           setStatus(resolved);
         } catch (error) {
           setStatus(rejected);
@@ -132,6 +143,7 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
               parentPageName,
             }}
             visibilityIcon
+            dataWasChanged={dataWasChanged}
           />
           <Box
             component="form"
@@ -174,6 +186,7 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
               handleCloseModal={handleCloseModal}
               type={'back'}
               link={initialLink}
+              dataWasChanged={dataWasChanged}
             />
           )}
           {openDeleteModal && (
@@ -181,6 +194,8 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
               shouldOpenModal={openDeleteModal}
               handleCloseModal={handleCloseModal}
               type={'delete'}
+              link={initialLink}
+              handleDeleteData={() => handleDeleteNews(id as string)}
             />
           )}
           {openSaveModal && (
@@ -189,6 +204,7 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
               handleCloseModal={handleCloseModal}
               type={'save'}
               dataToSend={fieldsValues}
+              handleSendData={() => handleSendData(id as string, fieldsValues)}
             />
           )}
         </>
