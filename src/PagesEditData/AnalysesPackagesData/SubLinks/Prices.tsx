@@ -15,8 +15,6 @@ import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.
 import StyledField from '../../../components/Inputs/StyledField';
 import { stopInputScroll } from '../../../constants';
 
-// const cities = ['Київ', 'Харків', 'Вишгород'];
-
 export const CustomPaper: React.FC = props => {
   return <Paper {...props} />;
 };
