@@ -3,8 +3,7 @@ import { Checkbox, FormControlLabel, InputLabel, Switch } from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
-import { fetchRecommendedNews } from '../../../services/newsAPI';
-import { useParams } from 'react-router-dom';
+import { fetchCategories } from '../../../services/analysesAPI';
 
 interface IDataProps {
   darkTheme: boolean;
@@ -24,14 +23,14 @@ export const Data: React.FC<IDataProps> = ({
   fieldsValues,
 }) => {
   const [categoriesList, setCategoriesList] = React.useState([]);
-  const { id } = useParams();
+
   React.useEffect(() => {
     const getCategories = async () => {
-      const list = await fetchRecommendedNews(id);
+      const list = await fetchCategories();
       setCategoriesList(list);
     };
     getCategories();
-  }, [id]);
+  }, []);
 
   const handlePublishedChange =
     (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,14 +88,6 @@ export const Data: React.FC<IDataProps> = ({
           id="category"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
           onChange={handleAutocompleteChange('category')}
-          // onChange={(e: any, values: string[]) => {
-          //   setFieldsValues((prevState: any) => {
-          //     return {
-          //       ...prevState,
-          //       category: values,
-          //     };
-          //   });
-          // }}
           value={autocompleteValue}
         />
       </InputLabel>

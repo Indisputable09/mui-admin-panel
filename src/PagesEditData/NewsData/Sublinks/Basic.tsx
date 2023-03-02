@@ -1,5 +1,4 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import { InputLabel, List, ListItem, Typography } from '@mui/material';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../components/Inputs/StyledField';
@@ -35,10 +34,11 @@ export const Basic: React.FC<IBasicProps> = ({
   const [languageCode, setLanguageCode] = React.useState<string>(
     languages[0].code
   );
+  const [isRendered, setIsRendered] = React.useState(false);
 
-  const location = useLocation();
-  const activePath = location.pathname.split('/');
-  const chosenAction = activePath[activePath.length - 1];
+  React.useEffect(() => {
+    setIsRendered(true);
+  }, []);
 
   const handleLanguageClick = (code: string) => {
     setLanguageCode(code as string);
@@ -145,10 +145,10 @@ export const Basic: React.FC<IBasicProps> = ({
       <Typography component="h2" className={classes.descriptionText}>
         Опис
       </Typography>
-      {fieldsValues.description.map((item, index) => {
-        return (
-          <React.Fragment key={index}>
-            {!!item.value && chosenAction === 'edit' && (
+      {isRendered &&
+        fieldsValues.description.map((item, index) => {
+          return (
+            <React.Fragment key={index}>
               <React.Fragment>
                 {item.code === languageCode && (
                   <Editor
@@ -158,21 +158,9 @@ export const Basic: React.FC<IBasicProps> = ({
                   />
                 )}
               </React.Fragment>
-            )}
-            {chosenAction === 'add' && (
-              <React.Fragment>
-                {item.code === languageCode && (
-                  <Editor
-                    debug={false}
-                    initData={item.value}
-                    onChange={handleFieldsChange('description', index)}
-                  />
-                )}
-              </React.Fragment>
-            )}
-          </React.Fragment>
-        );
-      })}
+            </React.Fragment>
+          );
+        })}
     </>
   );
 };

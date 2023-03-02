@@ -26,7 +26,7 @@ export const editNewsById = async (id: string, data: INews) => {
   }
 };
 
-export const handleSendData = async (id: string, data: INews) => {
+export const handleSendNewsData = async (id: string, data: INews) => {
   try {
     if (!data.url) {
       toast.error(`Поле "URL" обов'язкове`);

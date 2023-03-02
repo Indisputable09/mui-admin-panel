@@ -4,11 +4,12 @@ import { StyledCustomPaper } from '../../../PagesEditData/AnalysesData/AnalysesD
 import StyledField from '../StyledField';
 
 interface IAutocompleteProps {
-  list: string[];
+  // list: string[];
+  list: { id: number; value: string }[];
   className?: string;
   id?: string;
   onChange?: (e: any, newValue: string | null) => void;
-  value?: string | null;
+  value?: string[] | null;
 }
 
 const Autocomplete: React.FC<IAutocompleteProps> = ({
@@ -24,9 +25,9 @@ const Autocomplete: React.FC<IAutocompleteProps> = ({
     <MuiAutocomplete
       id={id}
       noOptionsText={<p>Відсутні результати</p>}
-      options={list}
+      options={list.map(item => item.value)}
       className={className}
-      value={value}
+      value={value ? value[0] : null}
       onChange={onChange}
       renderInput={params => <StyledField {...params} darkTheme={darkTheme} />}
       PaperComponent={props => {

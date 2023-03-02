@@ -10,16 +10,19 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useMoreActionsStyles } from './MoreActionsStyles';
 import Modal from '../../Modal';
 import { useGlobalContext } from '../../../hooks/GlobalContext';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 interface IMoreActionsProps {
   id: string;
+  handleDeleteData?: () => void;
 }
 
-const MoreActions: React.FC<IMoreActionsProps> = ({ id }) => {
+const MoreActions: React.FC<IMoreActionsProps> = ({ id, handleDeleteData }) => {
   const { darkTheme } = useGlobalContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openDeleteModal, setOpenDeleteModal] = React.useState<boolean>(false);
+
+  const location = useLocation();
 
   const handleClickOpenModal = () => {
     handleClose();
@@ -157,6 +160,8 @@ const MoreActions: React.FC<IMoreActionsProps> = ({ id }) => {
           shouldOpenModal={openDeleteModal}
           handleCloseModal={handleCloseModal}
           type={'delete'}
+          link={location.pathname}
+          handleDeleteData={handleDeleteData}
         />
       )}
     </Box>

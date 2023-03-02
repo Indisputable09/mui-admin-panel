@@ -7,7 +7,6 @@ import { StyledCustomPaper } from '../../../PagesEditData/AnalysesData/AnalysesD
 
 interface IMultipleAutocompleteProps {
   id: string;
-  // list: string[] ;
   list: { id: number; value: string }[];
   className?: string;
   darkTheme: boolean;

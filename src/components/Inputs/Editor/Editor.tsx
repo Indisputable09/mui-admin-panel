@@ -5,22 +5,25 @@ interface IEditorProps {
   debug?: boolean;
   initData: string;
   onChange: (e: any) => void;
+  name?: string;
 }
 
 const Editor: React.FC<IEditorProps> = props => {
   return (
-    <CKEditor
-      {...props}
-      config={{
-        stylesSet: [
-          {
-            name: 'Checkmark list',
-            element: 'ul',
-            attributes: { class: 'checkMark' },
-          },
-        ],
-      }}
-    />
+    <>
+      <CKEditor
+        {...props}
+        config={{
+          stylesSet: [
+            {
+              name: 'Checkmark list',
+              element: 'ul',
+              attributes: { class: 'checkMark' },
+            },
+          ],
+        }}
+      />
+    </>
   );
 };
 

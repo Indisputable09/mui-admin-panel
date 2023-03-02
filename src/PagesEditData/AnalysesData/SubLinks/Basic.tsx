@@ -18,8 +18,6 @@ interface IBasicProps {
     }[];
     code: string;
     tabs: {
-      id: string;
-      label: string;
       name: {
         code: string;
         value: string;
@@ -33,6 +31,8 @@ interface IBasicProps {
   languages: { name: string; id: number; code: string }[];
 }
 
+const labels = ['Вкладка 1', 'Вкладка 2', 'Вкладка 3'];
+
 export const Basic: React.FC<IBasicProps> = ({
   darkTheme,
   setFieldsValues,
@@ -43,6 +43,11 @@ export const Basic: React.FC<IBasicProps> = ({
   const [languageCode, setLanguageCode] = React.useState<string>(
     languages[0].code
   );
+  const [isRendered, setIsRendered] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsRendered(true);
+  }, []);
 
   const handleLanguageClick = (code: string) => {
     setLanguageCode(code as string);
@@ -189,16 +194,14 @@ export const Basic: React.FC<IBasicProps> = ({
                 <React.Fragment key={nameIndex}>
                   {name.code === languageCode && (
                     <InputLabel
-                      htmlFor={tab.id}
                       className={cx(
                         classes.label,
                         darkTheme ? 'dark' : null,
                         index === 0 ? null : 'topMargin'
                       )}
                     >
-                      {tab.label}
+                      {labels[index]}
                       <StyledField
-                        id={tab.id}
                         variant="outlined"
                         sx={{ width: '100%', mt: '16px' }}
                         required
@@ -211,23 +214,20 @@ export const Basic: React.FC<IBasicProps> = ({
                 </React.Fragment>
               );
             })}
-            {tab.description.map((description, descriptionIndex) => {
-              return (
-                <React.Fragment key={descriptionIndex}>
-                  {description.code === languageCode && (
-                    <Editor
-                      debug={false}
-                      initData={description.value}
-                      onChange={handleTabsChange(
-                        index,
-                        'description',
-                        descriptionIndex
-                      )}
-                    />
-                  )}
-                </React.Fragment>
-              );
-            })}
+            {isRendered &&
+              tab.description.map((item, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    {item.code === languageCode && (
+                      <Editor
+                        debug={false}
+                        initData={item.value}
+                        onChange={handleTabsChange(index, 'description', index)}
+                      />
+                    )}
+                  </React.Fragment>
+                );
+              })}
           </React.Fragment>
         );
       })}

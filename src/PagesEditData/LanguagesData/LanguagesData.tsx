@@ -14,7 +14,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import Modal from '../../components/Modal';
 import { languagesRows } from '../../TableRows/TableRows';
 import StyledField from '../../components/Inputs/StyledField/StyledField';
-import Autocomplete from '../../components/Inputs/Autocomplete';
+// import Autocomplete from '../../components/Inputs/Autocomplete';
 import PagesDataCommon from '../PagesDataCommon';
 import { usePagesDataCommonStyles } from '../PagesDataCommon/PagesDataCommon.styles';
 import { useGlobalContext } from '../../hooks/GlobalContext';
@@ -29,7 +29,7 @@ interface ICustomizedTooltipProps extends TooltipProps {
   darkTheme: boolean;
 }
 
-const icons = ['ukr', 'eng'];
+// const icons = ['ukr', 'eng'];
 
 const CustomizedTooltip = styled(
   ({ className, darkTheme, ...props }: ICustomizedTooltipProps) => (
@@ -193,7 +193,7 @@ const LanguagesData: React.FC<ILanguagesDataProps> = ({
           className={cx(classes.label, darkTheme ? 'dark' : null)}
         >
           Значок
-          <Autocomplete
+          {/* <Autocomplete
             id="languageIcon"
             value={fieldsValues.languageIcon}
             onChange={(e: any, newValue: string | null) => {
@@ -206,7 +206,7 @@ const LanguagesData: React.FC<ILanguagesDataProps> = ({
             }}
             list={icons}
             className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
-          />
+          /> */}
         </InputLabel>
         <InputLabel
           htmlFor="url"

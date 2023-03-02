@@ -8,6 +8,7 @@ import PriceCell from '../components/TableComponents/PriceCell';
 import VisibilityAction from '../components/TableComponents/VisibilityAction';
 import OrderStatus from '../components/TableComponents/OrderStatus';
 import { handleDeleteNews } from '../services/newsAPI';
+import { handleDeleteAnalysis } from '../services/analysesAPI';
 
 export const analysesColumns: GridColDef[] = [
   {
@@ -25,26 +26,26 @@ export const analysesColumns: GridColDef[] = [
     editable: false,
   },
   {
-    field: 'sku',
+    field: 'code',
     headerName: 'Код',
     width: 80,
     editable: false,
     headerAlign: 'center',
     align: 'center',
   },
-  {
-    field: 'price',
-    headerName: 'Ціна',
-    width: 110,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-    renderCell: params => {
-      return (
-        <PriceCell price={params.row.price} discount={params.row?.discount} />
-      );
-    },
-  },
+  // {
+  //   field: 'price',
+  //   headerName: 'Ціна',
+  //   width: 110,
+  //   editable: false,
+  //   headerAlign: 'center',
+  //   align: 'center',
+  //   renderCell: params => {
+  //     return (
+  //       <PriceCell price={params.row.price} discount={params.row?.discount} />
+  //     );
+  //   },
+  // },
   {
     field: 'category',
     headerName: 'Категорія',
@@ -54,14 +55,14 @@ export const analysesColumns: GridColDef[] = [
     align: 'center',
   },
   {
-    field: 'status',
+    field: 'published',
     headerName: 'Опубліковано',
     width: 120,
     editable: false,
     headerAlign: 'center',
     align: 'center',
     renderCell: params => {
-      return <ControlledSwitch status={params.row.status} />;
+      return <ControlledSwitch status={params.row.published} />;
     },
   },
   {
@@ -73,7 +74,12 @@ export const analysesColumns: GridColDef[] = [
     align: 'center',
     disableColumnMenu: true,
     renderCell: params => {
-      return <MoreActions id={params.row.id} />;
+      return (
+        <MoreActions
+          id={params.row.id}
+          handleDeleteData={() => handleDeleteAnalysis(params.row.id)}
+        />
+      );
     },
     width: 90,
   },

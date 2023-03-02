@@ -224,9 +224,6 @@ export const Data: React.FC<IDataProps> = ({
         Рекомендовані новини
         <MultipleAutocomplete
           list={recommendedNewsList}
-          // list={recommendedNewsList.map(
-          //   (item: { id: number; value: string }) => item.value
-          // )}
           darkTheme={darkTheme}
           id="recommendedNews"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}

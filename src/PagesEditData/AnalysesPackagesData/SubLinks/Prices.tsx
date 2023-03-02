@@ -124,7 +124,7 @@ export const Prices: React.FC<IPricesProps> = ({
                   className={cx(classes.label, darkTheme ? 'dark' : null)}
                 >
                   Місто
-                  <Autocomplete
+                  {/* <Autocomplete
                     id="producer"
                     onChange={handleFieldsChange(index, 'city')}
                     value={item.city}
@@ -133,7 +133,7 @@ export const Prices: React.FC<IPricesProps> = ({
                       classes.autocomplete,
                       darkTheme ? 'dark' : null
                     )}
-                  />
+                  /> */}
                 </InputLabel>
                 <InputLabel
                   htmlFor="price"

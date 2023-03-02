@@ -8,14 +8,14 @@ import { useGlobalContext } from '../../hooks/GlobalContext';
 import {
   fetchNewsById,
   handleDeleteNews,
-  handleSendData,
+  handleSendNewsData,
   handleAddNews,
 } from '../../services/newsAPI';
 import { INews } from '../../types/newsTypes';
 import Loader from '../../components/Loader';
 import { haveSameData, Status } from '../../constants';
 
-interface IAnalysesDataProps {
+interface INewsDataProps {
   initialLink: string;
   pageName: string;
   parentPageName: string;
@@ -32,7 +32,7 @@ const languages = [
   { name: 'Eng', id: 2, code: 'en' },
 ];
 
-const AnalysesData: React.FC<IAnalysesDataProps> = ({
+const NewsData: React.FC<INewsDataProps> = ({
   initialLink,
   pageName,
   parentPageName,
@@ -64,7 +64,6 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
     publicationDate: currentDay,
     url: '',
     recommendedNews: null,
-    // recommendedNews: [10, 11],
     metaTitle: [
       { code: 'uk', value: '' },
       { code: 'en', value: '' },
@@ -206,7 +205,9 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
               handleCloseModal={handleCloseModal}
               type={'save'}
               dataToSend={fieldsValues}
-              handleEditData={() => handleSendData(id as string, fieldsValues)}
+              handleEditData={() =>
+                handleSendNewsData(id as string, fieldsValues)
+              }
               handlePostData={() => handleAddNews(fieldsValues)}
             />
           )}
@@ -216,4 +217,4 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
   );
 };
 
-export default AnalysesData;
+export default NewsData;
