@@ -2,6 +2,7 @@ import React from 'react';
 import { InputLabel, List, ListItem, Typography } from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
+import { stopInputScroll } from '../../../constants';
 
 interface IAnalysesCategoryBasicProps {
   darkTheme: boolean;
@@ -12,6 +13,7 @@ interface IAnalysesCategoryBasicProps {
       value: string;
     }[];
     url: string;
+    sort: number;
   };
   languages: { name: string; id: number; code: string }[];
 }
@@ -32,7 +34,8 @@ export const AnalysesCategoryBasic: React.FC<IAnalysesCategoryBasicProps> = ({
   };
 
   const handleFieldsChange =
-    (key?: string, index?: number) => (e: React.ChangeEvent) => {
+    (key?: string, index?: number) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       setFieldsValues((prevState: any) => {
         if (key) {
           const newArray = fieldsValues[key].map((item: any, i: any) => {
@@ -45,10 +48,18 @@ export const AnalysesCategoryBasic: React.FC<IAnalysesCategoryBasicProps> = ({
             [key]: [...newArray],
           };
         } else {
-          return {
-            ...prevState,
-            [e.target.id]: (e.target as HTMLInputElement).value,
-          };
+          if (e.target.type === 'number') {
+            console.log('number');
+            return {
+              ...prevState,
+              [e.target.id]: Number((e.target as HTMLInputElement).value),
+            };
+          } else {
+            return {
+              ...prevState,
+              [e.target.id]: (e.target as HTMLInputElement).value,
+            };
+          }
         }
       });
     };
@@ -114,6 +125,25 @@ export const AnalysesCategoryBasic: React.FC<IAnalysesCategoryBasicProps> = ({
           sx={{ width: '100%', mt: '16px' }}
           darkTheme={darkTheme}
           value={fieldsValues.url}
+          onChange={handleFieldsChange()}
+        />
+      </InputLabel>
+      <InputLabel
+        htmlFor="sort"
+        className={cx(classes.label, darkTheme ? 'dark' : null)}
+      >
+        Сортування
+        <StyledField
+          type="number"
+          onWheel={e => {
+            stopInputScroll(e);
+          }}
+          id="sort"
+          variant="outlined"
+          sx={{ width: '40%', mt: '16px' }}
+          required
+          darkTheme={darkTheme}
+          value={Number(fieldsValues.sort).toString()}
           onChange={handleFieldsChange()}
         />
       </InputLabel>

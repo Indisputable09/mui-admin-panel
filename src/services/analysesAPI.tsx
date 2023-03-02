@@ -12,7 +12,6 @@ export const fetchAnalysesList = async () => {
 export const fetchAnalysisById = async (id: string) => {
   try {
     const response = await axios.get(`/analysis/${id}`);
-    console.log(' response.data.data:', response.data.data);
     return response.data.data;
   } catch (error) {}
 };
@@ -33,6 +32,8 @@ export const handleSendAnalysesData = async (id: string, data: IAnalysis) => {
       toast.error(`Поле "URL" обов'язкове`);
     } else if (data.name.some(item => !item.value)) {
       toast.error(`Поле "Назва" обов'язкове`);
+    } else if (!data.code) {
+      toast.error(`Поле "Код" обов'язкове`);
     } else {
       await editAnalysisById(id, data);
     }
@@ -42,7 +43,7 @@ export const handleSendAnalysesData = async (id: string, data: IAnalysis) => {
 export const deleteAnalysisById = async (id: string) => {
   try {
     const response = await axios.delete(`/analysis/${id}`);
-    toast.success('Аніліз видалено');
+    toast.success('Аналіз видалено');
     return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');

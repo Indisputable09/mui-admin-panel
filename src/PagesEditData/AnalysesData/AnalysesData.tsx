@@ -113,13 +113,11 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
     React.useState<IAnalysis>(initialData);
   const [chosenAnalysisName, setChosenAnalysisName] =
     React.useState<string>('');
-  // console.log('fieldsValues:', fieldsValues);
 
   const { id } = useParams();
   const [citiesList, setCitiesList] = React.useState([]);
 
   React.useEffect(() => {
-    console.log('fetching cities');
     const getCities = async () => {
       const list = await fetchCities();
       setCitiesList(list);

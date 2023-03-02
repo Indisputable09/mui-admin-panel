@@ -9,6 +9,7 @@ import VisibilityAction from '../components/TableComponents/VisibilityAction';
 import OrderStatus from '../components/TableComponents/OrderStatus';
 import { handleDeleteNews } from '../services/newsAPI';
 import { handleDeleteAnalysis } from '../services/analysesAPI';
+import { handleDeleteAnalysisCategory } from '../services/analysesCategoriesAPI';
 
 export const analysesColumns: GridColDef[] = [
   {
@@ -114,7 +115,12 @@ export const analysesCategoriesColumns: GridColDef[] = [
     editable: false,
     sortable: false,
     disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
+    renderCell: params => (
+      <BasicActions
+        id={params.row.id}
+        handleDeleteData={() => handleDeleteAnalysisCategory(params.row.id)}
+      />
+    ),
     width: 120,
     headerAlign: 'center',
     align: 'center',
