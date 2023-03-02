@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/mui-admin-panel/static/css/main.57f47c9a.css",
-    "main.js": "/mui-admin-panel/static/js/main.874bb812.js",
+    "main.js": "/mui-admin-panel/static/js/main.bb1401ea.js",
     "index.html": "/mui-admin-panel/index.html",
     "main.57f47c9a.css.map": "/mui-admin-panel/static/css/main.57f47c9a.css.map",
-    "main.874bb812.js.map": "/mui-admin-panel/static/js/main.874bb812.js.map"
+    "main.bb1401ea.js.map": "/mui-admin-panel/static/js/main.bb1401ea.js.map"
   },
   "entrypoints": [
     "static/css/main.57f47c9a.css",
-    "static/js/main.874bb812.js"
+    "static/js/main.bb1401ea.js"
   ]
 }
