@@ -10,12 +10,12 @@ import {
 import { nanoid } from 'nanoid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import Autocomplete from '../../../components/Inputs/Autocomplete';
+// import Autocomplete from '../../../components/Inputs/Autocomplete';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../components/Inputs/StyledField';
 import { stopInputScroll } from '../../../constants';
 
-const cities = ['Київ', 'Харків', 'Вишгород'];
+// const cities = ['Київ', 'Харків', 'Вишгород'];
 
 export const CustomPaper: React.FC = props => {
   return <Paper {...props} />;
@@ -95,16 +95,16 @@ export const Prices: React.FC<IPricesProps> = ({
     });
   };
 
-  const remainingCities = cities.filter(city => {
-    const chosenObj = fieldsValues.prices.find(price => {
-      return price.city === city;
-    });
-    if (chosenObj) {
-      return chosenObj.city !== city;
-    } else {
-      return city;
-    }
-  });
+  // const remainingCities = cities.filter(city => {
+  //   const chosenObj = fieldsValues.prices.find(price => {
+  //     return price.city === city;
+  //   });
+  //   if (chosenObj) {
+  //     return chosenObj.city !== city;
+  //   } else {
+  //     return city;
+  //   }
+  // });
 
   const { classes, cx } = usePagesDataCommonStyles();
 
