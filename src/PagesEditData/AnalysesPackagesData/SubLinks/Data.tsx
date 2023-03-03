@@ -2,13 +2,14 @@ import React from 'react';
 import { Checkbox, FormControlLabel, InputLabel, Switch } from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
-// import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
+import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
+import { fetchAnalyses } from '../../../services/analysesPackagesAPI';
 
 interface IDataProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    category: string[];
+    analyses: number[] | null;
     url: string;
     code: string;
     published: boolean;
@@ -21,6 +22,16 @@ export const Data: React.FC<IDataProps> = ({
   setFieldsValues,
   fieldsValues,
 }) => {
+  const [analysesList, setAnalysesList] = React.useState([]);
+
+  React.useEffect(() => {
+    const getCategories = async () => {
+      const list = await fetchAnalyses();
+      setAnalysesList(list);
+    };
+    getCategories();
+  }, []);
+
   const handlePublishedChange =
     (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setFieldsValues((prevState: any) => {
@@ -40,33 +51,46 @@ export const Data: React.FC<IDataProps> = ({
     });
   };
 
+  const handleAutocompleteChange =
+    (key: string) => (e: any, values: { id: number; value: string }[]) => {
+      const chosenIds = values.map(item => item.id);
+      setFieldsValues((prevState: any) => {
+        return {
+          ...prevState,
+          [key]: chosenIds,
+        };
+      });
+    };
+
+  const getAutocompleteValue = () => {
+    const array = analysesList.filter((item: any) =>
+      fieldsValues.analyses?.includes(item.id)
+    );
+    return array.map((obj: { id: number; value: string }) => obj.value);
+  };
+
+  const autocompleteValue = getAutocompleteValue();
+
   const { classes, cx } = usePagesDataCommonStyles();
 
   return (
     <>
-      {/* <InputLabel
-        htmlFor="category"
+      <InputLabel
+        htmlFor="analyses"
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
         <div>
-          Категорія<span style={{ color: 'red', fontSize: '20px' }}>*</span>
+          Аналізи<span style={{ color: 'red', fontSize: '20px' }}>*</span>
         </div>
         <MultipleAutocomplete
-          list={categories}
+          list={analysesList}
           darkTheme={darkTheme}
-          id="category"
+          id="analyses"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
-          onChange={(e: any, values: string[]) => {
-            setFieldsValues((prevState: any) => {
-              return {
-                ...prevState,
-                category: values,
-              };
-            });
-          }}
-          value={fieldsValues.category}
+          onChange={handleAutocompleteChange('analyses')}
+          value={autocompleteValue}
         />
-      </InputLabel> */}
+      </InputLabel>
       <InputLabel
         htmlFor="url"
         className={cx(classes.label, darkTheme ? 'dark' : null)}

@@ -129,7 +129,7 @@ export const Prices: React.FC<IPricesProps> = ({
                 >
                   Місто
                   <Autocomplete
-                    id="producer"
+                    id="city"
                     onChange={handleFieldsChange(index, 'city')}
                     value={citiesList
                       .filter((city: any) => city.id === item.city)

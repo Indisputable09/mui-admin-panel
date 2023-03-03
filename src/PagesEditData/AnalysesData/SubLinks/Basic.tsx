@@ -215,14 +215,18 @@ export const Basic: React.FC<IBasicProps> = ({
               );
             })}
             {isRendered &&
-              tab.description.map((item, index) => {
+              tab.description.map((item, descriptionIndex) => {
                 return (
-                  <React.Fragment key={index}>
+                  <React.Fragment key={descriptionIndex}>
                     {item.code === languageCode && (
                       <Editor
                         debug={false}
                         initData={item.value}
-                        onChange={handleTabsChange(index, 'description', index)}
+                        onChange={handleTabsChange(
+                          index,
+                          'description',
+                          descriptionIndex
+                        )}
                       />
                     )}
                   </React.Fragment>

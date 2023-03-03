@@ -1,4 +1,4 @@
-export interface IAnalysis {
+export interface IAnalysisPackage {
   name: { code: string; value: string }[];
   url: string;
   code: string;
@@ -6,7 +6,7 @@ export interface IAnalysis {
     name: { code: string; value: string }[];
     description: { code: string; value: string }[];
   }[];
-  categories: number[] | null;
+  analyses: number[] | null;
   deadline: { code: string; value: string }[];
   published: boolean;
   makeAtHome: boolean;

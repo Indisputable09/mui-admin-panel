@@ -86,7 +86,7 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
         ],
       },
     ],
-    category: null,
+    categories: null,
     deadline: [
       { code: 'uk', value: '' },
       { code: 'en', value: '' },
@@ -134,9 +134,9 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
       const fetchData = async () => {
         try {
           setStatus(pending);
-          const newsById = await fetchAnalysisById(id as string);
-          setFieldsValues(newsById);
-          setInitialData(newsById);
+          const analysisById = await fetchAnalysisById(id as string);
+          setFieldsValues(analysisById);
+          setInitialData(analysisById);
           setStatus(resolved);
         } catch (error) {
           setStatus(rejected);

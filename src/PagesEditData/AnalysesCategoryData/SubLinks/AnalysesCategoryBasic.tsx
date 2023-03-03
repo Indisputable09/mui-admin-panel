@@ -1,5 +1,12 @@
 import React from 'react';
-import { InputLabel, List, ListItem, Typography } from '@mui/material';
+import {
+  Checkbox,
+  FormControlLabel,
+  InputLabel,
+  List,
+  ListItem,
+  Typography,
+} from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import { stopInputScroll } from '../../../constants';
@@ -14,6 +21,7 @@ interface IAnalysesCategoryBasicProps {
     }[];
     url: string;
     sort: number;
+    top: boolean;
   };
   languages: { name: string; id: number; code: string }[];
 }
@@ -49,7 +57,6 @@ export const AnalysesCategoryBasic: React.FC<IAnalysesCategoryBasicProps> = ({
           };
         } else {
           if (e.target.type === 'number') {
-            console.log('number');
             return {
               ...prevState,
               [e.target.id]: Number((e.target as HTMLInputElement).value),
@@ -61,6 +68,16 @@ export const AnalysesCategoryBasic: React.FC<IAnalysesCategoryBasicProps> = ({
             };
           }
         }
+      });
+    };
+
+  const handleCheckboxChange =
+    (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFieldsValues((prevState: any) => {
+        return {
+          ...prevState,
+          [key]: (e.target as HTMLInputElement).checked,
+        };
       });
     };
 
@@ -147,6 +164,18 @@ export const AnalysesCategoryBasic: React.FC<IAnalysesCategoryBasicProps> = ({
           onChange={handleFieldsChange()}
         />
       </InputLabel>
+      <FormControlLabel
+        className={cx(classes.formControlCheckBox, darkTheme ? 'dark' : null)}
+        control={
+          <Checkbox
+            className={cx(classes.checkbox, darkTheme ? 'dark' : null)}
+            checked={fieldsValues.top}
+            onChange={handleCheckboxChange('top')}
+            inputProps={{ 'aria-label': 'controlled' }}
+          />
+        }
+        label="В топі"
+      />
     </>
   );
 };

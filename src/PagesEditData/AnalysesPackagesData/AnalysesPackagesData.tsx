@@ -1,12 +1,20 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { Prices, Basic, Data, SEO } from './SubLinks';
-import { useLocation, useParams } from 'react-router-dom';
-import { analysesPackagesRows } from '../../TableRows/TableRows';
+import {  useParams } from 'react-router-dom';
 import Modal from '../../components/Modal';
 import PagesDataCommon from '../PagesDataCommon';
 import { useGlobalContext } from '../../hooks/GlobalContext';
-import { nanoid } from 'nanoid';
+import { haveSameData, Status } from '../../constants';
+import { IAnalysisPackage } from '../../types/analysisPackageTypes';
+import { fetchCities } from '../../services/analysesAPI';
+import {
+  fetchAnalysisPackageById,
+  handleAddAnalysisPackage,
+  handleDeleteAnalysisPackage,
+  handleSendAnalysesPackageData,
+} from '../../services/analysesPackagesAPI';
+import Loader from '../../components/Loader';
 
 interface IAnalysesPackagesDataProps {
   initialLink: string;
@@ -31,153 +39,121 @@ const AnalysesPackagesData: React.FC<IAnalysesPackagesDataProps> = ({
   pageName,
   parentPageName,
 }) => {
+  const { idle, pending, resolved, rejected } = Status;
   const { darkTheme } = useGlobalContext();
   const [linkId, setLinkId] = React.useState<number>(1);
   const [openBackModal, setOpenBackModal] = React.useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = React.useState<boolean>(false);
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
+  const [status, setStatus] = React.useState(idle);
+  const [dataWasChanged, setDataWasChanged] = React.useState<boolean>(false);
+  const [initialData, setInitialData] = React.useState<IAnalysisPackage>({
+    name: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    url: '',
+    code: '',
+    tabs: [
+      {
+        name: [
+          { code: 'uk', value: '' },
+          { code: 'en', value: '' },
+        ],
+        description: [
+          { code: 'uk', value: '' },
+          { code: 'en', value: '' },
+        ],
+      },
+      {
+        name: [
+          { code: 'uk', value: '' },
+          { code: 'en', value: '' },
+        ],
+        description: [
+          { code: 'uk', value: '' },
+          { code: 'en', value: '' },
+        ],
+      },
+      {
+        name: [
+          { code: 'uk', value: '' },
+          { code: 'en', value: '' },
+        ],
+        description: [
+          { code: 'uk', value: '' },
+          { code: 'en', value: '' },
+        ],
+      },
+    ],
+    analyses: null,
+    deadline: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    published: false,
+    makeAtHome: false,
+    prices: [
+      {
+        city: null,
+        price: 0,
+        priceWithDiscount: null,
+      },
+    ],
+    metaTitle: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    metaDescription: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+  });
+  const [fieldsValues, setFieldsValues] =
+    React.useState<IAnalysisPackage>(initialData);
+  const [chosenAnalysisPackageName, setChosenAnalysisPackageName] =
+    React.useState<string>('');
 
   const { id } = useParams();
-  const location = useLocation();
-  const activePath = location.pathname.split('/');
-  const chosenAction = activePath[activePath.length - 1];
-  const chosenPackage = analysesPackagesRows.find(row => row.id === Number(id));
+  const [citiesList, setCitiesList] = React.useState([]);
 
-  const [fieldsValues, setFieldsValues] = React.useState(
-    chosenPackage && chosenAction === 'edit'
-      ? {
-          name: [
-            { code: 'uk', value: 'ukr value' },
-            { code: 'en', value: 'eng value' },
-          ],
-          url: 'url',
-          code: 'code',
-          tabs: [
-            {
-              id: 'tab1',
-              label: 'Вкладка 1',
-              name: [
-                { code: 'uk', value: 'ukr name 1' },
-                { code: 'en', value: 'eng name 1' },
-              ],
-              description: [
-                { code: 'uk', value: '<p>опис 1</p>' },
-                { code: 'en', value: '<p>description 1</p>' },
-              ],
-            },
-            {
-              id: 'tab2',
-              label: 'Вкладка 2',
-              name: [
-                { code: 'uk', value: 'ukr name 2' },
-                { code: 'en', value: 'eng name 2' },
-              ],
-              description: [
-                { code: 'uk', value: '<p>опис 2</p>' },
-                { code: 'en', value: '<p>description 2</p>' },
-              ],
-            },
-            {
-              id: 'tab3',
-              label: 'Вкладка 3',
-              name: [
-                { code: 'uk', value: 'ukr name 3' },
-                { code: 'en', value: 'eng name 3' },
-              ],
-              description: [
-                { code: 'uk', value: '<p>опис 3</p>' },
-                { code: 'en', value: '<p>description 3</p>' },
-              ],
-            },
-          ],
-          category: [],
-          deadline: [
-            { code: 'uk', value: 'uk deadline' },
-            { code: 'en', value: 'en deadline' },
-          ],
-          published: true,
-          makeAtHome: false,
-          prices: [
-            {
-              id: nanoid(3),
-              city: null,
-              price: 0,
-              priceWithDiscount: 0,
-            },
-          ],
-          metaTitle: [
-            { code: 'uk', value: 'ukr' },
-            { code: 'en', value: 'eng' },
-          ],
-          metaDescription: [
-            { code: 'uk', value: 'ukr' },
-            { code: 'en', value: 'eng' },
-          ],
+  React.useEffect(() => {
+    const getCities = async () => {
+      const list = await fetchCities();
+      setCitiesList(list);
+    };
+    getCities();
+  }, []);
+
+  React.useEffect(() => {
+    setDataWasChanged(!haveSameData(initialData, fieldsValues));
+  }, [fieldsValues, initialData]);
+
+  React.useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        try {
+          setStatus(pending);
+          const analysisPackageById = await fetchAnalysisPackageById(
+            id as string
+          );
+          setFieldsValues(analysisPackageById);
+          setInitialData(analysisPackageById);
+          setStatus(resolved);
+        } catch (error) {
+          setStatus(rejected);
         }
-      : {
-          name: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          url: '',
-          code: 'code',
-          tabs: [
-            {
-              id: 'tab1',
-              label: 'Вкладка 1',
-              name: [
-                { code: 'uk', value: 'ukr name 1' },
-                { code: 'en', value: 'eng name 1' },
-              ],
-              description: [
-                { code: 'uk', value: '<p>опис 1</p>' },
-                { code: 'en', value: '<p>description 1</p>' },
-              ],
-            },
-            {
-              id: 'tab2',
-              label: 'Вкладка 2',
-              name: [
-                { code: 'uk', value: 'ukr name 2' },
-                { code: 'en', value: 'eng name 2' },
-              ],
-              description: [
-                { code: 'uk', value: '<p>опис 2</p>' },
-                { code: 'en', value: '<p>description 2</p>' },
-              ],
-            },
-            {
-              id: 'tab3',
-              label: 'Вкладка 3',
-              name: [
-                { code: 'uk', value: 'ukr name 3' },
-                { code: 'en', value: 'eng name 3' },
-              ],
-              description: [
-                { code: 'uk', value: '<p>опис 3</p>' },
-                { code: 'en', value: '<p>description 3</p>' },
-              ],
-            },
-          ],
-          category: [],
-          deadline: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          published: true,
-          makeAtHome: false,
-          prices: [],
-          metaTitle: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          metaDescription: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-        }
-  );
-  // console.log('fieldsValues', fieldsValues);
+      };
+      fetchData();
+    }
+  }, [id, pending, rejected, resolved]);
+
+  React.useEffect(() => {
+    if (fieldsValues) {
+      const ukName = fieldsValues.name.find(item => item.code === 'uk');
+      setChosenAnalysisPackageName(ukName!.value);
+    }
+  }, [fieldsValues]);
 
   const handleClickOpenModal = (variant: string) => {
     if (variant === 'back') {
@@ -201,84 +177,99 @@ const AnalysesPackagesData: React.FC<IAnalysesPackagesDataProps> = ({
 
   return (
     <Box>
-      <PagesDataCommon
-        chosenRowItem={chosenPackage}
-        handleClickOpenModal={handleClickOpenModal}
-        links={links}
-        linkId={linkId}
-        handleClickLink={handleClickLink}
-        linksData={{
-          link: initialLink,
-          name: chosenPackage ? chosenPackage.name : null,
-          pageName,
-          parentPageName,
-        }}
-        visibilityIcon
-      />
-      <Box
-        component="form"
-        noValidate
-        autoComplete="off"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          pt: '24px',
-          pb: '48px',
-        }}
-      >
-        {linkId === 1 && (
-          <Basic
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-            languages={languages}
+      {status === pending && <Loader />}
+      {status !== pending && status !== rejected && (
+        <>
+          <PagesDataCommon
+            handleClickOpenModal={handleClickOpenModal}
+            links={links}
+            linkId={linkId}
+            handleClickLink={handleClickLink}
+            linksData={{
+              link: initialLink,
+              name: chosenAnalysisPackageName
+                ? chosenAnalysisPackageName
+                : null,
+              pageName,
+              parentPageName,
+            }}
+            dataWasChanged={dataWasChanged}
+            visibilityIcon
           />
-        )}
-        {linkId === 2 && (
-          <Data
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-          />
-        )}
-        {linkId === 3 && (
-          <Prices
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-          />
-        )}
-        {linkId === 4 && (
-          <SEO
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-            languages={languages}
-          />
-        )}
-      </Box>
-      {openBackModal && (
-        <Modal
-          shouldOpenModal={openBackModal}
-          handleCloseModal={handleCloseModal}
-          type={'back'}
-          link={initialLink}
-        />
-      )}
-      {openDeleteModal && (
-        <Modal
-          shouldOpenModal={openDeleteModal}
-          handleCloseModal={handleCloseModal}
-          type={'delete'}
-        />
-      )}
-      {openSaveModal && (
-        <Modal
-          shouldOpenModal={openSaveModal}
-          handleCloseModal={handleCloseModal}
-          type={'save'}
-          dataToSend={fieldsValues}
-        />
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              pt: '24px',
+              pb: '48px',
+            }}
+          >
+            {linkId === 1 && (
+              <Basic
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+                languages={languages}
+              />
+            )}
+            {linkId === 2 && (
+              <Data
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+              />
+            )}
+            {linkId === 3 && (
+              <Prices
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+                citiesList={citiesList}
+              />
+            )}
+            {linkId === 4 && (
+              <SEO
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+                languages={languages}
+              />
+            )}
+          </Box>
+          {openBackModal && (
+            <Modal
+              shouldOpenModal={openBackModal}
+              handleCloseModal={handleCloseModal}
+              type={'back'}
+              link={initialLink}
+              dataWasChanged={dataWasChanged}
+            />
+          )}
+          {openDeleteModal && (
+            <Modal
+              shouldOpenModal={openDeleteModal}
+              handleCloseModal={handleCloseModal}
+              type={'delete'}
+              link={initialLink}
+              handleDeleteData={() => handleDeleteAnalysisPackage(id as string)}
+            />
+          )}
+          {openSaveModal && (
+            <Modal
+              shouldOpenModal={openSaveModal}
+              handleCloseModal={handleCloseModal}
+              type={'save'}
+              dataToSend={fieldsValues}
+              handleEditData={() =>
+                handleSendAnalysesPackageData(id as string, fieldsValues)
+              }
+              handlePostData={() => handleAddAnalysisPackage(fieldsValues)}
+            />
+          )}
+        </>
       )}
     </Box>
   );

@@ -5,7 +5,6 @@ import { IAnalysisCategory } from '../types/analysisCategoryTypes';
 export const fetchAnalysesCategoriesList = async () => {
   try {
     const response = await axios.get('/analysis-category');
-    console.log('response.data.data:', response.data.data);
     return response.data.data;
   } catch (error) {}
 };
@@ -13,7 +12,6 @@ export const fetchAnalysesCategoriesList = async () => {
 export const fetchAnalysisCategoryById = async (id: string) => {
   try {
     const response = await axios.get(`/analysis-category/${id}`);
-    console.log('response.data.data:', response.data.data);
     return response.data.data;
   } catch (error) {}
 };

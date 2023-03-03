@@ -10,6 +10,7 @@ import OrderStatus from '../components/TableComponents/OrderStatus';
 import { handleDeleteNews } from '../services/newsAPI';
 import { handleDeleteAnalysis } from '../services/analysesAPI';
 import { handleDeleteAnalysisCategory } from '../services/analysesCategoriesAPI';
+import { handleDeleteAnalysisPackage } from '../services/analysesPackagesAPI';
 
 export const analysesColumns: GridColDef[] = [
   {
@@ -48,8 +49,8 @@ export const analysesColumns: GridColDef[] = [
   //   },
   // },
   {
-    field: 'category',
-    headerName: 'Категорія',
+    field: 'categories',
+    headerName: 'Категорії',
     width: 130,
     editable: false,
     headerAlign: 'center',
@@ -156,7 +157,12 @@ export const analysesPackagesColumns: GridColDef[] = [
     editable: false,
     sortable: false,
     disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
+    renderCell: params => (
+      <BasicActions
+        id={params.row.id}
+        handleDeleteData={() => handleDeleteAnalysisPackage(params.row.id)}
+      />
+    ),
     width: 120,
     headerAlign: 'center',
     align: 'center',

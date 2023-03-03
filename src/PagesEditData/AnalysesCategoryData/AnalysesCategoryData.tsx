@@ -51,6 +51,7 @@ const AnalysesCategoriesData: React.FC<IAnalysesCategoriesDataProps> = ({
     ],
     url: '',
     sort: 0,
+    top: false,
     metaTitle: [
       { code: 'uk', value: '' },
       { code: 'en', value: '' },

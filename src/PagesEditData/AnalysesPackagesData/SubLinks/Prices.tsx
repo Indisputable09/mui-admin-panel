@@ -7,10 +7,9 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import { nanoid } from 'nanoid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-// import Autocomplete from '../../../components/Inputs/Autocomplete';
+import Autocomplete from '../../../components/Inputs/Autocomplete';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../components/Inputs/StyledField';
 import { stopInputScroll } from '../../../constants';
@@ -23,19 +22,21 @@ interface IPricesProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    prices: {
-      id: string;
-      city: string | null;
-      price: number;
-      priceWithDiscount: number;
-    }[];
+    prices:
+      | {
+          city: number | null;
+          price: number;
+          priceWithDiscount: number | null;
+        }[];
   };
+  citiesList: { id: number; value: string }[];
 }
 
 export const Prices: React.FC<IPricesProps> = ({
   darkTheme,
   fieldsValues,
   setFieldsValues,
+  citiesList,
 }) => {
   const handleAddClick = () => {
     setFieldsValues((prevState: any) => {
@@ -44,10 +45,9 @@ export const Prices: React.FC<IPricesProps> = ({
         prices: [
           ...prevState.prices,
           {
-            id: nanoid(3),
             city: null,
             price: 0,
-            priceWithDiscount: 0,
+            priceWithDiscount: null,
           },
         ],
       };
@@ -56,12 +56,18 @@ export const Prices: React.FC<IPricesProps> = ({
 
   const handleFieldsChange =
     (index: number, key?: string) => (e: any, newValue?: string | null) => {
+      const newCityTOSend = citiesList.filter(
+        (item: any) => item.value === newValue
+      )[0];
+      const cityId = newCityTOSend
+        ? (newCityTOSend as { id: number; value: string }).id
+        : null;
       const newArray = fieldsValues.prices.map((item, i) => {
         if (index === i) {
           if (key) {
             return {
               ...item,
-              [key]: newValue,
+              [key]: cityId,
             };
           } else {
             return {
@@ -81,9 +87,20 @@ export const Prices: React.FC<IPricesProps> = ({
       });
     };
 
-  const handleDeletePriceClick = (id: string) => {
+  const remainingCities = citiesList.filter(city => {
+    const chosenObj = fieldsValues.prices.find(price => {
+      return price.city === city.id;
+    });
+    if (chosenObj) {
+      return chosenObj.city !== city.id;
+    } else {
+      return city;
+    }
+  });
+
+  const handleDeletePriceClick = (id: number) => {
     const filteredData = fieldsValues.prices.filter(
-      (item: any) => item.id !== id
+      (item: any, index: number) => index !== id
     );
     setFieldsValues((prevState: typeof fieldsValues) => {
       return {
@@ -92,17 +109,6 @@ export const Prices: React.FC<IPricesProps> = ({
       };
     });
   };
-
-  // const remainingCities = cities.filter(city => {
-  //   const chosenObj = fieldsValues.prices.find(price => {
-  //     return price.city === city;
-  //   });
-  //   if (chosenObj) {
-  //     return chosenObj.city !== city;
-  //   } else {
-  //     return city;
-  //   }
-  // });
 
   const { classes, cx } = usePagesDataCommonStyles();
 
@@ -116,22 +122,24 @@ export const Prices: React.FC<IPricesProps> = ({
         <>
           {fieldsValues.prices.map((item, index) => {
             return (
-              <React.Fragment key={item.id}>
+              <React.Fragment key={index}>
                 <InputLabel
                   htmlFor="city"
                   className={cx(classes.label, darkTheme ? 'dark' : null)}
                 >
                   Місто
-                  {/* <Autocomplete
-                    id="producer"
+                  <Autocomplete
+                    id="city"
                     onChange={handleFieldsChange(index, 'city')}
-                    value={item.city}
+                    value={citiesList
+                      .filter((city: any) => city.id === item.city)
+                      .map((value: any) => value.value)}
                     list={remainingCities}
                     className={cx(
                       classes.autocomplete,
                       darkTheme ? 'dark' : null
                     )}
-                  /> */}
+                  />
                 </InputLabel>
                 <InputLabel
                   htmlFor="price"
@@ -179,7 +187,7 @@ export const Prices: React.FC<IPricesProps> = ({
                       classes.deleteBanner,
                       darkTheme ? 'dark' : null
                     )}
-                    onClick={() => handleDeletePriceClick(item.id)}
+                    onClick={() => handleDeletePriceClick(index)}
                   >
                     <DeleteIcon sx={{ width: '28px', height: '28px' }} />
                   </IconButton>

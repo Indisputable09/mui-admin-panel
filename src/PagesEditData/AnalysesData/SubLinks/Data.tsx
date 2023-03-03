@@ -9,7 +9,7 @@ interface IDataProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    category: number[] | null;
+    categories: number[] | null;
     url: string;
     code: string;
     published: boolean;
@@ -64,7 +64,7 @@ export const Data: React.FC<IDataProps> = ({
 
   const getAutocompleteValue = () => {
     const array = categoriesList.filter((item: any) =>
-      fieldsValues.category?.includes(item.id)
+      fieldsValues.categories?.includes(item.id)
     );
     return array.map((obj: { id: number; value: string }) => obj.value);
   };
@@ -76,7 +76,7 @@ export const Data: React.FC<IDataProps> = ({
   return (
     <>
       <InputLabel
-        htmlFor="category"
+        htmlFor="categories"
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
         <div>
@@ -85,9 +85,9 @@ export const Data: React.FC<IDataProps> = ({
         <MultipleAutocomplete
           list={categoriesList}
           darkTheme={darkTheme}
-          id="category"
+          id="categories"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
-          onChange={handleAutocompleteChange('category')}
+          onChange={handleAutocompleteChange('categories')}
           value={autocompleteValue}
         />
       </InputLabel>
