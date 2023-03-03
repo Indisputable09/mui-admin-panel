@@ -40,6 +40,10 @@ export const handleSendAnalysesPackageData = async (
       toast.error(`Поле "Назва" обов'язкове`);
     } else if (!data.code) {
       toast.error(`Поле "Код" обов'язкове`);
+    } else if (!data.analyses) {
+      toast.error(`Поле "Категорії" обов'язкове`);
+    } else if (!data.prices) {
+      toast.error(`Ціни обов'язкові`);
     } else {
       await editAnalysisPackageById(id, data);
     }
@@ -81,7 +85,9 @@ export const handleAddAnalysisPackage = async (data: IAnalysisPackage) => {
     } else if (!data.code) {
       toast.error(`Поле "Код" обов'язкове`);
     } else if (!data.analyses) {
-      toast.error(`Поле "Аналізи" обов'язкове`);
+      toast.error(`Поле "Категорії" обов'язкове`);
+    } else if (!data.prices) {
+      toast.error(`Ціни обов'язкові`);
     } else {
       await addNewAnalysisPackage(data);
     }

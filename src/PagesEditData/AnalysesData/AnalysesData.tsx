@@ -9,12 +9,12 @@ import { haveSameData, Status } from '../../constants';
 import { IAnalysis } from '../../types/analysisTypes';
 import {
   fetchAnalysisById,
-  fetchCities,
   handleAddAnalysis,
   handleDeleteAnalysis,
   handleSendAnalysesData,
 } from '../../services/analysesAPI';
 import Loader from '../../components/Loader';
+import { fetchCities } from '../../services/citiesAPI';
 
 interface IAnalysesDataProps {
   initialLink: string;

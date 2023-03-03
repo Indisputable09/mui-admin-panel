@@ -32,6 +32,12 @@ export const handleSendNewsData = async (id: string, data: INews) => {
       toast.error(`Поле "URL" обов'язкове`);
     } else if (data.name.some(item => !item.value)) {
       toast.error(`Поле "Назва" обов'язкове`);
+    } else if (data.shortDescription.some(item => !item.value)) {
+      toast.error(`Поле "Короткий опис" обов'язкове`);
+    } else if (data.description.some(item => !item.value)) {
+      toast.error(`Поле "Опис" обов'язкове`);
+    } else if (!data.publicationDate) {
+      toast.error(`Поле "Дата публікації" обов'язкове`);
     } else {
       await editNewsById(id, data);
     }
@@ -70,6 +76,12 @@ export const handleAddNews = async (data: INews) => {
       toast.error(`Поле "URL" обов'язкове`);
     } else if (data.name.some(item => !item.value)) {
       toast.error(`Поле "Назва" обов'язкове`);
+    } else if (data.shortDescription.some(item => !item.value)) {
+      toast.error(`Поле "Короткий опис" обов'язкове`);
+    } else if (data.description.some(item => !item.value)) {
+      toast.error(`Поле "Опис" обов'язкове`);
+    } else if (!data.publicationDate) {
+      toast.error(`Поле "Дата публікації" обов'язкове`);
     } else {
       await addNewNews(data);
     }

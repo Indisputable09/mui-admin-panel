@@ -3,7 +3,7 @@ import { Checkbox, FormControlLabel, InputLabel, Switch } from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
-import { fetchCategories } from '../../../services/analysesAPI';
+import { fetchCategories } from '../../../services/analysesCategoriesAPI';
 
 interface IDataProps {
   darkTheme: boolean;
@@ -80,7 +80,7 @@ export const Data: React.FC<IDataProps> = ({
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
         <div>
-          Категорія<span style={{ color: 'red', fontSize: '20px' }}>*</span>
+          Категорії<span style={{ color: 'red', fontSize: '20px' }}>*</span>
         </div>
         <MultipleAutocomplete
           list={categoriesList}

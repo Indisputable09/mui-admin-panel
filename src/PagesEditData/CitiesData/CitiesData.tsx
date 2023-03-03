@@ -1,13 +1,19 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { CitiesBasic, CitiesSEO } from './SubLinks';
-import { useLocation, useParams } from 'react-router-dom';
-import { citiesRows } from '../../TableRows/TableRows';
+import { CitiesBasic, CityData } from './SubLinks';
+import { useParams } from 'react-router-dom';
 import Modal from '../../components/Modal';
 import PagesDataCommon from '../PagesDataCommon';
 import { useGlobalContext } from '../../hooks/GlobalContext';
-import { CityData } from './SubLinks/CityData';
-import { nanoid } from 'nanoid';
+import { haveSameData, Status } from '../../constants';
+import {
+  fetchCityById,
+  handleAddCity,
+  handleDeleteCity,
+  handleSendCityData,
+} from '../../services/citiesAPI';
+import { ICity } from '../../types/cityTypes';
+import Loader from '../../components/Loader';
 
 interface ICitiesDataProps {
   initialLink: string;
@@ -23,7 +29,6 @@ const languages = [
 const links = [
   { name: 'загальне', id: 1 },
   { name: 'дані', id: 2 },
-  { name: 'seo', id: 3 },
 ];
 
 const CitiesData: React.FC<ICitiesDataProps> = ({
@@ -31,83 +36,73 @@ const CitiesData: React.FC<ICitiesDataProps> = ({
   pageName,
   parentPageName,
 }) => {
+  const { idle, pending, resolved, rejected } = Status;
   const { darkTheme } = useGlobalContext();
   const [linkId, setLinkId] = React.useState<number>(1);
   const [openBackModal, setOpenBackModal] = React.useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = React.useState<boolean>(false);
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
+  const [status, setStatus] = React.useState(idle);
+  const [dataWasChanged, setDataWasChanged] = React.useState<boolean>(false);
+  const [initialData, setInitialData] = React.useState<ICity>({
+    name: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    url: '',
+    phoneNumbers: [''],
+    address: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    workingHours: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    email: '',
+    mapLink: '',
+    metaTitle: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+    metaDescription: [
+      { code: 'uk', value: '' },
+      { code: 'en', value: '' },
+    ],
+  });
+
+  const [fieldsValues, setFieldsValues] = React.useState<ICity>(initialData);
+  const [chosenCityName, setChosenCityName] = React.useState<string>('');
 
   const { id } = useParams();
-  const location = useLocation();
-  const activePath = location.pathname.split('/');
-  const chosenAction = activePath[activePath.length - 1];
-  const chosenCity = citiesRows.find(row => row.id === Number(id));
 
-  const [fieldsValues, setFieldsValues] = React.useState(
-    chosenCity && chosenAction === 'edit'
-      ? {
-          name: [
-            { code: 'uk', value: 'ukr value' },
-            { code: 'en', value: 'eng value' },
-          ],
-          url: 'url',
-          phoneNumbers: [
-            {
-              id: nanoid(3),
-              value: '0992551552',
-            },
-          ],
-          address: [
-            { code: 'uk', value: 'ukr address' },
-            { code: 'en', value: 'eng address' },
-          ],
-          workingHours: [
-            { code: 'uk', value: 'ukr workingHours' },
-            { code: 'en', value: 'eng workingHours' },
-          ],
-          email: 'test@mail.com',
-          mapLink: 'link',
-          metaTitle: [
-            { code: 'uk', value: 'ukr' },
-            { code: 'en', value: 'eng' },
-          ],
-          metaDescription: [
-            { code: 'uk', value: 'ukr' },
-            { code: 'en', value: 'eng' },
-          ],
+  React.useEffect(() => {
+    setDataWasChanged(!haveSameData(initialData, fieldsValues));
+  }, [fieldsValues, initialData]);
+
+  React.useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        try {
+          setStatus(pending);
+          const cityById = await fetchCityById(id as string);
+          setFieldsValues(cityById);
+          setInitialData(cityById);
+          setStatus(resolved);
+        } catch (error) {
+          setStatus(rejected);
         }
-      : {
-          name: [
-            { code: 'uk', value: 'ukr value' },
-            { code: 'en', value: 'eng value' },
-          ],
-          url: '',
-          address: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          workingHours: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          phoneNumbers: [
-            {
-              id: nanoid(3),
-              value: '0992551552',
-            },
-          ],
-          email: '',
-          mapLink: '',
-          metaTitle: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-          metaDescription: [
-            { code: 'uk', value: '' },
-            { code: 'en', value: '' },
-          ],
-        }
-  );
+      };
+      fetchData();
+    }
+  }, [id, pending, rejected, resolved]);
+
+  React.useEffect(() => {
+    if (fieldsValues) {
+      const ukName = fieldsValues.name.find(item => item.code === 'uk');
+      setChosenCityName(ukName!.value);
+    }
+  }, [fieldsValues]);
 
   const handleClickOpenModal = (variant: string) => {
     if (variant === 'back') {
@@ -131,78 +126,81 @@ const CitiesData: React.FC<ICitiesDataProps> = ({
 
   return (
     <Box>
-      <PagesDataCommon
-        chosenRowItem={chosenCity}
-        handleClickOpenModal={handleClickOpenModal}
-        links={links}
-        linkId={linkId}
-        handleClickLink={handleClickLink}
-        linksData={{
-          link: initialLink,
-          name: chosenCity ? chosenCity.name : null,
-          pageName,
-          parentPageName,
-        }}
-        visibilityIcon
-      />
-      <Box
-        component="form"
-        noValidate
-        autoComplete="off"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          pt: '24px',
-          pb: '48px',
-        }}
-      >
-        {linkId === 1 && (
-          <CitiesBasic
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-            languages={languages}
+      {status === pending && <Loader />}
+      {status !== pending && status !== rejected && (
+        <>
+          <PagesDataCommon
+            handleClickOpenModal={handleClickOpenModal}
+            links={links}
+            linkId={linkId}
+            handleClickLink={handleClickLink}
+            linksData={{
+              link: initialLink,
+              name: chosenCityName ? chosenCityName : null,
+              pageName,
+              parentPageName,
+            }}
+            visibilityIcon
+            dataWasChanged={dataWasChanged}
           />
-        )}
-        {linkId === 2 && (
-          <CityData
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-            languages={languages}
-          />
-        )}
-        {linkId === 3 && (
-          <CitiesSEO
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-            languages={languages}
-          />
-        )}
-      </Box>
-      {openBackModal && (
-        <Modal
-          shouldOpenModal={openBackModal}
-          handleCloseModal={handleCloseModal}
-          type={'back'}
-          link={initialLink}
-        />
-      )}
-      {openDeleteModal && (
-        <Modal
-          shouldOpenModal={openDeleteModal}
-          handleCloseModal={handleCloseModal}
-          type={'delete'}
-        />
-      )}
-      {openSaveModal && (
-        <Modal
-          shouldOpenModal={openSaveModal}
-          handleCloseModal={handleCloseModal}
-          type={'save'}
-          dataToSend={fieldsValues}
-        />
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              pt: '24px',
+              pb: '48px',
+            }}
+          >
+            {linkId === 1 && (
+              <CitiesBasic
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+                languages={languages}
+              />
+            )}
+            {linkId === 2 && (
+              <CityData
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+              />
+            )}
+          </Box>
+          {openBackModal && (
+            <Modal
+              shouldOpenModal={openBackModal}
+              handleCloseModal={handleCloseModal}
+              type={'back'}
+              link={initialLink}
+              dataWasChanged={dataWasChanged}
+            />
+          )}
+          {openDeleteModal && (
+            <Modal
+              shouldOpenModal={openDeleteModal}
+              handleCloseModal={handleCloseModal}
+              type={'delete'}
+              link={initialLink}
+              handleDeleteData={() => handleDeleteCity(id as string)}
+            />
+          )}
+          {openSaveModal && (
+            <Modal
+              shouldOpenModal={openSaveModal}
+              handleCloseModal={handleCloseModal}
+              type={'save'}
+              dataToSend={fieldsValues}
+              handleEditData={() =>
+                handleSendCityData(id as string, fieldsValues)
+              }
+              handlePostData={() => handleAddCity(fieldsValues)}
+            />
+          )}
+        </>
       )}
     </Box>
   );

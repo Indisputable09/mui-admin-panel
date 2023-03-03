@@ -15,10 +15,7 @@ interface ICitiesBasicProps {
       code: string;
       value: string;
     }[];
-    workingHours: {
-      code: string;
-      value: string;
-    }[];
+    workingHours: { code: string; value: string }[];
   };
   languages: { name: string; id: number; code: string }[];
 }
@@ -137,21 +134,26 @@ export const CitiesBasic: React.FC<ICitiesBasicProps> = ({
         return (
           <React.Fragment key={index}>
             {item.code === languageCode && (
-              <InputLabel
-                htmlFor="workingHours"
-                className={cx(classes.label, darkTheme ? 'dark' : null)}
-              >
-                Часи праці
-                <StyledField
-                  id="workingHours"
-                  variant="outlined"
-                  sx={{ width: '100%', mt: '16px' }}
-                  required
-                  darkTheme={darkTheme}
-                  value={item.value}
-                  onChange={handleFieldsChange('workingHours', index)}
-                />
-              </InputLabel>
+              <>
+                <InputLabel
+                  htmlFor="workingHours"
+                  className={cx(
+                    classes.label,
+                    darkTheme ? 'dark' : null,
+                    'noBottomMargin'
+                  )}
+                >
+                  Часи праці
+                  <StyledField
+                    variant="outlined"
+                    id="workingHours"
+                    sx={{ width: '40%', mt: '16px' }}
+                    darkTheme={darkTheme}
+                    value={item.value}
+                    onChange={handleFieldsChange('workingHours', index)}
+                  />
+                </InputLabel>
+              </>
             )}
           </React.Fragment>
         );

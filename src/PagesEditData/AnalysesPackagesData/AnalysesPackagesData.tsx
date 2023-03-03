@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { Prices, Basic, Data, SEO } from './SubLinks';
-import {  useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Modal from '../../components/Modal';
 import PagesDataCommon from '../PagesDataCommon';
 import { useGlobalContext } from '../../hooks/GlobalContext';
 import { haveSameData, Status } from '../../constants';
 import { IAnalysisPackage } from '../../types/analysisPackageTypes';
-import { fetchCities } from '../../services/analysesAPI';
+import { fetchCities } from '../../services/citiesAPI';
 import {
   fetchAnalysisPackageById,
   handleAddAnalysisPackage,

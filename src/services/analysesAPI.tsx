@@ -34,6 +34,10 @@ export const handleSendAnalysesData = async (id: string, data: IAnalysis) => {
       toast.error(`Поле "Назва" обов'язкове`);
     } else if (!data.code) {
       toast.error(`Поле "Код" обов'язкове`);
+    } else if (!data.categories) {
+      toast.error(`Поле "Категорії" обов'язкове`);
+    } else if (!data.prices) {
+      toast.error(`Ціни обов'язкові`);
     } else {
       await editAnalysisById(id, data);
     }
@@ -74,22 +78,12 @@ export const handleAddAnalysis = async (data: IAnalysis) => {
       toast.error(`Поле "Назва" обов'язкове`);
     } else if (!data.code) {
       toast.error(`Поле "Код" обов'язкове`);
+    } else if (!data.categories) {
+      toast.error(`Поле "Категорії" обов'язкове`);
+    } else if (!data.prices) {
+      toast.error(`Ціни обов'язкові`);
     } else {
       await addNewAnalysis(data);
     }
-  } catch (error) {}
-};
-
-export const fetchCategories = async () => {
-  try {
-    const response = await axios.get(`/analysis-category/selections`);
-    return response.data.data;
-  } catch (error) {}
-};
-
-export const fetchCities = async () => {
-  try {
-    const response = await axios.get(`/city/selections`);
-    return response.data.data;
   } catch (error) {}
 };

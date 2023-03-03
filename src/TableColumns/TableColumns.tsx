@@ -11,6 +11,7 @@ import { handleDeleteNews } from '../services/newsAPI';
 import { handleDeleteAnalysis } from '../services/analysesAPI';
 import { handleDeleteAnalysisCategory } from '../services/analysesCategoriesAPI';
 import { handleDeleteAnalysisPackage } from '../services/analysesPackagesAPI';
+import { handleDeleteCity } from '../services/citiesAPI';
 
 export const analysesColumns: GridColDef[] = [
   {
@@ -510,7 +511,12 @@ export const citiesColumns: GridColDef[] = [
     headerAlign: 'center',
     align: 'center',
     disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
+    renderCell: params => (
+      <BasicActions
+        id={params.row.id}
+        handleDeleteData={() => handleDeleteCity(params.row.id)}
+      />
+    ),
     width: 120,
   },
 ];

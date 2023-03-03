@@ -1,24 +1,22 @@
 import React from 'react';
-import { Button, Divider, InputLabel } from '@mui/material';
+import { Box, Button, Divider, IconButton, InputLabel } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
-import { nanoid } from 'nanoid';
 
 interface ICityDataProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    phoneNumbers: { id: string; value: string }[];
+    phoneNumbers: string[];
     email: string;
     mapLink: string;
     url: string;
   };
-  languages: { name: string; id: number; code: string }[];
 }
 
 export const CityData: React.FC<ICityDataProps> = ({
-  languages,
   setFieldsValues,
   fieldsValues,
   darkTheme,
@@ -29,13 +27,7 @@ export const CityData: React.FC<ICityDataProps> = ({
     setFieldsValues((prevState: any) => {
       return {
         ...prevState,
-        phoneNumbers: [
-          ...prevState.phoneNumbers,
-          {
-            id: nanoid(3),
-            value: '',
-          },
-        ],
+        phoneNumbers: [...prevState.phoneNumbers, ''],
       };
     });
   };
@@ -44,15 +36,28 @@ export const CityData: React.FC<ICityDataProps> = ({
     (index?: number, key?: string) => (e: React.ChangeEvent) => {
       setFieldsValues((prevState: any) => {
         if (key) {
-          const newArray = fieldsValues[key].map((item: any, i: any) => {
-            if (index === i) {
-              return { ...item, value: (e.target as HTMLInputElement).value };
-            } else return item;
-          });
-          return {
-            ...prevState,
-            [key]: [...newArray],
-          };
+          if (key === 'phoneNumbers') {
+            const newArray = fieldsValues[key].map((item: any, i: any) => {
+              if (index === i) {
+                item = (e.target as HTMLInputElement).value;
+                return item;
+              } else return item;
+            });
+            return {
+              ...prevState,
+              [key]: [...newArray],
+            };
+          } else {
+            const newArray = fieldsValues[key].map((item: any, i: any) => {
+              if (index === i) {
+                return { ...item, value: (e.target as HTMLInputElement).value };
+              } else return item;
+            });
+            return {
+              ...prevState,
+              [key]: [...newArray],
+            };
+          }
         } else {
           return {
             ...prevState,
@@ -61,6 +66,19 @@ export const CityData: React.FC<ICityDataProps> = ({
         }
       });
     };
+
+  const handleDeletePhoneNumberClick = (id: number) => {
+    const filteredData = fieldsValues.phoneNumbers.filter((number, index) => {
+      return index !== id;
+    });
+    setFieldsValues((prevState: typeof fieldsValues) => {
+      return {
+        ...prevState,
+        phoneNumbers: filteredData,
+      };
+    });
+  };
+
   return (
     <>
       <InputLabel
@@ -74,16 +92,30 @@ export const CityData: React.FC<ICityDataProps> = ({
       </InputLabel>
       {fieldsValues.phoneNumbers.map((phoneNumber, index) => {
         return (
-          <StyledField
-            key={phoneNumber.id}
-            id={phoneNumber.id}
-            type="tel"
-            variant="outlined"
-            sx={{ width: '100%', mt: '16px' }}
-            onChange={handleFieldsChange(index, 'phoneNumbers')}
-            value={phoneNumber.value}
-            darkTheme={darkTheme}
-          />
+          <Box
+            key={index}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+            }}
+          >
+            <StyledField
+              id={phoneNumber}
+              type="tel"
+              variant="outlined"
+              sx={{ width: '100%', mt: '16px' }}
+              onChange={handleFieldsChange(index, 'phoneNumbers')}
+              value={phoneNumber ? phoneNumber : ''}
+              darkTheme={darkTheme}
+            />
+            <IconButton
+              className={cx(classes.deleteBanner, darkTheme ? 'dark' : null)}
+              onClick={() => handleDeletePhoneNumberClick(index)}
+            >
+              <DeleteIcon sx={{ width: '28px', height: '28px' }} />
+            </IconButton>
+          </Box>
         );
       })}
       <Button
