@@ -14,6 +14,7 @@ import { handleDeleteAnalysisPackage } from '../services/analysesPackagesAPI';
 import { handleDeleteCity } from '../services/citiesAPI';
 import { handleDeleteLanguage } from '../services/languagesAPI';
 import { handleDeleteAction } from '../services/actionsAPI';
+import { handleDeleteVacancy } from '../services/vacanciesAPI';
 
 export const analysesColumns: GridColDef[] = [
   {
@@ -493,7 +494,12 @@ export const vacanciesColumns: GridColDef[] = [
     editable: false,
     sortable: false,
     disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
+    renderCell: params => (
+      <BasicActions
+        id={params.row.id}
+        handleDeleteData={() => handleDeleteVacancy(params.row.id)}
+      />
+    ),
     width: 120,
     headerAlign: 'center',
     align: 'center',

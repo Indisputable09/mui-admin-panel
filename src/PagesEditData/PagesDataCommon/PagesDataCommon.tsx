@@ -1,7 +1,6 @@
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Divider, List, ListItem, Typography } from '@mui/material';
@@ -73,7 +72,7 @@ const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
               <ArrowBackIcon />
             </IconButton>
           )}
-          {visibilityIcon && (
+          {/* {visibilityIcon && (
             <IconButton
               className={classes.button}
               size="small"
@@ -83,7 +82,7 @@ const PagesDataCommon: React.FC<IPagesDataCommonProps> = ({
             >
               <VisibilityIcon />
             </IconButton>
-          )}
+          )} */}
           {noSaveIcon ? null : (
             <IconButton
               className={classes.button}

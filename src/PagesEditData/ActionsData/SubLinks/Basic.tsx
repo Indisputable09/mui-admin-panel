@@ -30,7 +30,7 @@ export const Basic: React.FC<IDescriptionProps> = ({
   React.useEffect(() => {
     const timeoutId = setTimeout(() => {
       setIsRendered(true);
-    }, 0);
+    }, 100);
     return () => {
       clearTimeout(timeoutId);
     };

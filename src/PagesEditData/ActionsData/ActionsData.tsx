@@ -165,7 +165,6 @@ const ActionsData: React.FC<IActionsDataProps> = ({
               parentPageName,
             }}
             visibilityIcon
-            noDeleteIcon
             dataWasChanged={dataWasChanged}
           />
           <Box
