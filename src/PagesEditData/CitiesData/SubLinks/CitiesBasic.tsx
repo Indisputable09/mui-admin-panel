@@ -1,7 +1,8 @@
 import React from 'react';
-import { InputLabel, List, ListItem, Typography } from '@mui/material';
+import { InputLabel } from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
+import { LanguagesTabsList } from '../../PagesDataCommon/LanguagesTabsList';
 
 interface ICitiesBasicProps {
   darkTheme: boolean;
@@ -17,7 +18,7 @@ interface ICitiesBasicProps {
     }[];
     workingHours: { code: string; value: string }[];
   };
-  languages: { name: string; id: number; code: string }[];
+  languages: { value: string; code: string }[];
 }
 
 export const CitiesBasic: React.FC<ICitiesBasicProps> = ({
@@ -28,7 +29,7 @@ export const CitiesBasic: React.FC<ICitiesBasicProps> = ({
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
   const [languageCode, setLanguageCode] = React.useState<string>(
-    languages[0].code
+    languages.length !== 0 ? languages[0].code : ''
   );
 
   const handleLanguageClick = (code: string) => {
@@ -59,28 +60,11 @@ export const CitiesBasic: React.FC<ICitiesBasicProps> = ({
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
       {fieldsValues.name.map((name, index) => {
         return (
           <React.Fragment key={index}>
@@ -99,7 +83,7 @@ export const CitiesBasic: React.FC<ICitiesBasicProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={name.value}
+                  value={name.value ? name.value : ''}
                   onChange={handleFieldsChange('name', index)}
                 />
               </InputLabel>
@@ -122,7 +106,7 @@ export const CitiesBasic: React.FC<ICitiesBasicProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={address.value}
+                  value={address.value ? address.value : ''}
                   onChange={handleFieldsChange('address', index)}
                 />
               </InputLabel>
@@ -149,7 +133,7 @@ export const CitiesBasic: React.FC<ICitiesBasicProps> = ({
                     id="workingHours"
                     sx={{ width: '40%', mt: '16px' }}
                     darkTheme={darkTheme}
-                    value={item.value}
+                    value={item.value ? item.value : ''}
                     onChange={handleFieldsChange('workingHours', index)}
                   />
                 </InputLabel>

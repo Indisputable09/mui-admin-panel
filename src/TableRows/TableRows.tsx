@@ -278,17 +278,6 @@ export const languagesRows = [
   },
 ];
 
-export const citiesRows = [
-  {
-    id: 1,
-    name: 'Київ',
-  },
-  {
-    id: 2,
-    name: 'Харків',
-  },
-];
-
 export const privacyPolicyRows = [
   {
     id: 1,

@@ -1,8 +1,9 @@
 import React from 'react';
-import { InputLabel, List, ListItem, Typography } from '@mui/material';
+import { InputLabel } from '@mui/material';
 import Editor from '../../../components/Inputs/Editor';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
+import { LanguagesTabsList } from '../../PagesDataCommon/LanguagesTabsList';
 
 interface IBasicProps {
   darkTheme: boolean;
@@ -28,7 +29,7 @@ interface IBasicProps {
       }[];
     }[];
   };
-  languages: { name: string; id: number; code: string }[];
+  languages: { value: string; code: string }[];
 }
 
 const labels = ['Вкладка 1', 'Вкладка 2', 'Вкладка 3'];
@@ -46,7 +47,12 @@ export const Basic: React.FC<IBasicProps> = ({
   const [isRendered, setIsRendered] = React.useState(false);
 
   React.useEffect(() => {
-    setIsRendered(true);
+    const timeoutId = setTimeout(() => {
+      setIsRendered(true);
+    }, 0);
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   const handleLanguageClick = (code: string) => {
@@ -116,28 +122,11 @@ export const Basic: React.FC<IBasicProps> = ({
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
       {fieldsValues.name.map((name, index) => {
         return (
           <React.Fragment key={index}>
@@ -155,7 +144,7 @@ export const Basic: React.FC<IBasicProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={name.value}
+                  value={name.value ? name.value : ''}
                   onChange={handleFieldsChange('name', index)}
                 />
               </InputLabel>
@@ -178,7 +167,7 @@ export const Basic: React.FC<IBasicProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={item.value}
+                  value={item.value ? item.value : ''}
                   onChange={handleFieldsChange('deadline', index)}
                 />
               </InputLabel>
@@ -206,7 +195,7 @@ export const Basic: React.FC<IBasicProps> = ({
                         sx={{ width: '100%', mt: '16px' }}
                         required
                         darkTheme={darkTheme}
-                        value={name.value}
+                        value={name.value ? name.value : ''}
                         onChange={handleTabsChange(index, 'name', nameIndex)}
                       />
                     </InputLabel>
@@ -221,7 +210,7 @@ export const Basic: React.FC<IBasicProps> = ({
                     {item.code === languageCode && (
                       <Editor
                         debug={false}
-                        initData={item.value}
+                        initData={item.value ? item.value : ''}
                         onChange={handleTabsChange(
                           index,
                           'description',

@@ -15,6 +15,7 @@ import {
 } from '../../services/analysesAPI';
 import Loader from '../../components/Loader';
 import { fetchCities } from '../../services/citiesAPI';
+import { fetchLanguages } from '../../services/languagesAPI';
 
 interface IAnalysesDataProps {
   initialLink: string;
@@ -27,11 +28,6 @@ const links = [
   { name: 'дані', id: 2 },
   { name: 'ціни', id: 3 },
   { name: 'seo', id: 4 },
-];
-
-const languages = [
-  { name: 'Укр', id: 1, code: 'uk' },
-  { name: 'Eng', id: 2, code: 'en' },
 ];
 
 const AnalysesData: React.FC<IAnalysesDataProps> = ({
@@ -47,50 +43,29 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
   const [status, setStatus] = React.useState(idle);
   const [dataWasChanged, setDataWasChanged] = React.useState<boolean>(false);
+  const [initialValueWithLanguages, setInitialValueWithLanguages] =
+    React.useState([{ code: 'uk', value: '' }]);
+  const [languagesList, setLanguagesList] = React.useState([]);
   const [initialData, setInitialData] = React.useState<IAnalysis>({
-    name: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
+    name: initialValueWithLanguages,
     url: '',
     code: '',
     tabs: [
       {
-        name: [
-          { code: 'uk', value: '' },
-          { code: 'en', value: '' },
-        ],
-        description: [
-          { code: 'uk', value: '' },
-          { code: 'en', value: '' },
-        ],
+        name: initialValueWithLanguages,
+        description: initialValueWithLanguages,
       },
       {
-        name: [
-          { code: 'uk', value: '' },
-          { code: 'en', value: '' },
-        ],
-        description: [
-          { code: 'uk', value: '' },
-          { code: 'en', value: '' },
-        ],
+        name: initialValueWithLanguages,
+        description: initialValueWithLanguages,
       },
       {
-        name: [
-          { code: 'uk', value: '' },
-          { code: 'en', value: '' },
-        ],
-        description: [
-          { code: 'uk', value: '' },
-          { code: 'en', value: '' },
-        ],
+        name: initialValueWithLanguages,
+        description: initialValueWithLanguages,
       },
     ],
     categories: null,
-    deadline: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
+    deadline: initialValueWithLanguages,
     published: false,
     makeAtHome: false,
     prices: [
@@ -100,19 +75,36 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
         priceWithDiscount: null,
       },
     ],
-    metaTitle: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
-    metaDescription: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
+    metaTitle: initialValueWithLanguages,
+    metaDescription: initialValueWithLanguages,
   });
   const [fieldsValues, setFieldsValues] =
     React.useState<IAnalysis>(initialData);
   const [chosenAnalysisName, setChosenAnalysisName] =
     React.useState<string>('');
+
+  React.useEffect(() => {
+    const result = languagesList.map(
+      (language: { code: string; value: string }) => {
+        return { code: language.code, value: '' };
+      }
+    );
+    setInitialValueWithLanguages(result);
+  }, [languagesList]);
+
+  React.useEffect(() => {
+    const getLanguages = async () => {
+      try {
+        setStatus(pending);
+        const languages = await fetchLanguages();
+        setLanguagesList(languages);
+        setStatus(resolved);
+      } catch (error) {
+        setStatus(rejected);
+      }
+    };
+    getLanguages();
+  }, [pending, rejected, resolved]);
 
   const { id } = useParams();
   const [citiesList, setCitiesList] = React.useState([]);
@@ -143,13 +135,46 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
         }
       };
       fetchData();
+    } else {
+      setFieldsValues({
+        name: initialValueWithLanguages,
+        url: '',
+        code: '',
+        tabs: [
+          {
+            name: initialValueWithLanguages,
+            description: initialValueWithLanguages,
+          },
+          {
+            name: initialValueWithLanguages,
+            description: initialValueWithLanguages,
+          },
+          {
+            name: initialValueWithLanguages,
+            description: initialValueWithLanguages,
+          },
+        ],
+        categories: null,
+        deadline: initialValueWithLanguages,
+        published: false,
+        makeAtHome: false,
+        prices: [
+          {
+            city: null,
+            price: 0,
+            priceWithDiscount: null,
+          },
+        ],
+        metaTitle: initialValueWithLanguages,
+        metaDescription: initialValueWithLanguages,
+      });
     }
-  }, [id, pending, rejected, resolved]);
+  }, [id, initialValueWithLanguages, pending, rejected, resolved]);
 
   React.useEffect(() => {
     if (fieldsValues) {
       const ukName = fieldsValues.name.find(item => item.code === 'uk');
-      setChosenAnalysisName(ukName!.value);
+      if (ukName) setChosenAnalysisName(ukName!.value);
     }
   }, [fieldsValues]);
 
@@ -203,12 +228,12 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
               pb: '48px',
             }}
           >
-            {linkId === 1 && (
+            {linkId === 1 && languagesList.length !== 0 && (
               <Basic
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
             )}
             {linkId === 2 && (
@@ -226,12 +251,12 @@ const AnalysesData: React.FC<IAnalysesDataProps> = ({
                 citiesList={citiesList}
               />
             )}
-            {linkId === 4 && (
+            {linkId === 4 && languagesList.length !== 0 && (
               <SEO
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
             )}
           </Box>

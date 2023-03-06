@@ -1,15 +1,9 @@
 import React from 'react';
-import {
-  Checkbox,
-  FormControlLabel,
-  InputLabel,
-  List,
-  ListItem,
-  Typography,
-} from '@mui/material';
+import { Checkbox, FormControlLabel, InputLabel } from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import { stopInputScroll } from '../../../constants';
+import { LanguagesTabsList } from '../../PagesDataCommon/LanguagesTabsList';
 
 interface IAnalysesCategoryBasicProps {
   darkTheme: boolean;
@@ -23,7 +17,7 @@ interface IAnalysesCategoryBasicProps {
     sort: number;
     top: boolean;
   };
-  languages: { name: string; id: number; code: string }[];
+  languages: { value: string; code: string }[];
 }
 
 export const AnalysesCategoryBasic: React.FC<IAnalysesCategoryBasicProps> = ({
@@ -83,28 +77,11 @@ export const AnalysesCategoryBasic: React.FC<IAnalysesCategoryBasicProps> = ({
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
       {fieldsValues.name.map((name, index) => {
         return (
           <React.Fragment key={index}>
@@ -123,7 +100,7 @@ export const AnalysesCategoryBasic: React.FC<IAnalysesCategoryBasicProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={name.value}
+                  value={name.value ? name.value : ''}
                   onChange={handleFieldsChange('name', index)}
                 />
               </InputLabel>
@@ -141,7 +118,7 @@ export const AnalysesCategoryBasic: React.FC<IAnalysesCategoryBasicProps> = ({
           variant="outlined"
           sx={{ width: '100%', mt: '16px' }}
           darkTheme={darkTheme}
-          value={fieldsValues.url}
+          value={fieldsValues.url ? fieldsValues.url : ''}
           onChange={handleFieldsChange()}
         />
       </InputLabel>

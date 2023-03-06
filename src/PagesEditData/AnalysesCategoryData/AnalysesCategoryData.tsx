@@ -14,17 +14,13 @@ import {
   handleSendAnalysesCategoryData,
 } from '../../services/analysesCategoriesAPI';
 import Loader from '../../components/Loader';
+import { fetchLanguages } from '../../services/languagesAPI';
 
 interface IAnalysesCategoriesDataProps {
   initialLink: string;
   pageName: string;
   parentPageName: string;
 }
-
-const languages = [
-  { name: 'Укр', id: 1, code: 'uk' },
-  { name: 'Eng', id: 2, code: 'en' },
-];
 
 const links = [
   { name: 'категорія', id: 1 },
@@ -44,23 +40,40 @@ const AnalysesCategoriesData: React.FC<IAnalysesCategoriesDataProps> = ({
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
   const [status, setStatus] = React.useState(idle);
   const [dataWasChanged, setDataWasChanged] = React.useState<boolean>(false);
+  const [initialValueWithLanguages, setInitialValueWithLanguages] =
+    React.useState([{ code: 'uk', value: '' }]);
+  const [languagesList, setLanguagesList] = React.useState([]);
   const [initialData, setInitialData] = React.useState<IAnalysisCategory>({
-    name: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
+    name: initialValueWithLanguages,
     url: '',
     sort: 0,
     top: false,
-    metaTitle: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
-    metaDescription: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
+    metaTitle: initialValueWithLanguages,
+    metaDescription: initialValueWithLanguages,
   });
+
+  React.useEffect(() => {
+    const result = languagesList.map(
+      (language: { code: string; value: string }) => {
+        return { code: language.code, value: '' };
+      }
+    );
+    setInitialValueWithLanguages(result);
+  }, [languagesList]);
+
+  React.useEffect(() => {
+    const getLanguages = async () => {
+      try {
+        setStatus(pending);
+        const languages = await fetchLanguages();
+        setLanguagesList(languages);
+        setStatus(resolved);
+      } catch (error) {
+        setStatus(rejected);
+      }
+    };
+    getLanguages();
+  }, [pending, rejected, resolved]);
 
   const { id } = useParams();
 
@@ -87,13 +100,24 @@ const AnalysesCategoriesData: React.FC<IAnalysesCategoriesDataProps> = ({
         }
       };
       fetchData();
+    } else {
+      setFieldsValues({
+        name: initialValueWithLanguages,
+        url: '',
+        sort: 0,
+        top: false,
+        metaTitle: initialValueWithLanguages,
+        metaDescription: initialValueWithLanguages,
+      });
     }
-  }, [id, pending, rejected, resolved]);
+  }, [id, initialValueWithLanguages, pending, rejected, resolved]);
 
   React.useEffect(() => {
     if (fieldsValues) {
       const ukName = fieldsValues.name.find(item => item.code === 'uk');
-      setChosenAnalysisCategoryName(ukName!.value);
+      if (ukName) {
+        setChosenAnalysisCategoryName(ukName!.value);
+      }
     }
   }, [fieldsValues]);
 
@@ -149,20 +173,20 @@ const AnalysesCategoriesData: React.FC<IAnalysesCategoriesDataProps> = ({
               pb: '48px',
             }}
           >
-            {linkId === 1 && (
+            {linkId === 1 && languagesList.length !== 0 && (
               <AnalysesCategoryBasic
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
             )}
-            {linkId === 2 && (
+            {linkId === 2 && languagesList.length !== 0 && (
               <AnalysesCategorySEO
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
             )}
           </Box>

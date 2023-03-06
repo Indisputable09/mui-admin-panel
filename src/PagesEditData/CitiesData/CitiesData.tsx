@@ -14,17 +14,13 @@ import {
 } from '../../services/citiesAPI';
 import { ICity } from '../../types/cityTypes';
 import Loader from '../../components/Loader';
+import { fetchLanguages } from '../../services/languagesAPI';
 
 interface ICitiesDataProps {
   initialLink: string;
   pageName: string;
   parentPageName: string;
 }
-
-const languages = [
-  { name: 'Укр', id: 1, code: 'uk' },
-  { name: 'Eng', id: 2, code: 'en' },
-];
 
 const links = [
   { name: 'загальне', id: 1 },
@@ -44,37 +40,47 @@ const CitiesData: React.FC<ICitiesDataProps> = ({
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
   const [status, setStatus] = React.useState(idle);
   const [dataWasChanged, setDataWasChanged] = React.useState<boolean>(false);
+  const [initialValueWithLanguages, setInitialValueWithLanguages] =
+    React.useState([{ code: 'uk', value: '' }]);
+  const [languagesList, setLanguagesList] = React.useState([]);
   const [initialData, setInitialData] = React.useState<ICity>({
-    name: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
+    name: initialValueWithLanguages,
     url: '',
     phoneNumbers: [''],
-    address: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
-    workingHours: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
+    address: initialValueWithLanguages,
+    workingHours: initialValueWithLanguages,
     email: '',
     mapLink: '',
-    metaTitle: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
-    metaDescription: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
+    metaTitle: initialValueWithLanguages,
+    metaDescription: initialValueWithLanguages,
   });
-
   const [fieldsValues, setFieldsValues] = React.useState<ICity>(initialData);
   const [chosenCityName, setChosenCityName] = React.useState<string>('');
 
+  React.useEffect(() => {
+    const result = languagesList.map(
+      (language: { code: string; value: string }) => {
+        return { code: language.code, value: '' };
+      }
+    );
+    setInitialValueWithLanguages(result);
+  }, [languagesList]);
+
   const { id } = useParams();
+
+  React.useEffect(() => {
+    const getLanguages = async () => {
+      try {
+        setStatus(pending);
+        const languages = await fetchLanguages();
+        setLanguagesList(languages);
+        setStatus(resolved);
+      } catch (error) {
+        setStatus(rejected);
+      }
+    };
+    getLanguages();
+  }, [pending, rejected, resolved]);
 
   React.useEffect(() => {
     setDataWasChanged(!haveSameData(initialData, fieldsValues));
@@ -94,13 +100,27 @@ const CitiesData: React.FC<ICitiesDataProps> = ({
         }
       };
       fetchData();
+    } else {
+      setFieldsValues({
+        name: initialValueWithLanguages,
+        url: '',
+        phoneNumbers: [''],
+        address: initialValueWithLanguages,
+        workingHours: initialValueWithLanguages,
+        email: '',
+        mapLink: '',
+        metaTitle: initialValueWithLanguages,
+        metaDescription: initialValueWithLanguages,
+      });
     }
-  }, [id, pending, rejected, resolved]);
+  }, [id, initialValueWithLanguages, pending, rejected, resolved]);
 
   React.useEffect(() => {
     if (fieldsValues) {
       const ukName = fieldsValues.name.find(item => item.code === 'uk');
-      setChosenCityName(ukName!.value);
+      if (ukName) {
+        setChosenCityName(ukName!.value);
+      }
     }
   }, [fieldsValues]);
 
@@ -154,12 +174,12 @@ const CitiesData: React.FC<ICitiesDataProps> = ({
               pb: '48px',
             }}
           >
-            {linkId === 1 && (
+            {linkId === 1 && languagesList.length !== 0 && (
               <CitiesBasic
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
             )}
             {linkId === 2 && (

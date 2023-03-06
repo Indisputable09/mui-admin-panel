@@ -14,6 +14,7 @@ import {
 import { INews } from '../../types/newsTypes';
 import Loader from '../../components/Loader';
 import { haveSameData, Status } from '../../constants';
+import { fetchLanguages } from '../../services/languagesAPI';
 
 interface INewsDataProps {
   initialLink: string;
@@ -25,11 +26,6 @@ const links = [
   { name: 'загальне', id: 1 },
   { name: 'дані', id: 2 },
   { name: 'seo', id: 3 },
-];
-
-const languages = [
-  { name: 'Укр', id: 1, code: 'uk' },
-  { name: 'Eng', id: 2, code: 'en' },
 ];
 
 const NewsData: React.FC<INewsDataProps> = ({
@@ -46,36 +42,47 @@ const NewsData: React.FC<INewsDataProps> = ({
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
   const [status, setStatus] = React.useState(idle);
   const [dataWasChanged, setDataWasChanged] = React.useState<boolean>(false);
+  const [initialValueWithLanguages, setInitialValueWithLanguages] =
+    React.useState([{ code: 'uk', value: '' }]);
+  const [languagesList, setLanguagesList] = React.useState([]);
   const [initialData, setInitialData] = React.useState<INews>({
-    name: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
-    shortDescription: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
-    description: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
+    name: initialValueWithLanguages,
+    shortDescription: initialValueWithLanguages,
+    description: initialValueWithLanguages,
     image: null,
     published: false,
     publicationDate: currentDay,
     url: '',
     recommendedNews: null,
-    metaTitle: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
-    metaDescription: [
-      { code: 'uk', value: '' },
-      { code: 'en', value: '' },
-    ],
+    metaTitle: initialValueWithLanguages,
+    metaDescription: initialValueWithLanguages,
     indexed: true,
   });
   const [fieldsValues, setFieldsValues] = React.useState<INews>(initialData);
   const [chosenNewsName, setChosenNewsName] = React.useState<string>('');
+
+  React.useEffect(() => {
+    const result = languagesList.map(
+      (language: { code: string; value: string }) => {
+        return { code: language.code, value: '' };
+      }
+    );
+    setInitialValueWithLanguages(result);
+  }, [languagesList]);
+
+  React.useEffect(() => {
+    const getLanguages = async () => {
+      try {
+        setStatus(pending);
+        const languages = await fetchLanguages();
+        setLanguagesList(languages);
+        setStatus(resolved);
+      } catch (error) {
+        setStatus(rejected);
+      }
+    };
+    getLanguages();
+  }, [pending, rejected, resolved]);
 
   const { id } = useParams();
 
@@ -97,13 +104,29 @@ const NewsData: React.FC<INewsDataProps> = ({
         }
       };
       fetchData();
+    } else {
+      setFieldsValues({
+        name: initialValueWithLanguages,
+        shortDescription: initialValueWithLanguages,
+        description: initialValueWithLanguages,
+        image: null,
+        published: false,
+        publicationDate: currentDay,
+        url: '',
+        recommendedNews: null,
+        metaTitle: initialValueWithLanguages,
+        metaDescription: initialValueWithLanguages,
+        indexed: true,
+      });
     }
-  }, [id, pending, rejected, resolved]);
+  }, [currentDay, id, initialValueWithLanguages, pending, rejected, resolved]);
 
   React.useEffect(() => {
     if (fieldsValues) {
       const ukName = fieldsValues.name.find(item => item.code === 'uk');
-      setChosenNewsName(ukName!.value);
+      if (ukName) {
+        setChosenNewsName(ukName!.value);
+      }
     }
   }, [fieldsValues]);
 
@@ -157,12 +180,12 @@ const NewsData: React.FC<INewsDataProps> = ({
               pb: '48px',
             }}
           >
-            {linkId === 1 && (
+            {linkId === 1 && languagesList.length !== 0 && (
               <Basic
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
             )}
             {linkId === 2 && (
@@ -172,12 +195,12 @@ const NewsData: React.FC<INewsDataProps> = ({
                 fieldsValues={fieldsValues}
               />
             )}
-            {linkId === 3 && (
+            {linkId === 3 && languagesList.length !== 0 && (
               <SEO
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
             )}
           </Box>

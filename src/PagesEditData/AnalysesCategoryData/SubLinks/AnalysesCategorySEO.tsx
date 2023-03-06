@@ -1,6 +1,7 @@
-import { InputLabel, List, ListItem, Typography } from '@mui/material';
+import { InputLabel } from '@mui/material';
 import React from 'react';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
+import { LanguagesTabsList } from '../../PagesDataCommon/LanguagesTabsList';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 
 interface IAnalysesCategorySEOProps {
@@ -16,7 +17,7 @@ interface IAnalysesCategorySEOProps {
       value: string;
     }[];
   };
-  languages: { name: string; id: number; code: string }[];
+  languages: { value: string; code: string }[];
 }
 
 export const AnalysesCategorySEO: React.FC<IAnalysesCategorySEOProps> = ({
@@ -58,28 +59,11 @@ export const AnalysesCategorySEO: React.FC<IAnalysesCategorySEOProps> = ({
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
       {fieldsValues.metaTitle.map((title, index) => {
         return (
           <React.Fragment key={index}>
@@ -96,7 +80,7 @@ export const AnalysesCategorySEO: React.FC<IAnalysesCategorySEOProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={title.value}
+                  value={title.value ? title.value : ''}
                   onChange={handleFieldsChange('metaTitle', index)}
                 />
               </InputLabel>
@@ -120,7 +104,7 @@ export const AnalysesCategorySEO: React.FC<IAnalysesCategorySEOProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={description.value}
+                  value={description.value ? description.value : ''}
                   onChange={handleFieldsChange('metaDescription', index)}
                 />
               </InputLabel>

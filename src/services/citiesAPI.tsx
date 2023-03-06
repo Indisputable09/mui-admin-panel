@@ -12,7 +12,6 @@ export const fetchCitiesList = async () => {
 export const fetchCityById = async (id: string) => {
   try {
     const response = await axios.get(`/city/${id}`);
-    console.log('response.data.data:', response.data.data);
     return response.data.data;
   } catch (error) {}
 };
