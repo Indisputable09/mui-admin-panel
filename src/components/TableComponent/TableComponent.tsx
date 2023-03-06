@@ -68,6 +68,10 @@ const TableComponent: React.FC<ITableComponentProps> = ({
           return row.name.toLocaleLowerCase().includes(normalizedFilterValue);
         } else if (row.from) {
           return row.from.toLocaleLowerCase().includes(normalizedFilterValue);
+        } else if (row.question) {
+          return row.question
+            .toLocaleLowerCase()
+            .includes(normalizedFilterValue);
         } else return row;
       });
       return filteredRows;

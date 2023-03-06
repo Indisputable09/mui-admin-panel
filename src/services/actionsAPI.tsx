@@ -34,10 +34,6 @@ export const handleSendActionData = async (id: string, data: IAction) => {
       toast.error(`Поле "Назва" обов'язкове`);
     } else if (data.description.some(item => !item.value)) {
       toast.error(`Поле "Опис" обов'язкове`);
-    } else if (data.metaTitle.some(item => !item.value)) {
-      toast.error(`Поле "Мета Назва" обов'язкове`);
-    } else if (data.metaDescription.some(item => !item.value)) {
-      toast.error(`Поле "Мета Опис" обов'язкове`);
     } else {
       await editActionById(id, data);
     }
@@ -78,10 +74,6 @@ export const handleAddAction = async (data: IAction) => {
       toast.error(`Поле "Назва" обов'язкове`);
     } else if (data.description.some(item => !item.value)) {
       toast.error(`Поле "Опис" обов'язкове`);
-    } else if (data.metaTitle.some(item => !item.value)) {
-      toast.error(`Поле "Мета Назва" обов'язкове`);
-    } else if (data.metaDescription.some(item => !item.value)) {
-      toast.error(`Поле "Мета Опис" обов'язкове`);
     } else {
       await addNewAction(data);
     }

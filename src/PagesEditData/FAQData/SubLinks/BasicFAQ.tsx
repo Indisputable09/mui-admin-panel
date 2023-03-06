@@ -1,7 +1,8 @@
 import React from 'react';
-import { InputLabel, List, ListItem, Typography } from '@mui/material';
+import { InputLabel } from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
+import { LanguagesTabsList } from '../../PagesDataCommon/LanguagesTabsList';
 
 interface IBasicFAQProps {
   darkTheme: boolean;
@@ -10,7 +11,7 @@ interface IBasicFAQProps {
     answer: { code: string; value: string }[];
   };
   setFieldsValues: (obj: any) => void;
-  languages: { name: string; id: number; code: string }[];
+  languages: { value: string; code: string }[];
 }
 
 export const BasicFAQ: React.FC<IBasicFAQProps> = ({
@@ -52,28 +53,11 @@ export const BasicFAQ: React.FC<IBasicFAQProps> = ({
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
       {fieldsValues.question.map((item, index) => {
         return (
           <React.Fragment key={index}>
@@ -88,7 +72,7 @@ export const BasicFAQ: React.FC<IBasicFAQProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={item.value}
+                  value={item.value ? item.value : ''}
                   onChange={handleFieldsChange('question', index)}
                 />
               </InputLabel>
@@ -112,7 +96,7 @@ export const BasicFAQ: React.FC<IBasicFAQProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={item.value}
+                  value={item.value ? item.value : ''}
                   onChange={handleFieldsChange('answer', index)}
                 />
               </InputLabel>

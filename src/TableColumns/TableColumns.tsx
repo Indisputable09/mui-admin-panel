@@ -15,6 +15,7 @@ import { handleDeleteCity } from '../services/citiesAPI';
 import { handleDeleteLanguage } from '../services/languagesAPI';
 import { handleDeleteAction } from '../services/actionsAPI';
 import { handleDeleteVacancy } from '../services/vacanciesAPI';
+import { handleDeleteFAQ } from '../services/faqAPI';
 
 export const analysesColumns: GridColDef[] = [
   {
@@ -454,7 +455,7 @@ export const FAQColumns: GridColDef[] = [
     align: 'center',
   },
   {
-    field: 'name',
+    field: 'question',
     headerName: 'Назва',
     width: 910,
     flex: 1,
@@ -466,7 +467,12 @@ export const FAQColumns: GridColDef[] = [
     editable: false,
     sortable: false,
     disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
+    renderCell: params => (
+      <BasicActions
+        id={params.row.id}
+        handleDeleteData={() => handleDeleteFAQ(params.row.id)}
+      />
+    ),
     width: 120,
     headerAlign: 'center',
     align: 'center',
