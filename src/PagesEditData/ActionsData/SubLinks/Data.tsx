@@ -3,26 +3,30 @@ import {
   Box,
   FormControlLabel,
   IconButton,
-  // InputLabel,
+  InputLabel,
   Switch,
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
-// import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
 import DatePicker from '../../../components/Inputs/DatePicker';
+import { useParams } from 'react-router-dom';
+import { fetchAnalyses } from '../../../services/analysesPackagesAPI';
+import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
+import StyledField from '../../../components/Inputs/StyledField';
 
 interface IGalleryProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    image: string;
-    analyses: string[];
-    endDate: Date | Dayjs | null;
+    image: any;
+    analyses: number[] | null;
+    finishDate: Date | Dayjs | null | string;
     published: boolean;
+    url: string;
   };
 }
 
@@ -32,6 +36,16 @@ export const Data: React.FC<IGalleryProps> = ({
   fieldsValues,
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
+  const { id } = useParams();
+  const [analysesList, setAnalysesList] = React.useState([]);
+
+  React.useEffect(() => {
+    const getActionsList = async () => {
+      const list = await fetchAnalyses();
+      setAnalysesList(list);
+    };
+    getActionsList();
+  }, [id]);
 
   const handleEndDateChange = (
     name: string,
@@ -40,7 +54,7 @@ export const Data: React.FC<IGalleryProps> = ({
     setFieldsValues((prevState: any) => {
       return {
         ...prevState,
-        [name]: newValue,
+        [name]: dayjs(newValue).format('YYYY-MM-DDTHH:mm:ssZ[Z]').slice(0, 10),
       };
     });
   };
@@ -55,15 +69,34 @@ export const Data: React.FC<IGalleryProps> = ({
       });
     };
 
-  // const handleAutocompleteChange =
-  //   (key: string) => (e: any, values: string[]) => {
-  //     setFieldsValues((prevState: any) => {
-  //       return {
-  //         ...prevState,
-  //         [key]: values,
-  //       };
-  //     });
-  //   };
+  const handleFieldsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFieldsValues((prevState: any) => {
+      return {
+        ...prevState,
+        [e.target.id]: (e.target as HTMLInputElement).value,
+      };
+    });
+  };
+
+  const handleAutocompleteChange =
+    (key: string) => (e: any, values: { id: number; value: string }[]) => {
+      const chosenIds = values.map(item => item.id);
+      setFieldsValues((prevState: any) => {
+        return {
+          ...prevState,
+          [key]: chosenIds,
+        };
+      });
+    };
+
+  const getAutocompleteValue = () => {
+    const array = analysesList.filter((item: any) =>
+      fieldsValues.analyses?.includes(item.id)
+    );
+    return array.map((obj: { id: number; value: string }) => obj.value);
+  };
+
+  const autocompleteValue = getAutocompleteValue();
 
   return (
     <>
@@ -85,13 +118,22 @@ export const Data: React.FC<IGalleryProps> = ({
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              width: '200px',
+              width: '400px',
               height: '150px',
               marginRight: '30px',
               border: '1px solid grey',
             }}
           >
-            {fieldsValues.image ? null : (
+            {fieldsValues.image ? (
+              <>
+                <img
+                  src={fieldsValues.image}
+                  alt={'test'}
+                  width="100%"
+                  height="100%"
+                />
+              </>
+            ) : (
               <IconButton onClick={() => console.log('Add img')}>
                 <AddIcon
                   className={cx(
@@ -122,7 +164,11 @@ export const Data: React.FC<IGalleryProps> = ({
                 edge="start"
                 color="inherit"
                 aria-label="delete"
-                onClick={() => console.log('Delete img')}
+                onClick={() => {
+                  setFieldsValues((prevState: any) => {
+                    return { ...prevState, image: null };
+                  });
+                }}
               >
                 <DeleteIcon
                   className={cx(classes.deleteIcon, darkTheme ? 'dark' : null)}
@@ -132,27 +178,42 @@ export const Data: React.FC<IGalleryProps> = ({
           ) : null}
         </Box>
       </Box>
-      {/* <InputLabel
-        htmlFor="analyses"
+      <InputLabel
+        htmlFor="url"
         className={cx(classes.label, darkTheme ? 'dark' : null, 'topMargin')}
+      >
+        URL
+        <StyledField
+          required
+          id="url"
+          variant="outlined"
+          sx={{ width: '100%', mt: '16px' }}
+          darkTheme={darkTheme}
+          value={fieldsValues.url}
+          onChange={handleFieldsChange}
+        />
+      </InputLabel>
+      <InputLabel
+        htmlFor="analyses"
+        className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
         Аналізи
         <MultipleAutocomplete
-          list={categories}
+          list={analysesList}
           darkTheme={darkTheme}
           id="analyses"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
           onChange={handleAutocompleteChange('analyses')}
-          value={fieldsValues.analyses}
+          value={autocompleteValue}
         />
-      </InputLabel> */}
+      </InputLabel>
       <DatePicker
         noMaxDate
         darkTheme={darkTheme}
         label="Дата закінчення"
-        value={fieldsValues.endDate}
+        value={fieldsValues.finishDate}
         onChange={(newValue: Date | Dayjs | null) => {
-          handleEndDateChange('endDate', newValue);
+          handleEndDateChange('finishDate', newValue);
         }}
       />
       <FormControlLabel

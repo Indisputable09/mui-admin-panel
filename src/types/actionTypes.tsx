@@ -1,15 +1,14 @@
 import { Dayjs } from 'dayjs';
 
-export interface INews {
+export interface IAction {
   name: { code: string; value: string }[];
-  shortDescription: { code: string; value: string }[];
   description: { code: string; value: string }[];
   image: null | string;
-  published: boolean;
-  publicationDate: Date | Dayjs | null | string;
-  url: string;
-  recommendedNews: number[] | null;
+  analyses: number[] | null;
+  finishDate: Date | Dayjs | null | string;
+  published: false;
   metaTitle: { code: string; value: string }[];
   metaDescription: { code: string; value: string }[];
   indexed: boolean;
+  url: string;
 }

@@ -799,10 +799,13 @@ export const usePagesDataCommonStyles = makeStyles<void>()(
     },
     bannerImagesBlock: { display: 'flex', gap: '20%', flexWrap: 'wrap' },
     newsImgBlock: {
-      width: '350px',
+      width: '500px',
       display: 'flex',
       justifyContent: 'start',
       alignItems: 'center',
+      '&.grid': {
+        width: '350px',
+      },
     },
     newsImgBlockButton: {
       display: 'flex',

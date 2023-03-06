@@ -1,14 +1,8 @@
 import React from 'react';
-import {
-  FormControlLabel,
-  InputLabel,
-  List,
-  ListItem,
-  Switch,
-  Typography,
-} from '@mui/material';
+import { FormControlLabel, InputLabel, Switch } from '@mui/material';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../components/Inputs/StyledField';
+import { LanguagesTabsList } from '../../PagesDataCommon/LanguagesTabsList';
 
 interface ISEOProps {
   darkTheme: boolean;
@@ -24,7 +18,7 @@ interface ISEOProps {
     }[];
     indexed: boolean;
   };
-  languages: { name: string; id: number; code: string }[];
+  languages: { value: string; code: string }[];
 }
 
 export const SEO: React.FC<ISEOProps> = ({
@@ -76,28 +70,11 @@ export const SEO: React.FC<ISEOProps> = ({
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
       {fieldsValues.metaTitle.map((title, index) => {
         return (
           <React.Fragment key={index}>
@@ -114,7 +91,7 @@ export const SEO: React.FC<ISEOProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={title.value}
+                  value={title.value ? title.value : ''}
                   onChange={handleFieldsChange('metaTitle', index)}
                 />
               </InputLabel>
@@ -138,7 +115,7 @@ export const SEO: React.FC<ISEOProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={description.value}
+                  value={description.value ? description.value : ''}
                   onChange={handleFieldsChange('metaDescription', index)}
                 />
               </InputLabel>

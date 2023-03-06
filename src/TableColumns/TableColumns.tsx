@@ -13,6 +13,7 @@ import { handleDeleteAnalysisCategory } from '../services/analysesCategoriesAPI'
 import { handleDeleteAnalysisPackage } from '../services/analysesPackagesAPI';
 import { handleDeleteCity } from '../services/citiesAPI';
 import { handleDeleteLanguage } from '../services/languagesAPI';
+import { handleDeleteAction } from '../services/actionsAPI';
 
 export const analysesColumns: GridColDef[] = [
   {
@@ -327,18 +328,18 @@ export const actionsColumns: GridColDef[] = [
     editable: false,
   },
   {
-    field: 'active',
+    field: 'published',
     headerName: 'Активна',
     width: 80,
     editable: false,
     renderCell: params => {
-      return <ControlledSwitch status={params.row.active} />;
+      return <ControlledSwitch status={params.row.published} />;
     },
     headerAlign: 'center',
     align: 'center',
   },
   {
-    field: 'endDate',
+    field: 'finishDate',
     headerName: 'Дата закінчення',
     width: 150,
     editable: false,
@@ -353,7 +354,12 @@ export const actionsColumns: GridColDef[] = [
     headerAlign: 'center',
     align: 'center',
     disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
+    renderCell: params => (
+      <BasicActions
+        id={params.row.id}
+        handleDeleteData={() => handleDeleteAction(params.row.id)}
+      />
+    ),
     width: 120,
   },
 ];

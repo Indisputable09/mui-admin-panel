@@ -53,7 +53,7 @@ export const Basic: React.FC<IBasicProps> = ({
                   {image.label}
                 </Typography>
               </Box>
-              <Box className={cx(classes.newsImgBlock)}>
+              <Box className={cx(classes.newsImgBlock, 'grid')}>
                 <Box
                   sx={{
                     display: 'flex',

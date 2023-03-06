@@ -1,8 +1,9 @@
 import React from 'react';
-import { InputLabel, List, ListItem, Typography } from '@mui/material';
+import { InputLabel, Typography } from '@mui/material';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../components/Inputs/StyledField';
 import Editor from '../../../components/Inputs/Editor';
+import { LanguagesTabsList } from '../../PagesDataCommon/LanguagesTabsList';
 
 interface IDescriptionProps {
   darkTheme: boolean;
@@ -11,7 +12,7 @@ interface IDescriptionProps {
     name: { code: string; value: string }[];
     description: { code: string; value: string }[];
   };
-  languages: { id: number; code: string; name: string }[];
+  languages: { code: string; value: string }[];
 }
 
 export const Basic: React.FC<IDescriptionProps> = ({
@@ -24,6 +25,16 @@ export const Basic: React.FC<IDescriptionProps> = ({
   const [languageCode, setLanguageCode] = React.useState<string>(
     languages[0].code
   );
+  const [isRendered, setIsRendered] = React.useState(false);
+
+  React.useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setIsRendered(true);
+    }, 0);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   const handleLanguageClick = (code: string) => {
     setLanguageCode(code as string);
@@ -59,28 +70,11 @@ export const Basic: React.FC<IDescriptionProps> = ({
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
       {fieldsValues.name.map((item, index) => {
         return (
           <React.Fragment key={index}>
@@ -101,7 +95,7 @@ export const Basic: React.FC<IDescriptionProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={item.value}
+                  value={item.value ? item.value : ''}
                   onChange={handleFieldsChange('name', index)}
                 />
               </InputLabel>
@@ -112,19 +106,20 @@ export const Basic: React.FC<IDescriptionProps> = ({
       <Typography component="h2" className={classes.descriptionText}>
         Опис
       </Typography>
-      {fieldsValues.description.map((item, index) => {
-        return (
-          <React.Fragment key={index}>
-            {item.code === languageCode && (
-              <Editor
-                debug={false}
-                initData={item.value}
-                onChange={handleFieldsChange('description', index)}
-              />
-            )}
-          </React.Fragment>
-        );
-      })}
+      {isRendered &&
+        fieldsValues.description.map((item, index) => {
+          return (
+            <React.Fragment key={index}>
+              {item.code === languageCode && (
+                <Editor
+                  debug={false}
+                  initData={item.value ? item.value : ''}
+                  onChange={handleFieldsChange('description', index)}
+                />
+              )}
+            </React.Fragment>
+          );
+        })}
     </>
   );
 };
