@@ -17,9 +17,9 @@ interface IBasicProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    image: any;
+    image: string | null;
     published: boolean;
-    discount: string;
+    discount: string | null;
     url: string;
   };
 }
@@ -83,7 +83,16 @@ export const Basic: React.FC<IBasicProps> = ({
               border: '1px solid grey',
             }}
           >
-            {fieldsValues.image ? null : (
+            {fieldsValues.image ? (
+              <>
+                <img
+                  src={fieldsValues.image}
+                  alt={'test'}
+                  width="100%"
+                  // height="100%"
+                />
+              </>
+            ) : (
               <IconButton onClick={() => console.log('Add img')}>
                 <AddIcon
                   className={cx(
@@ -114,7 +123,14 @@ export const Basic: React.FC<IBasicProps> = ({
                 edge="start"
                 color="inherit"
                 aria-label="delete"
-                onClick={() => console.log('Delete img')}
+                onClick={() => {
+                  return setFieldsValues((prevState: any) => {
+                    return {
+                      ...prevState,
+                      image: '',
+                    };
+                  });
+                }}
               >
                 <DeleteIcon
                   className={cx(classes.deleteIcon, darkTheme ? 'dark' : null)}
@@ -134,7 +150,7 @@ export const Basic: React.FC<IBasicProps> = ({
           variant="outlined"
           sx={{ width: '280px', mt: '16px' }}
           darkTheme={darkTheme}
-          value={fieldsValues.discount}
+          value={fieldsValues.discount ? fieldsValues.discount : ''}
           onChange={handleFieldsChange}
         />
       </InputLabel>
@@ -152,7 +168,7 @@ export const Basic: React.FC<IBasicProps> = ({
           variant="outlined"
           sx={{ width: '100%', mt: '16px' }}
           darkTheme={darkTheme}
-          value={fieldsValues.url}
+          value={fieldsValues.url ? fieldsValues.url : ''}
           onChange={handleFieldsChange}
         />
       </InputLabel>

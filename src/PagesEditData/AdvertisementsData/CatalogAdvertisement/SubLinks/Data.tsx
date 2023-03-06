@@ -1,22 +1,14 @@
 import React from 'react';
-import { InputLabel, List, ListItem, Typography } from '@mui/material';
+import { InputLabel } from '@mui/material';
 import { usePagesDataCommonStyles } from '../../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../../components/Inputs/StyledField';
+import { LanguagesTabsList } from '../../../PagesDataCommon/LanguagesTabsList';
 
 interface IDataProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
-  fieldsValues: {
-    texts: {
-      id: string;
-      text: {
-        code: string;
-        value: string;
-      }[];
-      label: string;
-    }[];
-  };
-  languages: { name: string; id: number; code: string }[];
+  fieldsValues: { text1: { code: string; value: string }[] };
+  languages: { value: string; code: string }[];
 }
 
 export const Data: React.FC<IDataProps> = ({
@@ -35,85 +27,45 @@ export const Data: React.FC<IDataProps> = ({
   };
 
   const handleFieldsChange =
-    (index: number, valuesIndex: number) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (key: string, index?: number) => (e: React.ChangeEvent) => {
       setFieldsValues((prevState: any) => {
-        const newArray = prevState.texts.map((item: any, i: number) => {
+        const newArray = fieldsValues[key].map((item: any, i: any) => {
           if (index === i) {
-            const newValues = item.text.map(
-              (subItem: any, subIndex: number) => {
-                if (subIndex === valuesIndex) {
-                  return {
-                    ...subItem,
-                    value: (e.target as HTMLInputElement).value,
-                  };
-                } else {
-                  return subItem;
-                }
-              }
-            );
-            return {
-              ...item,
-              text: [...newValues],
-            };
-          } else {
-            return item;
-          }
+            return { ...item, value: (e.target as HTMLInputElement).value };
+          } else return item;
         });
         return {
           ...prevState,
-          texts: newArray,
+          [key]: [...newArray],
         };
       });
     };
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
-      {fieldsValues.texts.map((item, index) => {
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
+      {fieldsValues.text1.map((item, index) => {
         return (
           <React.Fragment key={index}>
-            <InputLabel
-              className={cx(classes.label, darkTheme ? 'dark' : null)}
-            >
-              {item.label}
-              {item.text.map((text, textIndex) => {
-                return (
-                  <React.Fragment key={textIndex}>
-                    {text.code === languageCode && (
-                      <StyledField
-                        variant="outlined"
-                        sx={{ width: '100%', mt: '16px' }}
-                        darkTheme={darkTheme}
-                        value={text.value}
-                        onChange={handleFieldsChange(index, textIndex)}
-                      />
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </InputLabel>
+            {item.code === languageCode && (
+              <InputLabel
+                className={cx(classes.label, darkTheme ? 'dark' : null)}
+              >
+                Текст 1
+                <StyledField
+                  variant="outlined"
+                  sx={{ width: '100%', mt: '16px' }}
+                  required
+                  darkTheme={darkTheme}
+                  value={item.value ? item.value : ''}
+                  onChange={handleFieldsChange('text1', index)}
+                />
+              </InputLabel>
+            )}
           </React.Fragment>
         );
       })}

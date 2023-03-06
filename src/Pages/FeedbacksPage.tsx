@@ -3,7 +3,6 @@ import { Typography } from '@mui/material';
 import CollapsedBreadcrumbs from '../components/Crumbs/Crumbs';
 import { useNavBarStyles } from '../components/NavBar/NavBar.styles';
 import TableComponent from '../components/TableComponent';
-import { feedbacksRows } from '../TableRows/TableRows';
 import { feedbacksColumns } from '../TableColumns/TableColumns';
 import { useGlobalContext } from '../hooks/GlobalContext';
 import { Status } from '../constants';

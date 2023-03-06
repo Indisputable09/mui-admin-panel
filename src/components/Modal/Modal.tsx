@@ -62,7 +62,7 @@ const Modal: React.FC<IModalProps> = ({
 
   const handleAgreeClick = async () => {
     handleCloseModal();
-    if (dataToSend && handleEditData && handlePostData) {
+    if (dataToSend && (handleEditData || handlePostData)) {
       handleSave();
     }
     if (link) {
