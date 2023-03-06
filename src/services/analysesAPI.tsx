@@ -16,16 +16,6 @@ export const fetchAnalysisById = async (id: string) => {
   } catch (error) {}
 };
 
-export const editAnalysisById = async (id: string, data: IAnalysis) => {
-  try {
-    const response = await axios.put(`/analysis/${id}`, data);
-    toast.success('Дані збережено');
-    return response.data.data;
-  } catch (error) {
-    toast.error('Щось пішло не так. Спробуйте ще раз');
-  }
-};
-
 export const handleSendAnalysesData = async (id: string, data: IAnalysis) => {
   try {
     if (!data.url) {
@@ -39,16 +29,10 @@ export const handleSendAnalysesData = async (id: string, data: IAnalysis) => {
     } else if (!data.prices) {
       toast.error(`Ціни обов'язкові`);
     } else {
-      await editAnalysisById(id, data);
+      const response = await axios.put(`/analysis/${id}`, data);
+      toast.success('Дані збережено');
+      return response.data.data;
     }
-  } catch (error) {}
-};
-
-export const deleteAnalysisById = async (id: string) => {
-  try {
-    const response = await axios.delete(`/analysis/${id}`);
-    toast.success('Аналіз видалено');
-    return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
   }
@@ -56,14 +40,8 @@ export const deleteAnalysisById = async (id: string) => {
 
 export const handleDeleteAnalysis = async (id: string) => {
   try {
-    await deleteAnalysisById(id as string);
-  } catch (error) {}
-};
-
-export const addNewAnalysis = async (data: IAnalysis) => {
-  try {
-    const response = await axios.post('/analysis/add', data);
-    toast.success('Аналіз додано');
+    const response = await axios.delete(`/analysis/${id}`);
+    toast.success('Аналіз видалено');
     return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
@@ -83,7 +61,11 @@ export const handleAddAnalysis = async (data: IAnalysis) => {
     } else if (!data.prices) {
       toast.error(`Ціни обов'язкові`);
     } else {
-      await addNewAnalysis(data);
+      const response = await axios.post('/analysis/add', data);
+      toast.success('Аналіз додано');
+      return response.data.data;
     }
-  } catch (error) {}
+  } catch (error) {
+    toast.error('Щось пішло не так. Спробуйте ще раз');
+  }
 };

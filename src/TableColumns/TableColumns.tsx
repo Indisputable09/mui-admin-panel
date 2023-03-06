@@ -16,6 +16,7 @@ import { handleDeleteLanguage } from '../services/languagesAPI';
 import { handleDeleteAction } from '../services/actionsAPI';
 import { handleDeleteVacancy } from '../services/vacanciesAPI';
 import { handleDeleteFAQ } from '../services/faqAPI';
+import { handleDeleteFeedback } from '../services/feedbackAPI';
 
 export const analysesColumns: GridColDef[] = [
   {
@@ -382,18 +383,18 @@ export const feedbacksColumns: GridColDef[] = [
     editable: false,
   },
   {
-    field: 'active',
+    field: 'published',
     headerName: 'Активна',
     width: 80,
     editable: false,
     renderCell: params => {
-      return <ControlledSwitch status={params.row.active} />;
+      return <ControlledSwitch status={params.row.published} />;
     },
     headerAlign: 'center',
     align: 'center',
   },
   {
-    field: 'date',
+    field: 'publicationDate',
     headerName: 'Дата',
     width: 150,
     editable: false,
@@ -408,7 +409,12 @@ export const feedbacksColumns: GridColDef[] = [
     headerAlign: 'center',
     align: 'center',
     disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
+    renderCell: params => (
+      <BasicActions
+        id={params.row.id}
+        handleDeleteData={() => handleDeleteFeedback(params.row.id)}
+      />
+    ),
     width: 120,
   },
 ];

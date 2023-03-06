@@ -16,19 +16,6 @@ export const fetchAnalysisPackageById = async (id: string) => {
   } catch (error) {}
 };
 
-export const editAnalysisPackageById = async (
-  id: string,
-  data: IAnalysisPackage
-) => {
-  try {
-    const response = await axios.put(`/complex/${id}`, data);
-    toast.success('Дані збережено');
-    return response.data.data;
-  } catch (error) {
-    toast.error('Щось пішло не так. Спробуйте ще раз');
-  }
-};
-
 export const handleSendAnalysesPackageData = async (
   id: string,
   data: IAnalysisPackage
@@ -45,16 +32,10 @@ export const handleSendAnalysesPackageData = async (
     } else if (!data.prices) {
       toast.error(`Ціни обов'язкові`);
     } else {
-      await editAnalysisPackageById(id, data);
+      const response = await axios.put(`/complex/${id}`, data);
+      toast.success('Дані збережено');
+      return response.data.data;
     }
-  } catch (error) {}
-};
-
-export const deleteAnalysisPackageById = async (id: string) => {
-  try {
-    const response = await axios.delete(`/complex/${id}`);
-    toast.success('Пакет видалено');
-    return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
   }
@@ -62,14 +43,8 @@ export const deleteAnalysisPackageById = async (id: string) => {
 
 export const handleDeleteAnalysisPackage = async (id: string) => {
   try {
-    await deleteAnalysisPackageById(id as string);
-  } catch (error) {}
-};
-
-export const addNewAnalysisPackage = async (data: IAnalysisPackage) => {
-  try {
-    const response = await axios.post('/complex/add', data);
-    toast.success('Пакет додано');
+    const response = await axios.delete(`/complex/${id}`);
+    toast.success('Пакет видалено');
     return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
@@ -89,9 +64,13 @@ export const handleAddAnalysisPackage = async (data: IAnalysisPackage) => {
     } else if (!data.prices) {
       toast.error(`Ціни обов'язкові`);
     } else {
-      await addNewAnalysisPackage(data);
+      const response = await axios.post('/complex/add', data);
+      toast.success('Пакет додано');
+      return response.data.data;
     }
-  } catch (error) {}
+  } catch (error) {
+    toast.error('Щось пішло не так. Спробуйте ще раз');
+  }
 };
 
 export const fetchAnalyses = async () => {

@@ -16,16 +16,6 @@ export const fetchLanguageById = async (id: string) => {
   } catch (error) {}
 };
 
-export const editLanguageById = async (id: string, data: ILanguage) => {
-  try {
-    const response = await axios.put(`/language/${id}`, data);
-    toast.success('Дані збережено');
-    return response.data.data;
-  } catch (error) {
-    toast.error('Щось пішло не так. Спробуйте ще раз');
-  }
-};
-
 export const handleSendLanguageData = async (id: string, data: ILanguage) => {
   try {
     if (!data.url) {
@@ -37,16 +27,10 @@ export const handleSendLanguageData = async (id: string, data: ILanguage) => {
     } else if (data.iso.length !== 2) {
       toast.error(`Поле "ISO" має містити 2 символи`);
     } else {
-      await editLanguageById(id, data);
+      const response = await axios.put(`/language/${id}`, data);
+      toast.success('Дані збережено');
+      return response.data.data;
     }
-  } catch (error) {}
-};
-
-export const deleteLanguageById = async (id: string) => {
-  try {
-    const response = await axios.delete(`/language/${id}`);
-    toast.success('Мову видалено');
-    return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
   }
@@ -54,14 +38,8 @@ export const deleteLanguageById = async (id: string) => {
 
 export const handleDeleteLanguage = async (id: string) => {
   try {
-    await deleteLanguageById(id as string);
-  } catch (error) {}
-};
-
-export const addNewLanguage = async (data: ILanguage) => {
-  try {
-    const response = await axios.post('/language/add', data);
-    toast.success('Мову додано');
+    const response = await axios.delete(`/language/${id}`);
+    toast.success('Мову видалено');
     return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
@@ -79,9 +57,13 @@ export const handleAddLanguage = async (data: ILanguage) => {
     } else if (data.iso.length !== 2) {
       toast.error(`Поле "ISO" має містити 2 символи`);
     } else {
-      await addNewLanguage(data);
+      const response = await axios.post('/language/add', data);
+      toast.success('Мову додано');
+      return response.data.data;
     }
-  } catch (error) {}
+  } catch (error) {
+    toast.error('Щось пішло не так. Спробуйте ще раз');
+  }
 };
 
 export const fetchLanguages = async () => {

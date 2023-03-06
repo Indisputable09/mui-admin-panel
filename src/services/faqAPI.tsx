@@ -58,7 +58,7 @@ export const handleAddFAQ = async (data: IFAQ) => {
   }
 };
 
-export const fetchFAQ = async (id?: string) => {
+export const fetchFAQ = async () => {
   try {
     const response = await axios.get('/faq/selections');
     return response.data.data;

@@ -16,16 +16,6 @@ export const fetchCityById = async (id: string) => {
   } catch (error) {}
 };
 
-export const editCityById = async (id: string, data: ICity) => {
-  try {
-    const response = await axios.put(`/city/${id}`, data);
-    toast.success('Дані збережено');
-    return response.data.data;
-  } catch (error) {
-    toast.error('Щось пішло не так. Спробуйте ще раз');
-  }
-};
-
 export const handleSendCityData = async (id: string, data: ICity) => {
   try {
     if (!data.url) {
@@ -37,16 +27,10 @@ export const handleSendCityData = async (id: string, data: ICity) => {
     } else if (data.phoneNumbers.some(item => !item)) {
       toast.error(`Поле "Номер телефона" не може бути пустим`);
     } else {
-      await editCityById(id, data);
+      const response = await axios.put(`/city/${id}`, data);
+      toast.success('Дані збережено');
+      return response.data.data;
     }
-  } catch (error) {}
-};
-
-export const deleteCityById = async (id: string) => {
-  try {
-    const response = await axios.delete(`/city/${id}`);
-    toast.success('Місто видалено');
-    return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
   }
@@ -54,14 +38,8 @@ export const deleteCityById = async (id: string) => {
 
 export const handleDeleteCity = async (id: string) => {
   try {
-    await deleteCityById(id as string);
-  } catch (error) {}
-};
-
-export const addNewCity = async (data: ICity) => {
-  try {
-    const response = await axios.post('/city/add', data);
-    toast.success('Місто додано');
+    const response = await axios.delete(`/city/${id}`);
+    toast.success('Місто видалено');
     return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
@@ -79,9 +57,13 @@ export const handleAddCity = async (data: ICity) => {
     } else if (data.phoneNumbers.some(item => !item)) {
       toast.error(`Поле "Номер телефона" не може бути пустим`);
     } else {
-      await addNewCity(data);
+      const response = await axios.post('/city/add', data);
+      toast.success('Місто додано');
+      return response.data.data;
     }
-  } catch (error) {}
+  } catch (error) {
+    toast.error('Щось пішло не так. Спробуйте ще раз');
+  }
 };
 
 export const fetchCities = async () => {

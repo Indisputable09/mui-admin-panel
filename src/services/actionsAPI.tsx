@@ -16,16 +16,6 @@ export const fetchActionById = async (id: string) => {
   } catch (error) {}
 };
 
-export const editActionById = async (id: string, data: IAction) => {
-  try {
-    const response = await axios.put(`/sale/${id}`, data);
-    toast.success('Дані збережено');
-    return response.data.data;
-  } catch (error) {
-    toast.error('Щось пішло не так. Спробуйте ще раз');
-  }
-};
-
 export const handleSendActionData = async (id: string, data: IAction) => {
   try {
     if (!data.url) {
@@ -35,16 +25,10 @@ export const handleSendActionData = async (id: string, data: IAction) => {
     } else if (data.description.some(item => !item.value)) {
       toast.error(`Поле "Опис" обов'язкове`);
     } else {
-      await editActionById(id, data);
+      const response = await axios.put(`/sale/${id}`, data);
+      toast.success('Дані збережено');
+      return response.data.data;
     }
-  } catch (error) {}
-};
-
-export const deleteActionById = async (id: string) => {
-  try {
-    const response = await axios.delete(`/sale/${id}`);
-    toast.success('Акцію видалено');
-    return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
   }
@@ -52,14 +36,8 @@ export const deleteActionById = async (id: string) => {
 
 export const handleDeleteAction = async (id: string) => {
   try {
-    await deleteActionById(id as string);
-  } catch (error) {}
-};
-
-export const addNewAction = async (data: IAction) => {
-  try {
-    const response = await axios.post('/sale/add', data);
-    toast.success('Акцію додано');
+    const response = await axios.delete(`/sale/${id}`);
+    toast.success('Акцію видалено');
     return response.data.data;
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
@@ -75,9 +53,13 @@ export const handleAddAction = async (data: IAction) => {
     } else if (data.description.some(item => !item.value)) {
       toast.error(`Поле "Опис" обов'язкове`);
     } else {
-      await addNewAction(data);
+      const response = await axios.post('/sale/add', data);
+      toast.success('Акцію додано');
+      return response.data.data;
     }
-  } catch (error) {}
+  } catch (error) {
+    toast.error('Щось пішло не так. Спробуйте ще раз');
+  }
 };
 
 export const fetchActions = async () => {
