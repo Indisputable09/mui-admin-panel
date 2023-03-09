@@ -79,7 +79,7 @@ export const Data: React.FC<IDataProps> = ({
               <InputLabel
                 className={cx(classes.label, darkTheme ? 'dark' : null)}
               >
-                Текст 1
+                Текст 2
                 <StyledField
                   variant="outlined"
                   sx={{ width: '100%', mt: '16px' }}

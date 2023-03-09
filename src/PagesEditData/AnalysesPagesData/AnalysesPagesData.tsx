@@ -34,138 +34,138 @@ const AnalysesPagesData: React.FC<IAnalysesPagesDataProps> = ({
   pageName,
   parentPageName,
 }) => {
-  const { pagesLinkName } = useParams();
+  const { id } = useParams();
 
   return (
     <Box>
-      {pagesLinkName === 'main' && (
+      {id === '1' && (
         <AnalysesPagesMain
           initialLink={initialLink}
           pageName={pageName}
           parentPageName={parentPageName}
         />
       )}
-      {pagesLinkName === 'analysesAndPrices' && (
+      {id === '2' && (
         <AnalysesPagesAnalysesAndPrices
           initialLink={initialLink}
           pageName={pageName}
           parentPageName={parentPageName}
         />
       )}
-      {pagesLinkName === 'aboutLaboratory' && (
-        <AnalysesPagesAboutLaboratory
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'examinationsPackages' && (
+      {id === '3' && (
         <ExaminationsPackages
           initialLink={initialLink}
           pageName={pageName}
           parentPageName={parentPageName}
         />
       )}
-      {pagesLinkName === 'actions' && (
-        <AnalysesPagesActions
+      {id === '4' && (
+        <AnalysesPagesAnalysesAtHome
           initialLink={initialLink}
           pageName={pageName}
           parentPageName={parentPageName}
         />
       )}
-      {pagesLinkName === 'privacyPolicy' && (
-        <AnalysesPagesPrivacyPolicy
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'termsOfUse' && (
-        <AnalysesPagesTermsOfUse
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'contacts' && (
-        <AnalysesPagesContacts
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'FAQ' && (
-        <AnalysesPagesFAQ
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'feedbacks' && (
-        <AnalysesPagesFeedbacks
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'vacancies' && (
-        <AnalysesPagesVacancies
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'laboratoryHandbook' && (
-        <AnalysesPagesLaboratoryHandbook
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'news' && (
-        <AnalysesPagesNews
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'coworking' && (
-        <AnalysesPagesCoworking
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'franchise' && (
-        <AnalysesPagesFranchise
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === '404' && (
-        <AnalysesPages404
-          initialLink={initialLink}
-          pageName={pageName}
-          parentPageName={parentPageName}
-        />
-      )}
-      {pagesLinkName === 'covid19' && (
+      {id === '5' && (
         <AnalysesPagesCovid19
           initialLink={initialLink}
           pageName={pageName}
           parentPageName={parentPageName}
         />
       )}
-      {pagesLinkName === 'qualityPolitics' && (
+      {id === '6' && (
+        <AnalysesPagesActions
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '7' && (
+        <AnalysesPagesLaboratoryHandbook
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '8' && (
+        <AnalysesPagesCoworking
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '9' && (
+        <AnalysesPagesFranchise
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '10' && (
+        <AnalysesPagesAboutLaboratory
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '11' && (
+        <AnalysesPagesFAQ
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '12' && (
+        <AnalysesPagesFeedbacks
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '13' && (
         <AnalysesPagesQualityPolitics
           initialLink={initialLink}
           pageName={pageName}
           parentPageName={parentPageName}
         />
       )}
-      {pagesLinkName === 'analysesAtHome' && (
-        <AnalysesPagesAnalysesAtHome
+      {id === '14' && (
+        <AnalysesPagesVacancies
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '15' && (
+        <AnalysesPagesNews
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '16' && (
+        <AnalysesPagesTermsOfUse
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '17' && (
+        <AnalysesPagesPrivacyPolicy
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '18' && (
+        <AnalysesPagesContacts
+          initialLink={initialLink}
+          pageName={pageName}
+          parentPageName={parentPageName}
+        />
+      )}
+      {id === '19' && (
+        <AnalysesPages404
           initialLink={initialLink}
           pageName={pageName}
           parentPageName={parentPageName}

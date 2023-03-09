@@ -3,19 +3,20 @@ import { Typography } from '@mui/material';
 import CollapsedBreadcrumbs from '../components/Crumbs/Crumbs';
 import { useNavBarStyles } from '../components/NavBar/NavBar.styles';
 import TableComponent from '../components/TableComponent';
-import { advertisementsColumns } from '../TableColumns/TableColumns';
+import { usersColumns } from '../TableColumns/TableColumns';
 import { useGlobalContext } from '../hooks/GlobalContext';
 import { Status } from '../constants';
-import { fetchAdvertisements } from '../services/advertisementsAPI';
+import { fetchActionsList } from '../services/actionsAPI';
 import Loader from '../components/Loader';
+import { vacanciesRows } from '../TableRows/TableRows';
 
-interface IAdvertisementsPageProps {
+interface IUsersPageProps {
   pageName: string;
   link: string;
   parentPageName: string;
 }
 
-const AdvertisementsPage: React.FC<IAdvertisementsPageProps> = ({
+const UsersPage: React.FC<IUsersPageProps> = ({
   pageName,
   link,
   parentPageName,
@@ -23,19 +24,15 @@ const AdvertisementsPage: React.FC<IAdvertisementsPageProps> = ({
   const { idle, pending, resolved, rejected } = Status;
   const { classes, cx } = useNavBarStyles();
   const { darkTheme, rerenderComponent } = useGlobalContext();
-
   const [status, setStatus] = React.useState(idle);
-  const [advertisementsRows, setAdvertisementsRows] = React.useState(null);
+  //   const [actionsRows, setActionsRows] = React.useState(null);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         setStatus(pending);
-        const list = await fetchAdvertisements();
-        const arrayWithIds = list.map((item: any, index: number) => [
-          { ...item, id: index },
-        ]);
-        setAdvertisementsRows(arrayWithIds.flat());
+        await fetchActionsList();
+        // setActionsRows(list);
         setStatus(resolved);
       } catch (error) {
         setStatus(rejected);
@@ -65,10 +62,8 @@ const AdvertisementsPage: React.FC<IAdvertisementsPageProps> = ({
           </Typography>
           <TableComponent
             darkTheme={darkTheme}
-            columns={advertisementsColumns}
-            rows={advertisementsRows}
-            noAddButton
-            noCheckboxSelection
+            columns={usersColumns}
+            rows={vacanciesRows}
           />
         </>
       )}
@@ -76,4 +71,4 @@ const AdvertisementsPage: React.FC<IAdvertisementsPageProps> = ({
   );
 };
 
-export default AdvertisementsPage;
+export default UsersPage;

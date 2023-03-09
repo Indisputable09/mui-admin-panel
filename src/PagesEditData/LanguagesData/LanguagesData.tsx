@@ -73,7 +73,6 @@ const LanguagesData: React.FC<ILanguagesDataProps> = ({
 
   const [fieldsValues, setFieldsValues] =
     React.useState<ILanguage>(initialData);
-  console.log('fieldsValues:', fieldsValues);
   const [chosenLanguageName, setChosenLanguageName] =
     React.useState<string>('');
 

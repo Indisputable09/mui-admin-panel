@@ -17,12 +17,14 @@ import DatePicker from '../../../components/Inputs/DatePicker';
 import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
 import { fetchRecommendedNews } from '../../../services/newsAPI';
 import { useParams } from 'react-router-dom';
+import { useFileManager } from '../../../hooks/useFileManager';
+import { getAltText } from '../../../constants';
 
 interface IDataProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    image: any;
+    image: string | null;
     published: boolean;
     publicationDate: Date | Dayjs | null | string;
     url: string;
@@ -37,6 +39,7 @@ export const Data: React.FC<IDataProps> = ({
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
   const { id } = useParams();
+  const { openFileManager } = useFileManager(handleImageChange);
   const [recommendedNewsList, setRecommendedNewsList] = React.useState([]);
 
   React.useEffect(() => {
@@ -46,6 +49,15 @@ export const Data: React.FC<IDataProps> = ({
     };
     getRecommendedNews();
   }, [id]);
+
+  function handleImageChange(file: string | null) {
+    setFieldsValues((prevState: typeof fieldsValues) => {
+      return {
+        ...prevState,
+        image: file,
+      };
+    });
+  }
 
   const handleCreationDateChange = (
     name: string,
@@ -128,13 +140,12 @@ export const Data: React.FC<IDataProps> = ({
               <>
                 <img
                   src={fieldsValues.image}
-                  alt={'test'}
-                  width="100%"
-                  height="100%"
+                  alt={getAltText(fieldsValues.image)}
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
                 />
               </>
             ) : (
-              <IconButton onClick={() => console.log('Add img')}>
+              <IconButton onClick={openFileManager}>
                 <AddIcon
                   className={cx(
                     classes.addImageIcon,
@@ -152,7 +163,7 @@ export const Data: React.FC<IDataProps> = ({
                 edge="start"
                 color="inherit"
                 aria-label="edit"
-                onClick={() => console.log('Edit img')}
+                onClick={openFileManager}
               >
                 <EditIcon
                   className={cx(classes.editIcon, darkTheme ? 'dark' : null)}
@@ -168,7 +179,7 @@ export const Data: React.FC<IDataProps> = ({
                   return setFieldsValues((prevState: any) => {
                     return {
                       ...prevState,
-                      image: '',
+                      image: null,
                     };
                   });
                 }}

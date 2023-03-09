@@ -73,9 +73,7 @@ const CatalogAdvertisement: React.FC<ICatalogAdvertisementProps> = ({
       const fetchData = async () => {
         try {
           setStatus(pending);
-          const advertisementByType = await fetchAdvertisementByType(
-            'catalogy'
-          );
+          const advertisementByType = await fetchAdvertisementByType('catalog');
           const languages = await fetchLanguages();
           setLanguagesList(languages);
           setFieldsValues(advertisementByType);
@@ -177,7 +175,7 @@ const CatalogAdvertisement: React.FC<ICatalogAdvertisementProps> = ({
               type={'save'}
               dataToSend={fieldsValues}
               handleEditData={() =>
-                handleSendAdvertisementData('catalogy', fieldsValues)
+                handleSendAdvertisementData('catalog', fieldsValues)
               }
             />
           )}

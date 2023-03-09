@@ -48,7 +48,7 @@ const ActionsData: React.FC<IActionsDataProps> = ({
   const [initialData, setInitialData] = React.useState<IAction>({
     name: initialValueWithLanguages,
     description: initialValueWithLanguages,
-    image: '',
+    image: null,
     analyses: null,
     finishDate: currentDay,
     published: false,

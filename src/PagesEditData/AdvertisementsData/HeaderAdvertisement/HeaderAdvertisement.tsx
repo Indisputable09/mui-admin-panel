@@ -35,8 +35,8 @@ const HeaderAdvertisement: React.FC<IHeaderAdvertisementProps> = ({
   const [linkId, setLinkId] = React.useState<number>(1);
   const [openBackModal, setOpenBackModal] = React.useState<boolean>(false);
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
-  const [status, setStatus] = React.useState(idle);
   const [dataWasChanged, setDataWasChanged] = React.useState<boolean>(false);
+  const [status, setStatus] = React.useState(idle);
   const [initialValueWithLanguages, setInitialValueWithLanguages] =
     React.useState([{ code: 'uk', value: '' }]);
   const [languagesList, setLanguagesList] = React.useState([]);
@@ -164,6 +164,7 @@ const HeaderAdvertisement: React.FC<IHeaderAdvertisementProps> = ({
               shouldOpenModal={openBackModal}
               handleCloseModal={handleCloseModal}
               type={'back'}
+              dataWasChanged={dataWasChanged}
               link={initialLink}
             />
           )}

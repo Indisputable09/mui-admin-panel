@@ -56,7 +56,6 @@ const FeedbacksData: React.FC<IFeedbacksDataProps> = ({
   });
   const [fieldsValues, setFieldsValues] =
     React.useState<IFeedback>(initialData);
-  console.log('fieldsValues:', fieldsValues);
   const [chosenFeedbackName, setChosenFeedbackName] =
     React.useState<string>('');
   const [isRendered, setIsRendered] = React.useState(false);

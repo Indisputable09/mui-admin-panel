@@ -28,6 +28,14 @@ export const handleSendAnalysesData = async (id: string, data: IAnalysis) => {
       toast.error(`Поле "Категорії" обов'язкове`);
     } else if (!data.prices) {
       toast.error(`Ціни обов'язкові`);
+    } else if (
+      data.prices.some(item => {
+        if (item.priceWithDiscount) {
+          return item?.priceWithDiscount > item.price;
+        } else return false;
+      })
+    ) {
+      toast.error(`Ціна зі знижкою не може бути більше вказаної ціни`);
     } else {
       const response = await axios.put(`/analysis/${id}`, data);
       toast.success('Дані збережено');
@@ -60,6 +68,14 @@ export const handleAddAnalysis = async (data: IAnalysis) => {
       toast.error(`Поле "Категорії" обов'язкове`);
     } else if (!data.prices) {
       toast.error(`Ціни обов'язкові`);
+    } else if (
+      data.prices.some(item => {
+        if (item.priceWithDiscount) {
+          return item?.priceWithDiscount > item.price;
+        } else return false;
+      })
+    ) {
+      toast.error(`Ціна зі знижкою не може бути більше вказаної ціни`);
     } else {
       const response = await axios.post('/analysis/add', data);
       toast.success('Аналіз додано');

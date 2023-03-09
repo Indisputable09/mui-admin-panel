@@ -1,12 +1,7 @@
 import { GridColDef } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import MoreActions from '../components/TableComponents/MoreActions';
 import ControlledSwitch from '../components/TableComponents/ControlledSwitch';
 import BasicActions from '../components/TableComponents/BasicActions';
-import PriceCell from '../components/TableComponents/PriceCell';
-import VisibilityAction from '../components/TableComponents/VisibilityAction';
-import OrderStatus from '../components/TableComponents/OrderStatus';
 import { handleDeleteNews } from '../services/newsAPI';
 import { handleDeleteAnalysis } from '../services/analysesAPI';
 import { handleDeleteAnalysisCategory } from '../services/analysesCategoriesAPI';
@@ -17,6 +12,39 @@ import { handleDeleteAction } from '../services/actionsAPI';
 import { handleDeleteVacancy } from '../services/vacanciesAPI';
 import { handleDeleteFAQ } from '../services/faqAPI';
 import { handleDeleteFeedback } from '../services/feedbackAPI';
+import { Link } from 'react-router-dom';
+import React from 'react';
+import { useGlobalContext } from '../hooks/GlobalContext';
+import { useTableComponentStyles } from '../components/TableComponent/TableComponent.styles';
+
+interface ICellLinkProps {
+  id: string;
+  name: string;
+}
+
+interface IDataCell {
+  date: string;
+}
+
+const CellLink: React.FC<ICellLinkProps> = ({ id, name }) => {
+  const { darkTheme } = useGlobalContext();
+  const { classes, cx } = useTableComponentStyles();
+  return (
+    <Link
+      to={`${id}/edit`}
+      className={cx(classes.cellLink, darkTheme ? 'dark' : null)}
+    >
+      {name}
+    </Link>
+  );
+};
+
+const DataCell: React.FC<IDataCell> = ({ date }) => {
+  const onlyDate = date
+    ? date.slice(0, 10).split('-').reverse().join('-')
+    : null;
+  return <div>{onlyDate}</div>;
+};
 
 export const analysesColumns: GridColDef[] = [
   {
@@ -32,6 +60,9 @@ export const analysesColumns: GridColDef[] = [
     minWidth: 250,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'code',
@@ -41,19 +72,6 @@ export const analysesColumns: GridColDef[] = [
     headerAlign: 'center',
     align: 'center',
   },
-  // {
-  //   field: 'price',
-  //   headerName: 'Ціна',
-  //   width: 110,
-  //   editable: false,
-  //   headerAlign: 'center',
-  //   align: 'center',
-  //   renderCell: params => {
-  //     return (
-  //       <PriceCell price={params.row.price} discount={params.row?.discount} />
-  //     );
-  //   },
-  // },
   {
     field: 'categories',
     headerName: 'Категорії',
@@ -107,6 +125,9 @@ export const analysesCategoriesColumns: GridColDef[] = [
     width: 700,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'sort',
@@ -148,6 +169,9 @@ export const analysesPackagesColumns: GridColDef[] = [
     width: 700,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'sort',
@@ -183,6 +207,9 @@ export const analysesPagesColumns: GridColDef[] = [
     flex: 1,
     editable: false,
     sortable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'action',
@@ -192,13 +219,7 @@ export const analysesPagesColumns: GridColDef[] = [
     headerAlign: 'center',
     align: 'center',
     disableColumnMenu: true,
-    renderCell: params => (
-      <BasicActions
-        id={params.row.id}
-        onlyEdit
-        pagesLinkName={params.row.linkName}
-      />
-    ),
+    renderCell: params => <BasicActions id={params.row.id} onlyEdit />,
     width: 120,
   },
 ];
@@ -211,6 +232,9 @@ export const advertisementsColumns: GridColDef[] = [
     flex: 1,
     editable: false,
     sortable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'action',
@@ -224,7 +248,7 @@ export const advertisementsColumns: GridColDef[] = [
       <BasicActions
         id={params.row.id}
         onlyEdit
-        pagesLinkName={params.row.linkName}
+        pagesLinkName={params.row.type}
       />
     ),
     width: 120,
@@ -260,6 +284,9 @@ export const newsColumns: GridColDef[] = [
     width: 910,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'published',
@@ -279,6 +306,9 @@ export const newsColumns: GridColDef[] = [
     editable: false,
     headerAlign: 'center',
     align: 'center',
+    renderCell: params => {
+      return <DataCell date={params.row.publicationDate} />;
+    },
   },
   {
     field: 'actions',
@@ -329,6 +359,9 @@ export const actionsColumns: GridColDef[] = [
     width: 910,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'published',
@@ -348,6 +381,9 @@ export const actionsColumns: GridColDef[] = [
     editable: false,
     headerAlign: 'center',
     align: 'center',
+    renderCell: params => {
+      return <DataCell date={params.row.finishDate} />;
+    },
   },
   {
     field: 'actions',
@@ -381,6 +417,9 @@ export const feedbacksColumns: GridColDef[] = [
     width: 910,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'published',
@@ -400,6 +439,9 @@ export const feedbacksColumns: GridColDef[] = [
     editable: false,
     headerAlign: 'center',
     align: 'center',
+    renderCell: params => {
+      return <DataCell date={params.row.publicationDate} />;
+    },
   },
   {
     field: 'actions',
@@ -433,6 +475,9 @@ export const languagesColumns: GridColDef[] = [
     width: 910,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'actions',
@@ -466,6 +511,9 @@ export const FAQColumns: GridColDef[] = [
     width: 910,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.question} />;
+    },
   },
   {
     field: 'actions',
@@ -499,6 +547,9 @@ export const vacanciesColumns: GridColDef[] = [
     width: 910,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'actions',
@@ -510,6 +561,42 @@ export const vacanciesColumns: GridColDef[] = [
       <BasicActions
         id={params.row.id}
         handleDeleteData={() => handleDeleteVacancy(params.row.id)}
+      />
+    ),
+    width: 120,
+    headerAlign: 'center',
+    align: 'center',
+  },
+];
+
+export const usersColumns: GridColDef[] = [
+  {
+    field: 'id',
+    headerName: 'ID',
+    width: 50,
+    headerAlign: 'center',
+    align: 'center',
+  },
+  {
+    field: 'name',
+    headerName: 'Назва',
+    width: 910,
+    flex: 1,
+    editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
+  },
+  {
+    field: 'actions',
+    headerName: 'Дії',
+    editable: false,
+    sortable: false,
+    disableColumnMenu: true,
+    renderCell: params => (
+      <BasicActions
+        id={params.row.id}
+        // handleDeleteData={() => handleDeleteVacancy(params.row.id)}
       />
     ),
     width: 120,
@@ -532,6 +619,9 @@ export const citiesColumns: GridColDef[] = [
     width: 910,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'actions',
@@ -580,6 +670,9 @@ export const manufacturersColumns: GridColDef[] = [
     width: 910,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.name} />;
+    },
   },
   {
     field: 'actions',
@@ -591,130 +684,6 @@ export const manufacturersColumns: GridColDef[] = [
     disableColumnMenu: true,
     renderCell: params => <BasicActions id={params.row.id} />,
     width: 120,
-  },
-];
-
-export const attributesColumns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    width: 50,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'name',
-    headerName: 'Назва',
-    width: 910,
-    flex: 1,
-    editable: false,
-  },
-  {
-    field: 'values',
-    headerName: 'Значення',
-    width: 100,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'position',
-    headerName: 'Позиція',
-    width: 100,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-    // renderCell: params => {
-    //   console.log(
-    //     'params ',
-    //     params.api.getRowIndex(params.row.name),
-    //     params.row.id
-    //   );
-    //   return <></>;
-    // },
-  },
-  {
-    field: 'actions',
-    headerName: 'Дії',
-    editable: false,
-    sortable: false,
-    headerAlign: 'center',
-    align: 'center',
-    disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
-    width: 120,
-  },
-];
-
-export const attributesCategoriesColumns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    width: 50,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'name',
-    headerName: 'Назва',
-    width: 910,
-    flex: 1,
-    editable: false,
-  },
-  {
-    field: 'position',
-    headerName: 'Позиція',
-    width: 100,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-    // renderCell: params => {
-    //   console.log(
-    //     'params ',
-    //     params.api.getRowIndex(params.row.name),
-    //     params.row.id
-    //   );
-    //   return <></>;
-    // },
-  },
-  {
-    field: 'actions',
-    headerName: 'Дії',
-    editable: false,
-    sortable: false,
-    headerAlign: 'center',
-    align: 'center',
-    disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
-    width: 120,
-  },
-];
-
-export const privacyPolicyColumns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    width: 50,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'name',
-    headerName: 'Назва',
-    width: 910,
-    flex: 1,
-    editable: false,
-  },
-  {
-    field: 'actions',
-    headerName: 'Дії',
-    editable: false,
-    sortable: false,
-    disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
-    width: 120,
-    headerAlign: 'center',
-    align: 'center',
   },
 ];
 
@@ -732,6 +701,9 @@ export const redirectsColumns: GridColDef[] = [
     width: 910,
     flex: 1,
     editable: false,
+    renderCell: params => {
+      return <CellLink id={params.row.id} name={params.row.from} />;
+    },
   },
   {
     field: 'to',
@@ -750,264 +722,5 @@ export const redirectsColumns: GridColDef[] = [
     width: 120,
     headerAlign: 'center',
     align: 'center',
-  },
-];
-
-export const clientsColumns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    width: 50,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'name',
-    headerName: "Ім'я",
-    minWidth: 100,
-    flex: 1,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'surname',
-    headerName: 'Прізвище',
-    minWidth: 120,
-    editable: false,
-    flex: 1,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'telephoneNumber',
-    headerName: 'Телефон',
-    minWidth: 130,
-    editable: false,
-    flex: 1,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'email',
-    headerName: 'E-mail',
-    minWidth: 190,
-    editable: false,
-    flex: 1,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'sales',
-    headerName: 'Продажі',
-    width: 120,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-    renderCell: params => {
-      return <PriceCell price={params.row.sales} />;
-    },
-  },
-  {
-    field: 'active',
-    headerName: 'Включено',
-    width: 80,
-    editable: false,
-    renderCell: params => {
-      return <ControlledSwitch status={params.row.active} />;
-    },
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'registration',
-    headerName: 'Реєстрація',
-    width: 100,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'actions',
-    headerName: 'Дії',
-    editable: false,
-    sortable: false,
-    disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
-    width: 90,
-    headerAlign: 'center',
-    align: 'center',
-  },
-];
-
-export const ordersColumns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    width: 50,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'orderId',
-    headerName: 'Номер замовлення',
-    minWidth: 100,
-    flex: 1,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'delivery',
-    headerName: 'Доставка',
-    minWidth: 100,
-    editable: false,
-    flex: 1,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'name',
-    headerName: 'Клієнт',
-    minWidth: 100,
-    editable: false,
-    flex: 1,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'telephoneNumber',
-    headerName: 'Телефон',
-    minWidth: 150,
-    editable: false,
-    flex: 1,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'toPay',
-    headerName: 'До сплати',
-    width: 80,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-    renderCell: params => {
-      return <PriceCell price={params.row.toPay} />;
-    },
-  },
-  {
-    field: 'payment',
-    headerName: 'Оплата',
-    minWidth: 80,
-    editable: false,
-    flex: 1,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'orderStatus',
-    headerName: 'Статус замовлення',
-    minWidth: 110,
-    flex: 1,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-    renderCell: params => {
-      return <OrderStatus text={params.row.orderStatus} />;
-    },
-  },
-  {
-    field: 'date',
-    headerName: 'Дата',
-    width: 100,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'pdf',
-    headerName: 'Pdf',
-    width: 50,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-    renderCell: () => {
-      return (
-        <IconButton
-          sx={{ display: 'flex', justifyContent: 'center', ml: 1 }}
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="pdf"
-        >
-          <TextSnippetIcon />
-        </IconButton>
-      );
-    },
-  },
-  {
-    field: 'actions',
-    headerName: 'Дії',
-    editable: false,
-    sortable: false,
-    disableColumnMenu: true,
-    renderCell: params => {
-      return <VisibilityAction id={params.row.id} />;
-    },
-    width: 50,
-    headerAlign: 'center',
-    align: 'center',
-  },
-];
-
-export const optionsColumns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    width: 50,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'name',
-    headerName: 'Назва',
-    width: 910,
-    flex: 1,
-    editable: false,
-  },
-  {
-    field: 'values',
-    headerName: 'Значення',
-    width: 100,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'position',
-    headerName: 'Позиція',
-    width: 100,
-    editable: false,
-    headerAlign: 'center',
-    align: 'center',
-    // renderCell: params => {
-    //   console.log(
-    //     'params ',
-    //     params.api.getRowIndex(params.row.name),
-    //     params.row.id
-    //   );
-    //   return <></>;
-    // },
-  },
-  {
-    field: 'actions',
-    headerName: 'Дії',
-    editable: false,
-    sortable: false,
-    headerAlign: 'center',
-    align: 'center',
-    disableColumnMenu: true,
-    renderCell: params => <BasicActions id={params.row.id} />,
-    width: 120,
   },
 ];

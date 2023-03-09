@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.min.css';
 import NavBar from './components/NavBar';
 import Toast from './components/Toast';
+import { loadFileManager } from './constants';
 import { GlobalContext } from './hooks/GlobalContext';
 import Dashboard from './Pages/Dashboard';
 import LoginPage from './Pages/LoginPage';
@@ -23,6 +24,10 @@ export const App: React.FC = () => {
 
   const [rerenderComponent, setRerenderComponent] = React.useState(false);
 
+  React.useEffect(() => {
+    loadFileManager();
+  }, []);
+
   const handleThemeClick = () => {
     setDarkTheme(!darkTheme);
   };
@@ -37,7 +42,7 @@ export const App: React.FC = () => {
         value={{ darkTheme, rerenderComponent, setRerenderComponent }}
       >
         <Toast />
-        <BrowserRouter basename="/mui-admin-panel/">
+        <BrowserRouter>
           <Routes>
             <Route
               path="/"

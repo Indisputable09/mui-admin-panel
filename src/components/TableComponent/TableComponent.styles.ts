@@ -2,6 +2,19 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useTableComponentStyles = makeStyles<void>()(
   (theme, _params, classes) => ({
+    cellLink: {
+      fontWeight: 400,
+      color: '#000000DE',
+      transition: 'all 250ms ease-out',
+      '&.dark': {
+        fontWeight: 400,
+        color: '#F2F2F2',
+      },
+      '&:hover, &:focus': {
+        fontWeight: 500,
+        textDecoration: 'underline',
+      },
+    },
     tableToolbarBlock: {
       width: '100%',
       transition: 'all 250ms ease-out',
@@ -18,6 +31,7 @@ export const useTableComponentStyles = makeStyles<void>()(
       borderTopLeftRadius: '0',
       borderTopRightRadius: '0',
       transition: 'all 250ms ease-out',
+      fontSize: '16px',
       '&.dark div.MuiDataGrid-cell': {
         fontWeight: 500,
         color: '#ffffff',
@@ -27,7 +41,7 @@ export const useTableComponentStyles = makeStyles<void>()(
         whiteSpace: 'nowrap',
       },
       '& div.MuiDataGrid-cell': {
-        fontSize: '12px',
+        fontSize: '16px',
         fontWeight: 500,
         color: '#000000DE',
       },
@@ -85,7 +99,7 @@ export const useTableComponentStyles = makeStyles<void>()(
       },
       '& .MuiTablePagination-selectLabel': {
         fontWeight: 400,
-        fontSize: '12px',
+        fontSize: '16px',
         lineHeight: '1.6',
         color: '#000000',
         opacity: '0.6',
@@ -98,7 +112,7 @@ export const useTableComponentStyles = makeStyles<void>()(
       },
       '& .MuiTablePagination-select': {
         fontWeight: 400,
-        fontSize: '12px',
+        fontSize: '16px',
         lineHeight: '1.6',
         color: '#000000',
         opacity: '0.6',
@@ -111,7 +125,7 @@ export const useTableComponentStyles = makeStyles<void>()(
       },
       '& .MuiTablePagination-displayedRows': {
         fontWeight: 400,
-        fontSize: '12px',
+        fontSize: '16px',
         lineHeight: '1.6',
         color: '#000000',
         opacity: '0.6',

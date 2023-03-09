@@ -32,6 +32,8 @@ import VacanciesData from '../../PagesEditData/VacanciesData';
 import ShortcodesData from '../../PagesEditData/ShortcodesData';
 import FeedbacksPage from '../../Pages/FeedbacksPage';
 import FeedbacksData from '../../PagesEditData/FeedbacksData';
+import UsersPage from '../../Pages/UsersPage';
+import UsersData from '../../PagesEditData/UsersData';
 
 export const navBarMenuItems = [
   {
@@ -147,19 +149,21 @@ export const navBarMenuItems = [
         Component: RedirectsPage,
         DataComponent: RedirectsData,
       },
-      // {
-      //   name: 'Користувачі',
-      //   link: '/settings/users',
-      // },
       {
-        name: 'GTM',
-        link: '/settings/GTM',
-        Component: GTMData,
+        name: 'Користувачі',
+        link: '/settings/users',
+        Component: UsersPage,
+        DataComponent: UsersData,
       },
       {
         name: 'Shortcodes',
         link: '/settings/shortcodes',
         Component: ShortcodesData,
+      },
+      {
+        name: 'GTM',
+        link: '/settings/GTM',
+        Component: GTMData,
       },
     ],
   },

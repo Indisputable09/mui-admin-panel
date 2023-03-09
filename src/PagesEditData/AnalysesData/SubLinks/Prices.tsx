@@ -147,6 +147,9 @@ export const Prices: React.FC<IPricesProps> = ({
                 >
                   Ціна
                   <StyledField
+                    inputProps={{
+                      min: '0',
+                    }}
                     type="number"
                     onWheel={e => {
                       stopInputScroll(e);
@@ -169,6 +172,10 @@ export const Prices: React.FC<IPricesProps> = ({
                 >
                   Ціна зі знижкою
                   <StyledField
+                    inputProps={{
+                      min: '0',
+                      max: Number(item.price).toString(),
+                    }}
                     type="number"
                     onWheel={e => {
                       stopInputScroll(e);

@@ -12,6 +12,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { usePagesDataCommonStyles } from '../../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../../components/Inputs/StyledField';
+import { useFileManager } from '../../../../hooks/useFileManager';
+import { getAltText } from '../../../../constants';
 
 interface IBasicProps {
   darkTheme: boolean;
@@ -29,6 +31,16 @@ export const Basic: React.FC<IBasicProps> = ({
   darkTheme,
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
+  const { openFileManager } = useFileManager(handleImageChange);
+
+  function handleImageChange(file: string | null) {
+    setFieldsValues((prevState: typeof fieldsValues) => {
+      return {
+        ...prevState,
+        image: file,
+      };
+    });
+  }
 
   const handleActiveChange =
     (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,13 +98,12 @@ export const Basic: React.FC<IBasicProps> = ({
               <>
                 <img
                   src={fieldsValues.image}
-                  alt={'test'}
-                  width="100%"
-                  // height="100%"
+                  alt={getAltText(fieldsValues.image)}
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
                 />
               </>
             ) : (
-              <IconButton onClick={() => console.log('Add img')}>
+              <IconButton onClick={openFileManager}>
                 <AddIcon
                   className={cx(
                     classes.addImageIcon,
@@ -110,7 +121,7 @@ export const Basic: React.FC<IBasicProps> = ({
                 edge="start"
                 color="inherit"
                 aria-label="edit"
-                onClick={() => console.log('Edit img')}
+                onClick={openFileManager}
               >
                 <EditIcon
                   className={cx(classes.editIcon, darkTheme ? 'dark' : null)}
@@ -126,7 +137,7 @@ export const Basic: React.FC<IBasicProps> = ({
                   return setFieldsValues((prevState: any) => {
                     return {
                       ...prevState,
-                      image: '',
+                      image: null,
                     };
                   });
                 }}

@@ -6,9 +6,9 @@ export const usePagesDataCommonStyles = makeStyles<void>()(
     panel: {
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'start',
     },
-    productTitle: { fontSize: '3rem', mb: '20px' },
+    productTitle: { fontSize: '2rem', mb: '20px' },
     buttonsBlock: { display: 'flex', gap: '16px' },
     button: { display: 'flex', justifyContent: 'center', height: '34px' },
     linksList: {

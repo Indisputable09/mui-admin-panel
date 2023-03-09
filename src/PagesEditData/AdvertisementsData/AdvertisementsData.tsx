@@ -19,14 +19,14 @@ const AdvertisementsData: React.FC<IAdvertisementsDataProps> = ({
 
   return (
     <Box>
-      {pagesLinkName === 'headerAdvertisement' && (
+      {pagesLinkName === 'home' && (
         <HeaderAdvertisement
           initialLink={initialLink}
           pageName={pageName}
           parentPageName={parentPageName}
         />
       )}
-      {pagesLinkName === 'catalogAdvertisement' && (
+      {pagesLinkName === 'catalog' && (
         <CatalogAdvertisement
           initialLink={initialLink}
           pageName={pageName}

@@ -17,12 +17,14 @@ import { useParams } from 'react-router-dom';
 import { fetchAnalyses } from '../../../services/analysesPackagesAPI';
 import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
 import StyledField from '../../../components/Inputs/StyledField';
+import { useFileManager } from '../../../hooks/useFileManager';
+import { getAltText } from '../../../constants';
 
 interface IGalleryProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    image: any;
+    image: string | null;
     analyses: number[] | null;
     finishDate: Date | Dayjs | null | string;
     published: boolean;
@@ -37,6 +39,7 @@ export const Data: React.FC<IGalleryProps> = ({
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
   const { id } = useParams();
+  const { openFileManager } = useFileManager(handleImageChange);
   const [analysesList, setAnalysesList] = React.useState([]);
 
   React.useEffect(() => {
@@ -46,6 +49,15 @@ export const Data: React.FC<IGalleryProps> = ({
     };
     getActionsList();
   }, [id]);
+
+  function handleImageChange(file: string | null) {
+    setFieldsValues((prevState: typeof fieldsValues) => {
+      return {
+        ...prevState,
+        image: file,
+      };
+    });
+  }
 
   const handleEndDateChange = (
     name: string,
@@ -118,7 +130,7 @@ export const Data: React.FC<IGalleryProps> = ({
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              width: '400px',
+              width: '200px',
               height: '150px',
               marginRight: '30px',
               border: '1px solid grey',
@@ -128,13 +140,12 @@ export const Data: React.FC<IGalleryProps> = ({
               <>
                 <img
                   src={fieldsValues.image}
-                  alt={'test'}
-                  width="100%"
-                  height="100%"
+                  alt={getAltText(fieldsValues.image)}
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
                 />
               </>
             ) : (
-              <IconButton onClick={() => console.log('Add img')}>
+              <IconButton onClick={openFileManager}>
                 <AddIcon
                   className={cx(
                     classes.addImageIcon,
@@ -152,7 +163,7 @@ export const Data: React.FC<IGalleryProps> = ({
                 edge="start"
                 color="inherit"
                 aria-label="edit"
-                onClick={() => console.log('Edit img')}
+                onClick={openFileManager}
               >
                 <EditIcon
                   className={cx(classes.editIcon, darkTheme ? 'dark' : null)}

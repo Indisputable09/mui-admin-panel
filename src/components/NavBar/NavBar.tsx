@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import { useNavBarStyles } from './NavBar.styles';
 import NavBarMenu from '../NavBarMenu';
 import { Box } from '@mui/material';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Header from '../Header';
 
 interface INavBarProps {
@@ -23,8 +23,6 @@ const NavBar: React.FC<INavBarProps> = ({
   setLoggedIn,
 }) => {
   const { classes, cx } = useNavBarStyles();
-  const location = useLocation();
-  console.log('location:', location);
 
   return (
     <>

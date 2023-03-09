@@ -234,7 +234,7 @@ export const Banner: React.FC<IBannerProps> = ({
                         Зображення
                       </Typography>
                     </Box>
-                    <Box className={cx(classes.newsImgBlock)}>
+                    <Box className={cx(classes.newsImgBlock, 'grid')}>
                       <Box
                         sx={{
                           display: 'flex',
@@ -308,7 +308,7 @@ export const Banner: React.FC<IBannerProps> = ({
                         Зображення для мобільної версії
                       </Typography>
                     </Box>
-                    <Box className={cx(classes.newsImgBlock)}>
+                    <Box className={cx(classes.newsImgBlock, 'grid')}>
                       <Box
                         sx={{
                           display: 'flex',

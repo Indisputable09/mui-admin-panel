@@ -15,7 +15,6 @@ export const fetchAdvertisements = async () => {
 export const fetchAdvertisementByType = async (type: string) => {
   try {
     const response = await axios.get(`/banner/${type}`);
-    console.log('response.data.data:', response.data.data);
     return response.data.data;
   } catch (error) {}
 };
