@@ -42,7 +42,7 @@ export const App: React.FC = () => {
         value={{ darkTheme, rerenderComponent, setRerenderComponent }}
       >
         <Toast />
-        <BrowserRouter>
+        <BrowserRouter basename="/mui-admin-panel/">
           <Routes>
             <Route
               path="/"
