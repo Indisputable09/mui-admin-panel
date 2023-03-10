@@ -1,8 +1,9 @@
 import React from 'react';
-import { InputLabel, List, ListItem, Typography } from '@mui/material';
+import { InputLabel, Typography } from '@mui/material';
 import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../../../components/Inputs/StyledField';
 import Editor from '../../../../../components/Inputs/Editor';
+import { LanguagesTabsList } from '../../../../PagesDataCommon/LanguagesTabsList';
 
 interface IDescriptionProps {
   darkTheme: boolean;
@@ -17,8 +18,6 @@ interface IDescriptionProps {
       value: string;
     }[];
     texts: {
-      id: string;
-      label: string;
       name: {
         code: string;
         value: string;
@@ -29,8 +28,10 @@ interface IDescriptionProps {
       value: string;
     }[];
   };
-  languages: { name: string; id: number; code: string }[];
+  languages: { value: string; code: string }[];
 }
+
+const labels = ['Текст 1', 'Текст 2', 'Текст 3', 'Текст 4'];
 
 export const Description: React.FC<IDescriptionProps> = ({
   darkTheme,
@@ -109,28 +110,11 @@ export const Description: React.FC<IDescriptionProps> = ({
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
       {fieldsValues.title.map((title, index) => {
         return (
           <React.Fragment key={index}>
@@ -178,16 +162,14 @@ export const Description: React.FC<IDescriptionProps> = ({
                 <React.Fragment key={textIndex}>
                   {item.code === languageCode && (
                     <InputLabel
-                      htmlFor={text.id}
                       className={cx(
                         classes.label,
                         darkTheme ? 'dark' : null,
                         index === 0 ? 'topMargin' : null
                       )}
                     >
-                      {text.label}
+                      {labels[index]}
                       <StyledField
-                        id={text.id}
                         variant="outlined"
                         sx={{ width: '100%', mt: '16px' }}
                         required

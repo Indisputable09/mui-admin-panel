@@ -6,9 +6,8 @@ import TableComponent from '../components/TableComponent';
 import { usersColumns } from '../TableColumns/TableColumns';
 import { useGlobalContext } from '../hooks/GlobalContext';
 import { Status } from '../constants';
-import { fetchActionsList } from '../services/actionsAPI';
 import Loader from '../components/Loader';
-import { vacanciesRows } from '../TableRows/TableRows';
+import { fetchUsersList } from '../services/usersAPI';
 
 interface IUsersPageProps {
   pageName: string;
@@ -25,14 +24,14 @@ const UsersPage: React.FC<IUsersPageProps> = ({
   const { classes, cx } = useNavBarStyles();
   const { darkTheme, rerenderComponent } = useGlobalContext();
   const [status, setStatus] = React.useState(idle);
-  //   const [actionsRows, setActionsRows] = React.useState(null);
+  const [usersRows, setUsersRows] = React.useState(null);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         setStatus(pending);
-        await fetchActionsList();
-        // setActionsRows(list);
+        const list = await fetchUsersList();
+        setUsersRows(list);
         setStatus(resolved);
       } catch (error) {
         setStatus(rejected);
@@ -63,7 +62,7 @@ const UsersPage: React.FC<IUsersPageProps> = ({
           <TableComponent
             darkTheme={darkTheme}
             columns={usersColumns}
-            rows={vacanciesRows}
+            rows={usersRows}
           />
         </>
       )}

@@ -1,23 +1,24 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { analysesPagesRows } from '../../../../TableRows/TableRows';
 import PagesDataCommon from '../../../PagesDataCommon';
 import Modal from '../../../../components/Modal';
-import { useGlobalContext } from '../../../../hooks/GlobalContext';
-import { Basic, SEO, Data } from './SubLinks';
-import { nanoid } from 'nanoid';
+// import { useGlobalContext } from '../../../../hooks/GlobalContext';
+// import { Basic, SEO, Data } from './SubLinks';
+import { haveSameData, Status } from '../../../../constants';
+import { ICovidPage } from '../../../../types/pagesTypes';
+import {
+  fetchPageById,
+  handleSendCovidPageData,
+} from '../../../../services/pagesAPI';
+import { fetchLanguages } from '../../../../services/languagesAPI';
+import Loader from '../../../../components/Loader';
 
 interface IAnalysesPagesCovid19Props {
   initialLink: string;
   pageName: string;
   parentPageName: string;
 }
-
-const languages = [
-  { name: 'Укр', id: 1, code: 'uk' },
-  { name: 'Eng', id: 2, code: 'en' },
-];
 
 const links = [
   { name: 'загальне', id: 1 },
@@ -30,67 +31,81 @@ export const AnalysesPagesCovid19: React.FC<IAnalysesPagesCovid19Props> = ({
   pageName,
   parentPageName,
 }) => {
-  const { darkTheme } = useGlobalContext();
+  const { idle, pending, resolved, rejected } = Status;
+  const [status, setStatus] = React.useState(idle);
+  // const { darkTheme } = useGlobalContext();
   const [linkId, setLinkId] = React.useState<number>(1);
   const [openBackModal, setOpenBackModal] = React.useState<boolean>(false);
-  const [openDeleteModal, setOpenDeleteModal] = React.useState<boolean>(false);
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
-
-  const { id } = useParams();
-  const chosenPackage = analysesPagesRows.find(row => row.id === Number(id));
-
-  const [fieldsValues, setFieldsValues] = React.useState({
-    image: '',
-    mobileImage: '',
-    analyses: [],
+  const [dataWasChanged, setDataWasChanged] = React.useState<boolean>(false);
+  const [initialValueWithLanguages, setInitialValueWithLanguages] =
+    React.useState([{ code: 'uk', value: '' }]);
+  const [languagesList, setLanguagesList] = React.useState([]);
+  const [initialData, setInitialData] = React.useState<ICovidPage>({
+    image: null,
+    mobileImage: null,
+    analyses: null,
     data: {
-      id: nanoid(),
       primaryText: {
-        id: nanoid(),
         color: '#ffffff',
-        text: [
-          { code: 'uk', value: 'ukr' },
-          { code: 'en', value: 'eng' },
-        ],
+        text: initialValueWithLanguages,
       },
       additionalText: {
-        id: nanoid(),
         color: '#ffffff',
-        text: [
-          { code: 'uk', value: 'ukr' },
-          { code: 'en', value: 'eng' },
-        ],
+        text: initialValueWithLanguages,
       },
       banners: [
         {
-          id: nanoid(),
-          name: [
-            { code: 'uk', value: 'ukr' },
-            { code: 'en', value: 'eng' },
-          ],
-          description: [
-            { code: 'uk', value: 'ukr' },
-            { code: 'en', value: 'eng' },
-          ],
+          name: initialValueWithLanguages,
+          description: initialValueWithLanguages,
         },
       ],
     },
-    metaTitle: [
-      { code: 'uk', value: 'ukr' },
-      { code: 'en', value: 'eng' },
-    ],
-    metaDescription: [
-      { code: 'uk', value: 'ukr' },
-      { code: 'en', value: 'eng' },
-    ],
-    indexed: true,
+    metaTitle: initialValueWithLanguages,
+    metaDescription: initialValueWithLanguages,
+    indexed: false,
+    name: '',
   });
 
+  const [fieldsValues, setFieldsValues] =
+    React.useState<ICovidPage>(initialData);
+
+  React.useEffect(() => {
+    const result = languagesList.map(
+      (language: { code: string; value: string }) => {
+        return { code: language.code, value: '' };
+      }
+    );
+    setInitialValueWithLanguages(result);
+  }, [languagesList]);
+
+  const { id } = useParams();
+
+  React.useEffect(() => {
+    setDataWasChanged(!haveSameData(initialData, fieldsValues));
+  }, [fieldsValues, initialData]);
+
+  React.useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        try {
+          setStatus(pending);
+          const pageById = await fetchPageById(id as string);
+          const languages = await fetchLanguages();
+          setLanguagesList(languages);
+          setFieldsValues(pageById);
+          setInitialData(pageById);
+          setStatus(resolved);
+        } catch (error) {
+          setStatus(rejected);
+        }
+      };
+      fetchData();
+    }
+  }, [id, pending, rejected, resolved]);
   const handleClickOpenModal = (variant: string) => {
     if (variant === 'back') {
       setOpenBackModal(true);
-    } else if (variant === 'delete') {
-      setOpenDeleteModal(true);
     } else if (variant === 'save') {
       setOpenSaveModal(true);
     }
@@ -98,7 +113,6 @@ export const AnalysesPagesCovid19: React.FC<IAnalysesPagesCovid19Props> = ({
 
   const handleCloseModal = () => {
     setOpenBackModal(false);
-    setOpenDeleteModal(false);
     setOpenSaveModal(false);
   };
 
@@ -108,78 +122,80 @@ export const AnalysesPagesCovid19: React.FC<IAnalysesPagesCovid19Props> = ({
 
   return (
     <Box>
-      <PagesDataCommon
-        chosenRowItem={chosenPackage}
-        handleClickOpenModal={handleClickOpenModal}
-        links={links}
-        linkId={linkId}
-        handleClickLink={handleClickLink}
-        linksData={{
-          link: initialLink,
-          name: chosenPackage ? chosenPackage.name : null,
-          pageName,
-          parentPageName,
-        }}
-        visibilityIcon
-        noDeleteIcon
-      />
-      <Box
-        component="form"
-        noValidate
-        autoComplete="off"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          pt: '24px',
-          pb: '48px',
-        }}
-      >
-        {linkId === 1 && (
-          <Basic
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
+      {status === pending && <Loader />}
+      {status !== pending && status !== rejected && (
+        <>
+          <PagesDataCommon
+            handleClickOpenModal={handleClickOpenModal}
+            links={links}
+            linkId={linkId}
+            handleClickLink={handleClickLink}
+            linksData={{
+              link: initialLink,
+              name: fieldsValues.name,
+              pageName,
+              parentPageName,
+            }}
+            visibilityIcon
+            noDeleteIcon
+            dataWasChanged={dataWasChanged}
           />
-        )}
-        {linkId === 2 && (
-          <Data
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-            languages={languages}
-          />
-        )}
-        {linkId === 3 && (
-          <SEO
-            darkTheme={darkTheme}
-            setFieldsValues={setFieldsValues}
-            fieldsValues={fieldsValues}
-            languages={languages}
-          />
-        )}
-      </Box>
-      {openBackModal && (
-        <Modal
-          shouldOpenModal={openBackModal}
-          handleCloseModal={handleCloseModal}
-          type={'back'}
-          link={initialLink}
-        />
-      )}
-      {openDeleteModal && (
-        <Modal
-          shouldOpenModal={openDeleteModal}
-          handleCloseModal={handleCloseModal}
-          type={'delete'}
-        />
-      )}
-      {openSaveModal && (
-        <Modal
-          shouldOpenModal={openSaveModal}
-          handleCloseModal={handleCloseModal}
-          type={'save'}
-          dataToSend={fieldsValues}
-        />
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              pt: '24px',
+              pb: '48px',
+            }}
+          >
+            {/* {linkId === 1 && (
+              <Basic
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+              />
+            )}
+            {linkId === 2 && (
+              <Data
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+                languages={languages}
+              />
+            )}
+            {linkId === 3 && (
+              <SEO
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+                languages={languages}
+              />
+            )} */}
+          </Box>
+          {openBackModal && (
+            <Modal
+              shouldOpenModal={openBackModal}
+              handleCloseModal={handleCloseModal}
+              type={'back'}
+              link={initialLink}
+              dataWasChanged={dataWasChanged}
+            />
+          )}
+          {openSaveModal && (
+            <Modal
+              shouldOpenModal={openSaveModal}
+              handleCloseModal={handleCloseModal}
+              type={'save'}
+              dataToSend={fieldsValues}
+              handleEditData={() =>
+                handleSendCovidPageData(id as string, fieldsValues)
+              }
+            />
+          )}
+        </>
       )}
     </Box>
   );

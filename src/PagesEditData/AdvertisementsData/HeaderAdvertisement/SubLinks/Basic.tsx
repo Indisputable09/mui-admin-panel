@@ -34,12 +34,14 @@ export const Basic: React.FC<IBasicProps> = ({
   const { openFileManager } = useFileManager(handleImageChange);
 
   function handleImageChange(file: string | null) {
-    setFieldsValues((prevState: typeof fieldsValues) => {
-      return {
-        ...prevState,
-        image: file,
-      };
-    });
+    return function () {
+      setFieldsValues((prevState: typeof fieldsValues) => {
+        return {
+          ...prevState,
+          image: file,
+        };
+      });
+    };
   }
 
   const handleActiveChange =
@@ -103,7 +105,7 @@ export const Basic: React.FC<IBasicProps> = ({
                 />
               </>
             ) : (
-              <IconButton onClick={openFileManager}>
+              <IconButton onClick={() => openFileManager()}>
                 <AddIcon
                   className={cx(
                     classes.addImageIcon,
@@ -121,7 +123,7 @@ export const Basic: React.FC<IBasicProps> = ({
                 edge="start"
                 color="inherit"
                 aria-label="edit"
-                onClick={openFileManager}
+                onClick={() => openFileManager()}
               >
                 <EditIcon
                   className={cx(classes.editIcon, darkTheme ? 'dark' : null)}

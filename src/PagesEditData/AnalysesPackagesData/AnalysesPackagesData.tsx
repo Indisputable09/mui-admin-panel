@@ -48,6 +48,7 @@ const AnalysesPackagesData: React.FC<IAnalysesPackagesDataProps> = ({
   const [languagesList, setLanguagesList] = React.useState([]);
   const [initialData, setInitialData] = React.useState<IAnalysisPackage>({
     name: initialValueWithLanguages,
+    shortDescription: initialValueWithLanguages,
     url: '',
     code: '',
     tabs: [
@@ -140,6 +141,7 @@ const AnalysesPackagesData: React.FC<IAnalysesPackagesDataProps> = ({
     } else {
       setFieldsValues({
         name: initialValueWithLanguages,
+        shortDescription: initialValueWithLanguages,
         url: '',
         code: '',
         tabs: [

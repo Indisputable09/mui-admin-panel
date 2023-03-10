@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import { useGlobalContext } from '../hooks/GlobalContext';
 import { useTableComponentStyles } from '../components/TableComponent/TableComponent.styles';
+import { handleDeleteUser } from '../services/usersAPI';
 
 interface ICellLinkProps {
   id: string;
@@ -579,7 +580,7 @@ export const usersColumns: GridColDef[] = [
   },
   {
     field: 'name',
-    headerName: 'Назва',
+    headerName: "Ім'я",
     width: 910,
     flex: 1,
     editable: false,
@@ -596,7 +597,7 @@ export const usersColumns: GridColDef[] = [
     renderCell: params => (
       <BasicActions
         id={params.row.id}
-        // handleDeleteData={() => handleDeleteVacancy(params.row.id)}
+        handleDeleteData={() => handleDeleteUser(params.row.id)}
       />
     ),
     width: 120,

@@ -1,5 +1,9 @@
 export interface IAnalysisPackage {
   name: { code: string; value: string }[];
+  shortDescription: {
+    code: string;
+    value: string;
+  }[];
   url: string;
   code: string;
   tabs: {

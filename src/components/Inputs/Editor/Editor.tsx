@@ -13,6 +13,19 @@ const Editor: React.FC<IEditorProps> = props => {
     <>
       <CKEditor
         {...props}
+        onInstanceReady={event => {
+          event.editor.on('beforeCommandExec', function (event: any) {
+            if (event.data.name === 'paste') {
+              event.editor._.forcePasteDialog = true;
+            }
+            if (
+              event.data.name === 'pastetext' &&
+              event.data.commandData.from === 'keystrokeHandler'
+            ) {
+              event.cancel();
+            }
+          });
+        }}
         config={{
           format_tags: 'p;h1;h2;h3;h4;h5;h6;pre;div',
           stylesSet: [

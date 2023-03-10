@@ -13,6 +13,10 @@ interface IBasicProps {
       code: string;
       value: string;
     }[];
+    shortDescription: {
+      code: string;
+      value: string;
+    }[];
     deadline: {
       code: string;
       value: string;
@@ -47,12 +51,13 @@ export const Basic: React.FC<IBasicProps> = ({
   const [isRendered, setIsRendered] = React.useState(false);
 
   React.useEffect(() => {
- const timeoutId = setTimeout(() => {
-   setIsRendered(true);
- }, 100);
- return () => {
-   clearTimeout(timeoutId);
- };  }, []);
+    const timeoutId = setTimeout(() => {
+      setIsRendered(true);
+    }, 100);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   const handleLanguageClick = (code: string) => {
     setLanguageCode(code as string);
@@ -145,6 +150,32 @@ export const Basic: React.FC<IBasicProps> = ({
                   darkTheme={darkTheme}
                   value={name.value ? name.value : ''}
                   onChange={handleFieldsChange('name', index)}
+                />
+              </InputLabel>
+            )}
+          </React.Fragment>
+        );
+      })}
+      {fieldsValues.shortDescription.map((item, index) => {
+        return (
+          <React.Fragment key={index}>
+            {item.code === languageCode && (
+              <InputLabel
+                htmlFor="shortDescription"
+                className={cx(classes.label, darkTheme ? 'dark' : null)}
+              >
+                <div>
+                  Короткий опис
+                  <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                </div>
+                <StyledField
+                  id="shortDescription"
+                  variant="outlined"
+                  sx={{ width: '100%', mt: '16px' }}
+                  required
+                  darkTheme={darkTheme}
+                  value={item.value ? item.value : ''}
+                  onChange={handleFieldsChange('shortDescription', index)}
                 />
               </InputLabel>
             )}

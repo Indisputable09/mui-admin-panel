@@ -22,6 +22,8 @@ export const handleSendAnalysesData = async (id: string, data: IAnalysis) => {
       toast.error(`Поле "URL" обов'язкове`);
     } else if (data.name.some(item => !item.value)) {
       toast.error(`Поле "Назва" обов'язкове`);
+    } else if (data.shortDescription.some(item => !item.value)) {
+      toast.error(`Поле "Короткий опис" обов'язкове`);
     } else if (!data.code) {
       toast.error(`Поле "Код" обов'язкове`);
     } else if (!data.categories) {
@@ -62,6 +64,8 @@ export const handleAddAnalysis = async (data: IAnalysis) => {
       toast.error(`Поле "URL" обов'язкове`);
     } else if (data.name.some(item => !item.value)) {
       toast.error(`Поле "Назва" обов'язкове`);
+    } else if (data.shortDescription.some(item => !item.value)) {
+      toast.error(`Поле "Короткий опис" обов'язкове`);
     } else if (!data.code) {
       toast.error(`Поле "Код" обов'язкове`);
     } else if (!data.categories) {
@@ -84,4 +88,11 @@ export const handleAddAnalysis = async (data: IAnalysis) => {
   } catch (error) {
     toast.error('Щось пішло не так. Спробуйте ще раз');
   }
+};
+
+export const fetchAnalyses = async () => {
+  try {
+    const response = await axios.get(`/analysis/selections`);
+    return response.data.data;
+  } catch (error) {}
 };

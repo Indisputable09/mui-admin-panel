@@ -7,9 +7,14 @@ import Modal from '../../components/Modal';
 import StyledField from '../../components/Inputs/StyledField';
 import { usePagesDataCommonStyles } from '../PagesDataCommon/PagesDataCommon.styles';
 import { haveSameData, Status } from '../../constants';
-import { handleDeleteFeedback } from '../../services/feedbackAPI';
 import Loader from '../../components/Loader';
 import { IUser } from '../../types/userTypes';
+import {
+  fetchUserById,
+  handleAddUser,
+  handleDeleteUser,
+  handleSendUserData,
+} from '../../services/usersAPI';
 
 interface IUsersDataProps {
   initialLink: string;
@@ -31,7 +36,7 @@ const UsersData: React.FC<IUsersDataProps> = ({
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
   const [status, setStatus] = React.useState(idle);
   const [dataWasChanged, setDataWasChanged] = React.useState<boolean>(false);
-  const [initialData] = React.useState<IUser>({
+  const [initialData, setInitialData] = React.useState<IUser>({
     name: '',
     email: '',
   });
@@ -49,9 +54,9 @@ const UsersData: React.FC<IUsersDataProps> = ({
       const fetchData = async () => {
         try {
           setStatus(pending);
-          //   await fetchFeedbacksById(id as string);
-          //   setFieldsValues(userById);
-          //   setInitialData(userById);
+          const userById = await fetchUserById(id as string);
+          setFieldsValues(userById);
+          setInitialData(userById);
           setStatus(resolved);
         } catch (error) {
           setStatus(rejected);
@@ -173,7 +178,7 @@ const UsersData: React.FC<IUsersDataProps> = ({
               handleCloseModal={handleCloseModal}
               type={'delete'}
               link={initialLink}
-              handleDeleteData={() => handleDeleteFeedback(id as string)}
+              handleDeleteData={() => handleDeleteUser(id as string)}
             />
           )}
           {openSaveModal && (
@@ -182,10 +187,10 @@ const UsersData: React.FC<IUsersDataProps> = ({
               handleCloseModal={handleCloseModal}
               type={'save'}
               dataToSend={fieldsValues}
-              //   handleEditData={() =>
-              //     handleSendFeedbackData(id as string, fieldsValues)
-              //   }
-              //   handlePostData={() => handleAddFeedback(fieldsValues)}
+              handleEditData={() =>
+                handleSendUserData(id as string, fieldsValues)
+              }
+              handlePostData={() => handleAddUser(fieldsValues)}
             />
           )}
         </>

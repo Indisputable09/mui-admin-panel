@@ -15,7 +15,7 @@ import StyledField from '../../../components/Inputs/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import DatePicker from '../../../components/Inputs/DatePicker';
 import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
-import { fetchRecommendedNews } from '../../../services/newsAPI';
+import { fetchNews } from '../../../services/newsAPI';
 import { useParams } from 'react-router-dom';
 import { useFileManager } from '../../../hooks/useFileManager';
 import { getAltText } from '../../../constants';
@@ -44,19 +44,21 @@ export const Data: React.FC<IDataProps> = ({
 
   React.useEffect(() => {
     const getRecommendedNews = async () => {
-      const list = await fetchRecommendedNews(id);
+      const list = await fetchNews(id);
       setRecommendedNewsList(list);
     };
     getRecommendedNews();
   }, [id]);
 
   function handleImageChange(file: string | null) {
-    setFieldsValues((prevState: typeof fieldsValues) => {
-      return {
-        ...prevState,
-        image: file,
-      };
-    });
+    return function () {
+      setFieldsValues((prevState: typeof fieldsValues) => {
+        return {
+          ...prevState,
+          image: file,
+        };
+      });
+    };
   }
 
   const handleCreationDateChange = (
@@ -145,7 +147,7 @@ export const Data: React.FC<IDataProps> = ({
                 />
               </>
             ) : (
-              <IconButton onClick={openFileManager}>
+              <IconButton onClick={() => openFileManager()}>
                 <AddIcon
                   className={cx(
                     classes.addImageIcon,
@@ -163,7 +165,7 @@ export const Data: React.FC<IDataProps> = ({
                 edge="start"
                 color="inherit"
                 aria-label="edit"
-                onClick={openFileManager}
+                onClick={() => openFileManager()}
               >
                 <EditIcon
                   className={cx(classes.editIcon, darkTheme ? 'dark' : null)}

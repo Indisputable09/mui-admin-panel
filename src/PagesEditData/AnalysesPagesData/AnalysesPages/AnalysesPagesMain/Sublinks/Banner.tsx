@@ -5,8 +5,6 @@ import {
   Divider,
   IconButton,
   InputLabel,
-  List,
-  ListItem,
   Typography,
 } from '@mui/material';
 import ColorizeIcon from '@mui/icons-material/Colorize';
@@ -16,37 +14,28 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import StyledField from '../../../../../components/Inputs/StyledField';
 import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
-import { nanoid } from 'nanoid';
 import { SketchPicker } from 'react-color';
+import { LanguagesTabsList } from '../../../../PagesDataCommon/LanguagesTabsList';
+import { useFileManager } from '../../../../../hooks/useFileManager';
+import { getAltText } from '../../../../../constants';
 
 interface IBannerProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
     banners: {
-      id: string;
-      img: string;
-      mobileImg: string;
-      primaryText: {
-        id: string;
-        color: string;
-        text: {
-          code: string;
-          value: string;
-        }[];
-      };
-      additionalText: {
-        id: string;
-        color: string;
-        text: {
-          code: string;
-          value: string;
-        }[];
-      };
+      additionalColor: string;
+      primaryColor: string;
+      image: null | string;
+      imageMobile: null | string;
+      imageDesktop: null | string;
+      primaryText: { code: string; value: string }[];
+      additionalText: { code: string; value: string }[];
       url: string;
     }[];
   };
-  languages: { name: string; id: number; code: string }[];
+  languages: { value: string; code: string }[];
+  initialValueWithLanguages: { value: string; code: string }[];
 }
 
 export const Banner: React.FC<IBannerProps> = ({
@@ -54,7 +43,9 @@ export const Banner: React.FC<IBannerProps> = ({
   setFieldsValues,
   fieldsValues,
   languages,
+  initialValueWithLanguages,
 }) => {
+  const { openFileManager } = useFileManager(handleImageChange);
   const { classes, cx } = usePagesDataCommonStyles();
   const [languageCode, setLanguageCode] = React.useState<string>(
     languages[0].code
@@ -68,6 +59,46 @@ export const Banner: React.FC<IBannerProps> = ({
     subIndex: null,
     open: false,
   });
+
+  function handleImageChange(file: string | null) {
+    return function (key?: string, index?: number) {
+      setFieldsValues((prevState: typeof fieldsValues) => {
+        const newArray = fieldsValues.banners.map((banner: any, i: number) => {
+          if (index === i && key) {
+            return {
+              ...banner,
+              [key]: file,
+            };
+          } else {
+            return banner;
+          }
+        });
+        return {
+          ...prevState,
+          banners: [...newArray],
+        };
+      });
+    };
+  }
+
+  const handleDeleteImage = (key: string, index: number) => {
+    setFieldsValues((prevState: typeof fieldsValues) => {
+      const newArray = fieldsValues.banners.map((banner: any, i: number) => {
+        if (index === i && key) {
+          return {
+            ...banner,
+            [key]: null,
+          };
+        } else {
+          return banner;
+        }
+      });
+      return {
+        ...prevState,
+        banners: [...newArray],
+      };
+    });
+  };
 
   const handleAddColorClick = (index: number, subIndex: number) => {
     setOpenColorPicker({ index, subIndex, open: true });
@@ -88,25 +119,13 @@ export const Banner: React.FC<IBannerProps> = ({
         banners: [
           ...prevState.banners,
           {
-            id: nanoid(),
-            img: '',
-            mobileImg: '',
-            primaryText: {
-              id: nanoid(3),
-              color: '',
-              text: [
-                { code: 'uk', value: 'ukr value' },
-                { code: 'en', value: 'eng value' },
-              ],
-            },
-            additionalText: {
-              id: nanoid(3),
-              color: '',
-              text: [
-                { code: 'uk', value: 'ukr value' },
-                { code: 'en', value: 'eng value' },
-              ],
-            },
+            additionalColor: '',
+            primaryColor: '',
+            image: null,
+            imageMobile: null,
+            imageDesktop: null,
+            primaryText: initialValueWithLanguages,
+            additionalText: initialValueWithLanguages,
             url: '',
           },
         ],
@@ -125,24 +144,14 @@ export const Banner: React.FC<IBannerProps> = ({
               [key]: (e.target as HTMLInputElement).value,
             };
           } else {
-            const newValues = banner[key].text.map(
-              (subItem: any, subIndex: number) => {
-                if (subIndex === valuesIndex) {
-                  return {
-                    ...subItem,
-                    value: (e.target as HTMLInputElement).value,
-                  };
-                } else {
-                  return subItem;
-                }
-              }
-            );
+            const newValue = banner[key].map((item: any, subIndex: any) => {
+              if (valuesIndex === subIndex) {
+                return { ...item, value: (e.target as HTMLInputElement).value };
+              } else return item;
+            });
             return {
               ...banner,
-              [key]: {
-                ...banner[key],
-                text: newValues,
-              },
+              [key]: newValue,
             };
           }
         } else {
@@ -162,10 +171,7 @@ export const Banner: React.FC<IBannerProps> = ({
       if (index === i) {
         return {
           ...banner,
-          [key]: {
-            ...banner[key],
-            color: color.hex,
-          },
+          [key]: color.hex,
         };
       } else {
         return banner;
@@ -176,9 +182,9 @@ export const Banner: React.FC<IBannerProps> = ({
     });
   };
 
-  const handleDeleteBannerClick = (id: string) => {
+  const handleDeleteBannerClick = (i: number) => {
     const filteredData = fieldsValues.banners.filter(
-      (item: any) => item.id !== id
+      (item: any, index: number) => index !== i
     );
     setOpenColorPicker({ index: null, subIndex: null, open: false });
     setFieldsValues((prevState: typeof fieldsValues) => {
@@ -191,33 +197,16 @@ export const Banner: React.FC<IBannerProps> = ({
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
       {fieldsValues.banners.length === 0
         ? null
         : fieldsValues.banners.map((banner, index) => {
             return (
-              <React.Fragment key={banner.id}>
+              <React.Fragment key={index}>
                 <Box className={cx(classes.bannerImagesBlock)}>
                   <Box
                     sx={{
@@ -246,8 +235,18 @@ export const Banner: React.FC<IBannerProps> = ({
                           border: '1px solid grey',
                         }}
                       >
-                        {banner.img ? null : (
-                          <IconButton onClick={() => console.log('Add img')}>
+                        {banner.image ? (
+                          <>
+                            <img
+                              src={banner.image}
+                              alt={getAltText(banner.image)}
+                              style={{ maxWidth: '100%', maxHeight: '100%' }}
+                            />
+                          </>
+                        ) : (
+                          <IconButton
+                            onClick={() => openFileManager('image', index)}
+                          >
                             <AddIcon
                               className={cx(
                                 classes.addImageIcon,
@@ -257,7 +256,7 @@ export const Banner: React.FC<IBannerProps> = ({
                           </IconButton>
                         )}
                       </Box>
-                      {banner.img ? (
+                      {banner.image ? (
                         <Box sx={{ display: 'flex', gap: 3 }}>
                           <IconButton
                             className={cx(classes.newsImgBlockButton)}
@@ -265,7 +264,7 @@ export const Banner: React.FC<IBannerProps> = ({
                             edge="start"
                             color="inherit"
                             aria-label="edit"
-                            onClick={() => console.log('Edit img')}
+                            onClick={() => openFileManager('image', index)}
                           >
                             <EditIcon
                               className={cx(
@@ -280,7 +279,7 @@ export const Banner: React.FC<IBannerProps> = ({
                             edge="start"
                             color="inherit"
                             aria-label="delete"
-                            onClick={() => console.log('Delete img')}
+                            onClick={() => handleDeleteImage('image', index)}
                           >
                             <DeleteIcon
                               className={cx(
@@ -305,7 +304,7 @@ export const Banner: React.FC<IBannerProps> = ({
                         component="h2"
                         className={classes.descriptionText}
                       >
-                        Зображення для мобільної версії
+                        Фон для мобільної версії
                       </Typography>
                     </Box>
                     <Box className={cx(classes.newsImgBlock, 'grid')}>
@@ -320,8 +319,20 @@ export const Banner: React.FC<IBannerProps> = ({
                           border: '1px solid grey',
                         }}
                       >
-                        {banner.mobileImg ? null : (
-                          <IconButton onClick={() => console.log('Add img')}>
+                        {banner.imageMobile ? (
+                          <>
+                            <img
+                              src={banner.imageMobile}
+                              alt={getAltText(banner.imageMobile)}
+                              style={{ maxWidth: '100%', maxHeight: '100%' }}
+                            />
+                          </>
+                        ) : (
+                          <IconButton
+                            onClick={() =>
+                              openFileManager('imageMobile', index)
+                            }
+                          >
                             <AddIcon
                               className={cx(
                                 classes.addImageIcon,
@@ -331,7 +342,7 @@ export const Banner: React.FC<IBannerProps> = ({
                           </IconButton>
                         )}
                       </Box>
-                      {banner.mobileImg ? (
+                      {banner.imageMobile ? (
                         <Box sx={{ display: 'flex', gap: 3 }}>
                           <IconButton
                             className={cx(classes.newsImgBlockButton)}
@@ -339,7 +350,9 @@ export const Banner: React.FC<IBannerProps> = ({
                             edge="start"
                             color="inherit"
                             aria-label="edit"
-                            onClick={() => console.log('Edit img')}
+                            onClick={() =>
+                              openFileManager('imageMobile', index)
+                            }
                           >
                             <EditIcon
                               className={cx(
@@ -354,7 +367,100 @@ export const Banner: React.FC<IBannerProps> = ({
                             edge="start"
                             color="inherit"
                             aria-label="delete"
-                            onClick={() => console.log('Delete img')}
+                            onClick={() =>
+                              handleDeleteImage('imageMobile', index)
+                            }
+                          >
+                            <DeleteIcon
+                              className={cx(
+                                classes.deleteIcon,
+                                darkTheme ? 'dark' : null
+                              )}
+                            />
+                          </IconButton>
+                        </Box>
+                      ) : null}
+                    </Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      marginTop: '16px',
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        component="h2"
+                        className={classes.descriptionText}
+                      >
+                        Фон для десктопу
+                      </Typography>
+                    </Box>
+                    <Box className={cx(classes.newsImgBlock, 'grid')}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: '200px',
+                          height: '150px',
+                          marginRight: '30px',
+                          border: '1px solid grey',
+                        }}
+                      >
+                        {banner.imageDesktop ? (
+                          <>
+                            <img
+                              src={banner.imageDesktop}
+                              alt={getAltText(banner.imageDesktop)}
+                              style={{ maxWidth: '100%', maxHeight: '100%' }}
+                            />
+                          </>
+                        ) : (
+                          <IconButton
+                            onClick={() =>
+                              openFileManager('imageDesktop', index)
+                            }
+                          >
+                            <AddIcon
+                              className={cx(
+                                classes.addImageIcon,
+                                darkTheme ? 'dark' : null
+                              )}
+                            />
+                          </IconButton>
+                        )}
+                      </Box>
+                      {banner.imageDesktop ? (
+                        <Box sx={{ display: 'flex', gap: 3 }}>
+                          <IconButton
+                            className={cx(classes.newsImgBlockButton)}
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="edit"
+                            onClick={() =>
+                              openFileManager('imageDesktop', index)
+                            }
+                          >
+                            <EditIcon
+                              className={cx(
+                                classes.editIcon,
+                                darkTheme ? 'dark' : null
+                              )}
+                            />
+                          </IconButton>
+                          <IconButton
+                            className={cx(classes.newsImgBlockButton)}
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="delete"
+                            onClick={() =>
+                              handleDeleteImage('imageDesktop', index)
+                            }
                           >
                             <DeleteIcon
                               className={cx(
@@ -368,7 +474,7 @@ export const Banner: React.FC<IBannerProps> = ({
                     </Box>
                   </Box>
                 </Box>
-                {banner.primaryText.text.map((item, textIndex) => {
+                {banner.primaryText.map((item, textIndex) => {
                   return (
                     <React.Fragment key={textIndex}>
                       {item.code === languageCode && (
@@ -389,7 +495,7 @@ export const Banner: React.FC<IBannerProps> = ({
                               sx={{ width: '100%', mt: '16px' }}
                               required
                               darkTheme={darkTheme}
-                              value={item.value}
+                              value={item.value ? item.value : ''}
                               onChange={handleFieldsChange(
                                 'primaryText',
                                 index,
@@ -424,7 +530,7 @@ export const Banner: React.FC<IBannerProps> = ({
                             </Typography>
                             <Box
                               sx={{
-                                backgroundColor: `${banner.primaryText.color}`,
+                                backgroundColor: `${banner.primaryColor}`,
                                 width: '24px',
                                 height: '24px',
                                 borderRadius: '50%',
@@ -449,9 +555,13 @@ export const Banner: React.FC<IBannerProps> = ({
                                       classes.colorPicker,
                                       darkTheme ? 'dark' : null
                                     )}
-                                    color={banner.primaryText.color}
+                                    color={
+                                      banner.primaryColor
+                                        ? banner.primaryColor
+                                        : ''
+                                    }
                                     onChangeComplete={handleColorChange(
-                                      'primaryText',
+                                      'primaryColor',
                                       index
                                     )}
                                     disableAlpha
@@ -478,7 +588,7 @@ export const Banner: React.FC<IBannerProps> = ({
                     </React.Fragment>
                   );
                 })}
-                {banner.additionalText.text.map((item, textIndex) => {
+                {banner.additionalText.map((item, textIndex) => {
                   return (
                     <React.Fragment key={textIndex}>
                       {item.code === languageCode && (
@@ -502,7 +612,7 @@ export const Banner: React.FC<IBannerProps> = ({
                               }}
                               required
                               darkTheme={darkTheme}
-                              value={item.value}
+                              value={item.value ? item.value : ''}
                               onChange={handleFieldsChange(
                                 'additionalText',
                                 index,
@@ -537,7 +647,7 @@ export const Banner: React.FC<IBannerProps> = ({
                             </Typography>
                             <Box
                               sx={{
-                                backgroundColor: `${banner.additionalText.color}`,
+                                backgroundColor: `${banner.additionalColor}`,
                                 width: '24px',
                                 height: '24px',
                                 borderRadius: '50%',
@@ -562,9 +672,13 @@ export const Banner: React.FC<IBannerProps> = ({
                                       classes.colorPicker,
                                       darkTheme ? 'dark' : null
                                     )}
-                                    color={banner.additionalText.color}
+                                    color={
+                                      banner.additionalColor
+                                        ? banner.additionalColor
+                                        : ''
+                                    }
                                     onChangeComplete={handleColorChange(
-                                      'additionalText',
+                                      'additionalColor',
                                       index
                                     )}
                                     disableAlpha
@@ -605,7 +719,7 @@ export const Banner: React.FC<IBannerProps> = ({
                     variant="outlined"
                     sx={{ width: '100%', mt: '16px' }}
                     darkTheme={darkTheme}
-                    value={banner.url}
+                    value={banner.url ? banner.url : ''}
                     onChange={handleFieldsChange('url', index)}
                   />
                 </InputLabel>
@@ -615,7 +729,7 @@ export const Banner: React.FC<IBannerProps> = ({
                       classes.deleteBanner,
                       darkTheme ? 'dark' : null
                     )}
-                    onClick={() => handleDeleteBannerClick(banner.id)}
+                    onClick={() => handleDeleteBannerClick(index)}
                   >
                     <DeleteIcon sx={{ width: '28px', height: '28px' }} />
                   </IconButton>

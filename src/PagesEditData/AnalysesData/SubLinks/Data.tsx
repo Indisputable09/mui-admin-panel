@@ -95,7 +95,9 @@ export const Data: React.FC<IDataProps> = ({
         htmlFor="url"
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
-        URL
+        <div>
+          URL аналізу<span style={{ color: 'red', fontSize: '20px' }}>*</span>
+        </div>
         <StyledField
           id="url"
           variant="outlined"

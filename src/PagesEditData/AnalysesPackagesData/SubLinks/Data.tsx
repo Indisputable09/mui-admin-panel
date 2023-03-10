@@ -3,7 +3,7 @@ import { Checkbox, FormControlLabel, InputLabel, Switch } from '@mui/material';
 import StyledField from '../../../components/Inputs/StyledField/StyledField';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
-import { fetchAnalyses } from '../../../services/analysesPackagesAPI';
+import { fetchAnalyses } from '../../../services/analysesAPI';
 
 interface IDataProps {
   darkTheme: boolean;

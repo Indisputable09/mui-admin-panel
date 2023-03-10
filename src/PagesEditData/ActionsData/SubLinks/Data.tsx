@@ -14,7 +14,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { usePagesDataCommonStyles } from '../../PagesDataCommon/PagesDataCommon.styles';
 import DatePicker from '../../../components/Inputs/DatePicker';
 import { useParams } from 'react-router-dom';
-import { fetchAnalyses } from '../../../services/analysesPackagesAPI';
+import { fetchAnalyses } from '../../../services/analysesAPI';
 import MultipleAutocomplete from '../../../components/Inputs/MultipleAutocomplete';
 import StyledField from '../../../components/Inputs/StyledField';
 import { useFileManager } from '../../../hooks/useFileManager';
@@ -51,14 +51,15 @@ export const Data: React.FC<IGalleryProps> = ({
   }, [id]);
 
   function handleImageChange(file: string | null) {
-    setFieldsValues((prevState: typeof fieldsValues) => {
-      return {
-        ...prevState,
-        image: file,
-      };
-    });
+    return function () {
+      setFieldsValues((prevState: typeof fieldsValues) => {
+        return {
+          ...prevState,
+          image: file,
+        };
+      });
+    };
   }
-
   const handleEndDateChange = (
     name: string,
     newValue?: Date | Dayjs | null
@@ -145,7 +146,7 @@ export const Data: React.FC<IGalleryProps> = ({
                 />
               </>
             ) : (
-              <IconButton onClick={openFileManager}>
+              <IconButton onClick={() => openFileManager()}>
                 <AddIcon
                   className={cx(
                     classes.addImageIcon,
@@ -163,7 +164,7 @@ export const Data: React.FC<IGalleryProps> = ({
                 edge="start"
                 color="inherit"
                 aria-label="edit"
-                onClick={openFileManager}
+                onClick={() => openFileManager()}
               >
                 <EditIcon
                   className={cx(classes.editIcon, darkTheme ? 'dark' : null)}

@@ -1,81 +1,100 @@
 import React from 'react';
-// import { InputLabel } from '@mui/material';
-// import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
-// import MultipleAutocomplete from '../../../../../components/Inputs/MultipleAutocomplete';
+import { InputLabel } from '@mui/material';
+import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
+import MultipleAutocomplete from '../../../../../components/Inputs/MultipleAutocomplete';
 
 interface IPopularProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    popularAnalyses: string[];
-    popularAnalysesPackages: string[];
-    actions: string[];
-    news: string[];
+    analyses: number[] | null;
+    complexes: number[] | null;
+    sales: number[] | null;
+    news: number[] | null;
   };
+  analyses: { id: number; value: string }[];
+  complexes: { id: number; value: string }[];
+  sales: { id: number; value: string }[];
+  news: { id: number; value: string }[];
 }
 
 export const Popular: React.FC<IPopularProps> = ({
   darkTheme,
   setFieldsValues,
   fieldsValues,
+  analyses,
+  complexes,
+  sales,
+  news,
 }) => {
-  // const { classes, cx } = usePagesDataCommonStyles();
+  const { classes, cx } = usePagesDataCommonStyles();
 
-  // const handleAutocompleteChange =
-  //   (key: string) => (e: any, values: string[]) => {
-  //     setFieldsValues((prevState: any) => {
-  //       return {
-  //         ...prevState,
-  //         [key]: values,
-  //       };
-  //     });
-  //   };
+  const handleAutocompleteChange =
+    (key: string) => (e: any, values: { id: number; value: string }[]) => {
+      const chosenIds = values.map(item => item.id);
+      setFieldsValues((prevState: any) => {
+        return {
+          ...prevState,
+          [key]: chosenIds,
+        };
+      });
+    };
+
+  const getAutocompleteValue = (
+    list: { id: number; value: string }[],
+    key: string
+  ) => {
+    if (list) {
+      const array = list.filter(item => fieldsValues[key]?.includes(item.id));
+      return array.map((obj: { id: number; value: string }) => obj.value);
+    }
+  };
 
   return (
     <>
-      {/* <InputLabel
-        htmlFor="popularAnalyses"
+      <InputLabel
+        htmlFor="analyses"
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
         Популярні аналізи
         <MultipleAutocomplete
-          list={categories}
+          list={analyses}
           darkTheme={darkTheme}
-          id="popularAnalyses"
+          id="analyses"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
-          onChange={handleAutocompleteChange('popularAnalyses')}
-          value={fieldsValues.popularAnalyses}
+          onChange={handleAutocompleteChange('analyses')}
+          value={getAutocompleteValue(analyses, 'analyses') || null}
         />
-      </InputLabel> */}
-      {/* <InputLabel
-        htmlFor="popularAnalysesPackages"
+      </InputLabel>
+      <InputLabel
+        htmlFor="complexes"
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
         Популярні пакети аналізів
         <MultipleAutocomplete
-          list={categories}
+          list={complexes}
           darkTheme={darkTheme}
-          id="popularAnalysesPackages"
+          id="complexes"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
-          onChange={handleAutocompleteChange('popularAnalysesPackages')}
-          value={fieldsValues.popularAnalysesPackages}
+          onChange={handleAutocompleteChange('complexes')}
+          value={getAutocompleteValue(complexes, 'complexes') || null}
         />
-      </InputLabel> */}
-      {/* <InputLabel
-        htmlFor="actions"
+      </InputLabel>
+      <InputLabel
+        htmlFor="sales"
         className={cx(classes.label, darkTheme ? 'dark' : null)}
       >
         Акції
         <MultipleAutocomplete
-          list={categories}
+          list={sales}
           darkTheme={darkTheme}
-          id="actions"
+          id="sales"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
-          onChange={handleAutocompleteChange('actions')}
-          value={fieldsValues.actions}
+          onChange={handleAutocompleteChange('sales')}
+          value={getAutocompleteValue(sales, 'sales') || null}
         />
-      </InputLabel> */}
-      {/* <InputLabel
+      </InputLabel>
+      <InputLabel
         htmlFor="news"
         className={cx(
           classes.label,
@@ -85,14 +104,14 @@ export const Popular: React.FC<IPopularProps> = ({
       >
         Новини
         <MultipleAutocomplete
-          list={categories}
+          list={news}
           darkTheme={darkTheme}
           id="news"
           className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
           onChange={handleAutocompleteChange('news')}
-          value={fieldsValues.news}
+          value={getAutocompleteValue(news, 'news') || null}
         />
-      </InputLabel> */}
+      </InputLabel>
     </>
   );
 };
