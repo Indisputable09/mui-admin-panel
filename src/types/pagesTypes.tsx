@@ -64,23 +64,22 @@ export interface IAnalysesAtHomePage {
 }
 
 export interface ICovidPage {
-  image: string | null;
-  mobileImage: string | null;
   analyses: number[] | null;
-  data: {
-    primaryText: {
-      color: string;
-      text: { code: string; value: string }[];
-    };
-    additionalText: {
-      color: string;
-      text: { code: string; value: string }[];
-    };
-    banners: {
-      name: { code: string; value: string }[];
-      description: { code: string; value: string }[];
-    }[];
+  advices: {
+    name: { code: string; value: string }[];
+    title: { code: string; value: string }[];
+    text: { code: string; value: string }[];
+  }[];
+  banner: {
+    additionalColor: string;
+    primaryColor: string;
+    primaryText: { code: string; value: string }[];
+    additionalText: { code: string; value: string }[];
+    image: null | string;
+    imageMobile: null | string;
+    imageDesktop: null | string;
   };
+  faqs: number[] | null;
   metaTitle: { code: string; value: string }[];
   metaDescription: { code: string; value: string }[];
   indexed: boolean;

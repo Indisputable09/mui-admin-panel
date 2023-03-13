@@ -471,7 +471,7 @@ export const Data: React.FC<IDataProps> = ({
         );
       })}
       <Typography component="h2" className={classes.descriptionText}>
-        Текст опис
+        Текст опису
       </Typography>
       {isRendered &&
         fieldsValues.service.text.map((description, descriptionIndex) => {
@@ -495,7 +495,7 @@ export const Data: React.FC<IDataProps> = ({
         htmlFor="faq"
         className={cx(classes.label, darkTheme ? 'dark' : null, 'topMargin')}
       >
-        Місто
+        Питання
         <MultipleAutocomplete
           id="faq"
           darkTheme={darkTheme}

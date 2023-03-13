@@ -5,8 +5,6 @@ import {
   Divider,
   IconButton,
   InputLabel,
-  List,
-  ListItem,
   Typography,
 } from '@mui/material';
 import ColorizeIcon from '@mui/icons-material/Colorize';
@@ -17,44 +15,29 @@ import { SketchPicker } from 'react-color';
 import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../../../components/Inputs/StyledField';
 import Editor from '../../../../../components/Inputs/Editor';
-import { nanoid } from 'nanoid';
+import { LanguagesTabsList } from '../../../../PagesDataCommon/LanguagesTabsList';
 
 interface IDataProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    data: {
-      id: string;
-      primaryText: {
-        id: string;
-        color: string;
-        text: {
-          code: string;
-          value: string;
-        }[];
-      };
-      additionalText: {
-        id: string;
-        color: string;
-        text: {
-          code: string;
-          value: string;
-        }[];
-      };
-      banners: {
-        id: string;
-        name: {
-          code: string;
-          value: string;
-        }[];
-        description: {
-          code: string;
-          value: string;
-        }[];
-      }[];
+    advices: {
+      name: { code: string; value: string }[];
+      title: { code: string; value: string }[];
+      text: { code: string; value: string }[];
+    }[];
+    banner: {
+      additionalColor: string;
+      primaryColor: string;
+      primaryText: { code: string; value: string }[];
+      additionalText: { code: string; value: string }[];
+      image: null | string;
+      imageMobile: null | string;
+      imageDesktop: null | string;
     };
   };
-  languages: { name: string; id: number; code: string }[];
+  languages: { value: string; code: string }[];
+  initialValueWithLanguages: { value: string; code: string }[];
 }
 
 export const Data: React.FC<IDataProps> = ({
@@ -62,6 +45,7 @@ export const Data: React.FC<IDataProps> = ({
   setFieldsValues,
   fieldsValues,
   languages,
+  initialValueWithLanguages,
 }) => {
   const { classes, cx } = usePagesDataCommonStyles();
   const [languageCode, setLanguageCode] = React.useState<string>(
@@ -74,6 +58,16 @@ export const Data: React.FC<IDataProps> = ({
     subIndex: null,
     open: false,
   });
+  const [isRendered, setIsRendered] = React.useState(false);
+
+  React.useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setIsRendered(true);
+    }, 100);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   const handleAddColorClick = (subIndex: number) => {
     setOpenColorPicker({ subIndex, open: true });
@@ -83,23 +77,14 @@ export const Data: React.FC<IDataProps> = ({
     setFieldsValues((prevState: any) => {
       return {
         ...prevState,
-        data: {
-          ...prevState.data,
-          banners: [
-            ...prevState.data.banners,
-            {
-              id: nanoid(),
-              name: [
-                { code: 'uk', value: 'ukr' },
-                { code: 'en', value: 'eng' },
-              ],
-              description: [
-                { code: 'uk', value: 'ukr' },
-                { code: 'en', value: 'eng' },
-              ],
-            },
-          ],
-        },
+        advices: [
+          ...prevState.advices,
+          {
+            name: initialValueWithLanguages,
+            title: initialValueWithLanguages,
+            text: initialValueWithLanguages,
+          },
+        ],
       };
     });
   };
@@ -112,18 +97,15 @@ export const Data: React.FC<IDataProps> = ({
     setLanguageCode(code as string);
   };
 
-  const handleDeleteBannerClick = (id: string) => {
-    const filteredData = fieldsValues.data.banners.filter(
-      (item: any) => item.id !== id
+  const handleDeleteBannerClick = (i: number) => {
+    const filteredData = fieldsValues.advices.filter(
+      (item: any, index: number) => index !== i
     );
     setOpenColorPicker({ subIndex: null, open: false });
     setFieldsValues((prevState: typeof fieldsValues) => {
       return {
         ...prevState,
-        data: {
-          ...prevState.data,
-          banners: filteredData,
-        },
+        advices: filteredData,
       };
     });
   };
@@ -131,7 +113,7 @@ export const Data: React.FC<IDataProps> = ({
   const handleFieldsChange =
     (key: string, valuesIndex?: number) => (e: React.ChangeEvent) => {
       setFieldsValues((prevState: any) => {
-        const newValues = prevState.data[key].text.map(
+        const newValues = prevState.banner[key].map(
           (subItem: any, subIndex: number) => {
             if (subIndex === valuesIndex) {
               return {
@@ -145,12 +127,9 @@ export const Data: React.FC<IDataProps> = ({
         );
         return {
           ...prevState,
-          data: {
-            ...prevState.data,
-            [key]: {
-              ...prevState.data[key],
-              text: newValues,
-            },
+          banner: {
+            ...prevState.banner,
+            [key]: newValues,
           },
         };
       });
@@ -159,7 +138,7 @@ export const Data: React.FC<IDataProps> = ({
   const handleBannerChange =
     (index: number, key: string, valuesIndex?: number) => (e: any) => {
       setFieldsValues((prevState: any) => {
-        const newArray = prevState.data.banners.map((item: any, i: number) => {
+        const newArray = prevState.advices.map((item: any, i: number) => {
           if (index === i) {
             const newValues = item[key].map(
               (subItem: any, subIndex: number) => {
@@ -190,10 +169,7 @@ export const Data: React.FC<IDataProps> = ({
         });
         return {
           ...prevState,
-          data: {
-            ...prevState.data,
-            banners: newArray,
-          },
+          advices: newArray,
         };
       });
     };
@@ -202,42 +178,19 @@ export const Data: React.FC<IDataProps> = ({
     setFieldsValues((prevState: typeof fieldsValues) => {
       return {
         ...prevState,
-        data: {
-          ...prevState.data,
-          [key]: {
-            ...prevState.data[key],
-            color: color.hex,
-          },
-        },
+        banner: { ...prevState.banner, [key]: color.hex },
       };
     });
   };
 
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
-      {fieldsValues.data.primaryText.text.map((item, textIndex) => {
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
+      {fieldsValues.banner.primaryText.map((item, textIndex) => {
         return (
           <React.Fragment key={textIndex}>
             {item.code === languageCode && (
@@ -251,14 +204,14 @@ export const Data: React.FC<IDataProps> = ({
                     'noBottomMargin'
                   )}
                 >
-                  Головний текст
+                  Головний текст у банері
                   <StyledField
                     id="primaryText"
                     variant="outlined"
                     sx={{ width: '100%', mt: '16px' }}
                     required
                     darkTheme={darkTheme}
-                    value={item.value}
+                    value={item.value ? item.value : ''}
                     onChange={handleFieldsChange('primaryText', textIndex)}
                   />
                 </InputLabel>
@@ -284,7 +237,7 @@ export const Data: React.FC<IDataProps> = ({
                   </Typography>
                   <Box
                     sx={{
-                      backgroundColor: `${fieldsValues.data.primaryText.color}`,
+                      backgroundColor: `${fieldsValues.banner.primaryColor}`,
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
@@ -307,8 +260,8 @@ export const Data: React.FC<IDataProps> = ({
                           classes.colorPicker,
                           darkTheme ? 'dark' : null
                         )}
-                        color={fieldsValues.data.primaryText.color}
-                        onChangeComplete={handleColorChange('primaryText')}
+                        color={fieldsValues.banner.primaryColor}
+                        onChangeComplete={handleColorChange('primaryColor')}
                         disableAlpha
                       />
                       <IconButton
@@ -331,7 +284,7 @@ export const Data: React.FC<IDataProps> = ({
           </React.Fragment>
         );
       })}
-      {fieldsValues.data.additionalText.text.map((item, textIndex) => {
+      {fieldsValues.banner.additionalText.map((item, textIndex) => {
         return (
           <React.Fragment key={textIndex}>
             {item.code === languageCode && (
@@ -345,7 +298,7 @@ export const Data: React.FC<IDataProps> = ({
                     'noBottomMargin'
                   )}
                 >
-                  Додатковий текст
+                  Додатковий текст у банері
                   <StyledField
                     id="additionalText"
                     variant="outlined"
@@ -355,7 +308,7 @@ export const Data: React.FC<IDataProps> = ({
                     }}
                     required
                     darkTheme={darkTheme}
-                    value={item.value}
+                    value={item.value ? item.value : ''}
                     onChange={handleFieldsChange('additionalText', textIndex)}
                   />
                 </InputLabel>
@@ -381,7 +334,7 @@ export const Data: React.FC<IDataProps> = ({
                   </Typography>
                   <Box
                     sx={{
-                      backgroundColor: `${fieldsValues.data.additionalText.color}`,
+                      backgroundColor: `${fieldsValues.banner.additionalColor}`,
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
@@ -404,8 +357,8 @@ export const Data: React.FC<IDataProps> = ({
                           classes.colorPicker,
                           darkTheme ? 'dark' : null
                         )}
-                        color={fieldsValues.data.additionalText.color}
-                        onChangeComplete={handleColorChange('additionalText')}
+                        color={fieldsValues.banner.additionalColor}
+                        onChangeComplete={handleColorChange('additionalColor')}
                         disableAlpha
                       />
                       <IconButton
@@ -428,7 +381,7 @@ export const Data: React.FC<IDataProps> = ({
           </React.Fragment>
         );
       })}
-      {fieldsValues.data.banners.map((item, index) => {
+      {fieldsValues.advices.map((item, index) => {
         return (
           <React.Fragment key={index}>
             <Divider
@@ -438,19 +391,47 @@ export const Data: React.FC<IDataProps> = ({
                 'topMargin'
               )}
             />
-            {item.name.map((title, titleIndex) => {
+            {item.title.map((title, titleIndex) => {
               return (
                 <React.Fragment key={titleIndex}>
                   {title.code === languageCode && (
                     <InputLabel
-                      htmlFor="name"
+                      htmlFor="title"
                       className={cx(
                         classes.label,
                         darkTheme ? 'dark' : null,
                         'topMargin'
                       )}
                     >
-                      Назва блоку
+                      Назва блоку опису
+                      <StyledField
+                        id="title"
+                        multiline
+                        variant="outlined"
+                        sx={{ width: '100%', mt: '16px' }}
+                        required
+                        darkTheme={darkTheme}
+                        value={title.value ? title.value : ''}
+                        onChange={handleBannerChange(
+                          index,
+                          'title',
+                          titleIndex
+                        )}
+                      />
+                    </InputLabel>
+                  )}
+                </React.Fragment>
+              );
+            })}
+            {item.name.map((name, nameIndex) => {
+              return (
+                <React.Fragment key={nameIndex}>
+                  {name.code === languageCode && (
+                    <InputLabel
+                      htmlFor="name"
+                      className={cx(classes.label, darkTheme ? 'dark' : null)}
+                    >
+                      Скорочена назва блоку опису
                       <StyledField
                         id="name"
                         multiline
@@ -458,8 +439,8 @@ export const Data: React.FC<IDataProps> = ({
                         sx={{ width: '100%', mt: '16px' }}
                         required
                         darkTheme={darkTheme}
-                        value={title.value}
-                        onChange={handleBannerChange(index, 'name', titleIndex)}
+                        value={name.value ? name.value : ''}
+                        onChange={handleBannerChange(index, 'name', nameIndex)}
                       />
                     </InputLabel>
                   )}
@@ -469,27 +450,24 @@ export const Data: React.FC<IDataProps> = ({
             <Typography component="h2" className={classes.descriptionText}>
               Опис блоку
             </Typography>
-            {item.description.map((description, descriptionIndex) => {
-              return (
-                <React.Fragment key={descriptionIndex}>
-                  {description.code === languageCode && (
-                    <Editor
-                      debug={false}
-                      initData={description.value}
-                      onChange={handleBannerChange(
-                        index,
-                        'description',
-                        descriptionIndex
-                      )}
-                    />
-                  )}
-                </React.Fragment>
-              );
-            })}
-            {fieldsValues.data.banners.length > 1 ? (
+            {isRendered &&
+              item.text.map((text, textIndex) => {
+                return (
+                  <React.Fragment key={textIndex}>
+                    {text.code === languageCode && (
+                      <Editor
+                        debug={false}
+                        initData={text.value ? text.value : ''}
+                        onChange={handleBannerChange(index, 'text', textIndex)}
+                      />
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            {fieldsValues.advices.length > 1 ? (
               <IconButton
                 className={cx(classes.deleteBanner, darkTheme ? 'dark' : null)}
-                onClick={() => handleDeleteBannerClick(item.id)}
+                onClick={() => handleDeleteBannerClick(index)}
               >
                 <DeleteIcon sx={{ width: '28px', height: '28px' }} />
               </IconButton>

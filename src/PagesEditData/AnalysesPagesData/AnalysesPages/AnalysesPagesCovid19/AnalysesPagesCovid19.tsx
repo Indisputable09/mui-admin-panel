@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
 import PagesDataCommon from '../../../PagesDataCommon';
 import Modal from '../../../../components/Modal';
-// import { useGlobalContext } from '../../../../hooks/GlobalContext';
-// import { Basic, SEO, Data } from './SubLinks';
+import { useGlobalContext } from '../../../../hooks/GlobalContext';
+import { Basic, SEO, Data } from './SubLinks';
 import { haveSameData, Status } from '../../../../constants';
 import { ICovidPage } from '../../../../types/pagesTypes';
 import {
@@ -33,7 +33,7 @@ export const AnalysesPagesCovid19: React.FC<IAnalysesPagesCovid19Props> = ({
 }) => {
   const { idle, pending, resolved, rejected } = Status;
   const [status, setStatus] = React.useState(idle);
-  // const { darkTheme } = useGlobalContext();
+  const { darkTheme } = useGlobalContext();
   const [linkId, setLinkId] = React.useState<number>(1);
   const [openBackModal, setOpenBackModal] = React.useState<boolean>(false);
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
@@ -42,24 +42,23 @@ export const AnalysesPagesCovid19: React.FC<IAnalysesPagesCovid19Props> = ({
     React.useState([{ code: 'uk', value: '' }]);
   const [languagesList, setLanguagesList] = React.useState([]);
   const [initialData, setInitialData] = React.useState<ICovidPage>({
-    image: null,
-    mobileImage: null,
+    advices: [
+      {
+        name: initialValueWithLanguages,
+        title: initialValueWithLanguages,
+        text: initialValueWithLanguages,
+      },
+    ],
     analyses: null,
-    data: {
-      primaryText: {
-        color: '#ffffff',
-        text: initialValueWithLanguages,
-      },
-      additionalText: {
-        color: '#ffffff',
-        text: initialValueWithLanguages,
-      },
-      banners: [
-        {
-          name: initialValueWithLanguages,
-          description: initialValueWithLanguages,
-        },
-      ],
+    faqs: null,
+    banner: {
+      additionalColor: '',
+      primaryColor: '',
+      image: null,
+      imageMobile: null,
+      imageDesktop: null,
+      primaryText: initialValueWithLanguages,
+      additionalText: initialValueWithLanguages,
     },
     metaTitle: initialValueWithLanguages,
     metaDescription: initialValueWithLanguages,
@@ -91,6 +90,7 @@ export const AnalysesPagesCovid19: React.FC<IAnalysesPagesCovid19Props> = ({
         try {
           setStatus(pending);
           const pageById = await fetchPageById(id as string);
+          console.log('pageById:', pageById);
           const languages = await fetchLanguages();
           setLanguagesList(languages);
           setFieldsValues(pageById);
@@ -151,29 +151,30 @@ export const AnalysesPagesCovid19: React.FC<IAnalysesPagesCovid19Props> = ({
               pb: '48px',
             }}
           >
-            {/* {linkId === 1 && (
+            {linkId === 1 && (
               <Basic
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
               />
             )}
-            {linkId === 2 && (
+            {linkId === 2 && languagesList.length !== 0 && (
               <Data
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
+                initialValueWithLanguages={initialValueWithLanguages}
               />
             )}
-            {linkId === 3 && (
+            {linkId === 3 && languagesList.length !== 0 && (
               <SEO
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
-            )} */}
+            )}
           </Box>
           {openBackModal && (
             <Modal
