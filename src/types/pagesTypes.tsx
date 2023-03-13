@@ -33,30 +33,34 @@ export interface IMainPage {
 }
 
 export interface IAnalysesAtHomePage {
-  images: { image: string | null }[];
-  weekdaysOrdersSchedule: string;
-  weekendOrdersSchedule: string;
-  weekdaysDrivingSchedule: string;
-  weekendDrivingSchedule: string;
-  data: {
-    primaryText: {
-      color: string;
-      text: { code: string; value: string }[];
-    };
-    additionalText: {
-      color: string;
-      text: { code: string; value: string }[];
-    };
-    steps: {
-      title: { code: string; value: string }[];
-      description: { code: string; value: string }[];
-    }[];
-    description: { code: string; value: string }[];
+  banner: {
+    additionalColor: string;
+    primaryColor: string;
+    primaryText: { code: string; value: string }[];
+    additionalText: { code: string; value: string }[];
+    image: null | string;
+    imageMobile: null | string;
+    imageDesktop: null | string;
   };
+  faqs: number[] | null;
   metaTitle: { code: string; value: string }[];
   metaDescription: { code: string; value: string }[];
   indexed: boolean;
   name: string;
+  service: {
+    image: string | null;
+    title: { code: string; value: string }[];
+    text: { code: string; value: string }[];
+  };
+  steps: {
+    image: string | null;
+    title: { code: string; value: string }[];
+    text: { code: string; value: string }[];
+  }[];
+  weekdaysOrdersSchedule: string;
+  weekendOrdersSchedule: string;
+  weekdaysDrivingSchedule: string;
+  weekendDrivingSchedule: string;
 }
 
 export interface ICovidPage {

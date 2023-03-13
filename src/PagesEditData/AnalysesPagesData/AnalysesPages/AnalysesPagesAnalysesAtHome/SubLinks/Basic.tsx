@@ -5,12 +5,32 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../../../components/Inputs/StyledField';
+import { useFileManager } from '../../../../../hooks/useFileManager';
+import { getAltText } from '../../../../../constants';
 
 interface IBasicProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    images: { label: string; image: string }[];
+    banner: {
+      additionalColor: string;
+      primaryColor: string;
+      primaryText: { code: string; value: string }[];
+      additionalText: { code: string; value: string }[];
+      image: null | string;
+      imageMobile: null | string;
+      imageDesktop: null | string;
+    };
+    service: {
+      image: string | null;
+      title: { code: string; value: string }[];
+      text: { code: string; value: string }[];
+    };
+    steps: {
+      image: string | null;
+      title: { code: string; value: string }[];
+      text: { code: string; value: string }[];
+    }[];
     weekdaysOrdersSchedule: string;
     weekendOrdersSchedule: string;
     weekdaysDrivingSchedule: string;
@@ -18,12 +38,81 @@ interface IBasicProps {
   };
 }
 
+const labels = ['Крок 1', 'Крок 2', 'Крок 3', 'Крок 4'];
+
 export const Basic: React.FC<IBasicProps> = ({
   darkTheme,
   setFieldsValues,
   fieldsValues,
 }) => {
+  const { openFileManager } = useFileManager(handleImageChange);
   const { classes, cx } = usePagesDataCommonStyles();
+
+  function handleImageChange(file: string | null) {
+    return function (key?: string, index?: number, mainKey?: string) {
+      setFieldsValues((prevState: typeof fieldsValues) => {
+        if (key && mainKey) {
+          return {
+            ...prevState,
+            [mainKey]: {
+              ...prevState[mainKey],
+              [key]: file,
+            },
+          };
+        } else {
+          const newArray = fieldsValues.steps.map((item: any, i: number) => {
+            if (index === i && key) {
+              return {
+                ...item,
+                [key]: file,
+              };
+            } else {
+              return item;
+            }
+          });
+          return {
+            ...prevState,
+            steps: {
+              ...prevState.service,
+              items: [...newArray],
+            },
+          };
+        }
+      });
+    };
+  }
+
+  const handleDeleteImage = (key: string, index?: number, mainKey?: string) => {
+    setFieldsValues((prevState: typeof fieldsValues) => {
+      if (mainKey) {
+        return {
+          ...prevState,
+          [mainKey]: {
+            ...prevState[mainKey],
+            [key]: null,
+          },
+        };
+      } else {
+        const newArray = fieldsValues.steps.map((item: any, i: number) => {
+          if (index === i && key) {
+            return {
+              ...item,
+              [key]: null,
+            };
+          } else {
+            return item;
+          }
+        });
+        return {
+          ...prevState,
+          steps: {
+            ...prevState.service,
+            items: [...newArray],
+          },
+        };
+      }
+    });
+  };
 
   const handleFieldsChange = (e: React.ChangeEvent) => {
     setFieldsValues((prevState: any) => {
@@ -36,8 +125,340 @@ export const Basic: React.FC<IBasicProps> = ({
 
   return (
     <>
+      <Box className={cx(classes.bannerImagesBlock, 'marginBottom')}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+          }}
+        >
+          <Box>
+            <Typography component="h2" className={classes.descriptionText}>
+              Зображення
+            </Typography>
+          </Box>
+          <Box className={cx(classes.newsImgBlock, 'grid')}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '200px',
+                height: '150px',
+                marginRight: '30px',
+                border: '1px solid grey',
+              }}
+            >
+              {fieldsValues.banner.image ? (
+                <>
+                  <img
+                    src={fieldsValues.banner.image}
+                    alt={getAltText(fieldsValues.banner.image)}
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  />
+                </>
+              ) : (
+                <IconButton
+                  onClick={() => openFileManager('image', undefined, 'banner')}
+                >
+                  <AddIcon
+                    className={cx(
+                      classes.addImageIcon,
+                      darkTheme ? 'dark' : null
+                    )}
+                  />
+                </IconButton>
+              )}
+            </Box>
+            {fieldsValues.banner.image ? (
+              <Box sx={{ display: 'flex', gap: 3 }}>
+                <IconButton
+                  className={cx(classes.newsImgBlockButton)}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="edit"
+                  onClick={() => openFileManager('image', undefined, 'banner')}
+                >
+                  <EditIcon
+                    className={cx(classes.editIcon, darkTheme ? 'dark' : null)}
+                  />
+                </IconButton>
+                <IconButton
+                  className={cx(classes.newsImgBlockButton)}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="delete"
+                  onClick={() =>
+                    handleDeleteImage('image', undefined, 'banner')
+                  }
+                >
+                  <DeleteIcon
+                    className={cx(
+                      classes.deleteIcon,
+                      darkTheme ? 'dark' : null
+                    )}
+                  />
+                </IconButton>
+              </Box>
+            ) : null}
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+          }}
+        >
+          <Box>
+            <Typography component="h2" className={classes.descriptionText}>
+              Фон для мобільної версії
+            </Typography>
+          </Box>
+          <Box className={cx(classes.newsImgBlock, 'grid')}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '200px',
+                height: '150px',
+                marginRight: '30px',
+                border: '1px solid grey',
+              }}
+            >
+              {fieldsValues.banner.imageMobile ? (
+                <>
+                  <img
+                    src={fieldsValues.banner.imageMobile}
+                    alt={getAltText(fieldsValues.banner.imageMobile)}
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  />
+                </>
+              ) : (
+                <IconButton
+                  onClick={() =>
+                    openFileManager('imageMobile', undefined, 'banner')
+                  }
+                >
+                  <AddIcon
+                    className={cx(
+                      classes.addImageIcon,
+                      darkTheme ? 'dark' : null
+                    )}
+                  />
+                </IconButton>
+              )}
+            </Box>
+            {fieldsValues.banner.imageMobile ? (
+              <Box sx={{ display: 'flex', gap: 3 }}>
+                <IconButton
+                  className={cx(classes.newsImgBlockButton)}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="edit"
+                  onClick={() =>
+                    openFileManager('imageMobile', undefined, 'banner')
+                  }
+                >
+                  <EditIcon
+                    className={cx(classes.editIcon, darkTheme ? 'dark' : null)}
+                  />
+                </IconButton>
+                <IconButton
+                  className={cx(classes.newsImgBlockButton)}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="delete"
+                  onClick={() =>
+                    handleDeleteImage('imageMobile', undefined, 'banner')
+                  }
+                >
+                  <DeleteIcon
+                    className={cx(
+                      classes.deleteIcon,
+                      darkTheme ? 'dark' : null
+                    )}
+                  />
+                </IconButton>
+              </Box>
+            ) : null}
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            marginTop: '16px',
+          }}
+        >
+          <Box>
+            <Typography component="h2" className={classes.descriptionText}>
+              Фон для десктопу
+            </Typography>
+          </Box>
+          <Box className={cx(classes.newsImgBlock, 'grid')}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '200px',
+                height: '150px',
+                marginRight: '30px',
+                border: '1px solid grey',
+              }}
+            >
+              {fieldsValues.banner.imageDesktop ? (
+                <>
+                  <img
+                    src={fieldsValues.banner.imageDesktop}
+                    alt={getAltText(fieldsValues.banner.imageDesktop)}
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  />
+                </>
+              ) : (
+                <IconButton
+                  onClick={() =>
+                    openFileManager('imageDesktop', undefined, 'banner')
+                  }
+                >
+                  <AddIcon
+                    className={cx(
+                      classes.addImageIcon,
+                      darkTheme ? 'dark' : null
+                    )}
+                  />
+                </IconButton>
+              )}
+            </Box>
+            {fieldsValues.banner.imageDesktop ? (
+              <Box sx={{ display: 'flex', gap: 3 }}>
+                <IconButton
+                  className={cx(classes.newsImgBlockButton)}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="edit"
+                  onClick={() =>
+                    openFileManager('imageDesktop', undefined, 'banner')
+                  }
+                >
+                  <EditIcon
+                    className={cx(classes.editIcon, darkTheme ? 'dark' : null)}
+                  />
+                </IconButton>
+                <IconButton
+                  className={cx(classes.newsImgBlockButton)}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="delete"
+                  onClick={() =>
+                    handleDeleteImage('imageDesktop', undefined, 'banner')
+                  }
+                >
+                  <DeleteIcon
+                    className={cx(
+                      classes.deleteIcon,
+                      darkTheme ? 'dark' : null
+                    )}
+                  />
+                </IconButton>
+              </Box>
+            ) : null}
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            marginTop: '16px',
+          }}
+        >
+          <Box>
+            <Typography component="h2" className={classes.descriptionText}>
+              Зображення блоку з описом
+            </Typography>
+          </Box>
+          <Box className={cx(classes.newsImgBlock, 'grid')}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '200px',
+                height: '150px',
+                marginRight: '30px',
+                border: '1px solid grey',
+              }}
+            >
+              {fieldsValues.service.image ? (
+                <>
+                  <img
+                    src={fieldsValues.service.image}
+                    alt={getAltText(fieldsValues.service.image)}
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  />
+                </>
+              ) : (
+                <IconButton
+                  onClick={() => openFileManager('image', undefined, 'service')}
+                >
+                  <AddIcon
+                    className={cx(
+                      classes.addImageIcon,
+                      darkTheme ? 'dark' : null
+                    )}
+                  />
+                </IconButton>
+              )}
+            </Box>
+            {fieldsValues.service.image ? (
+              <Box sx={{ display: 'flex', gap: 3 }}>
+                <IconButton
+                  className={cx(classes.newsImgBlockButton)}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="edit"
+                  onClick={() => openFileManager('image', undefined, 'service')}
+                >
+                  <EditIcon
+                    className={cx(classes.editIcon, darkTheme ? 'dark' : null)}
+                  />
+                </IconButton>
+                <IconButton
+                  className={cx(classes.newsImgBlockButton)}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="delete"
+                  onClick={() =>
+                    handleDeleteImage('image', undefined, 'service')
+                  }
+                >
+                  <DeleteIcon
+                    className={cx(
+                      classes.deleteIcon,
+                      darkTheme ? 'dark' : null
+                    )}
+                  />
+                </IconButton>
+              </Box>
+            ) : null}
+          </Box>
+        </Box>
+      </Box>
       <Box className={cx(classes.bannerImagesBlock)}>
-        {fieldsValues.images.map((image, index) => {
+        {fieldsValues.steps.map((item, index) => {
           return (
             <Box
               key={index}
@@ -50,7 +471,7 @@ export const Basic: React.FC<IBasicProps> = ({
             >
               <Box>
                 <Typography component="h2" className={classes.descriptionText}>
-                  {image.label}
+                  {labels[index]}
                 </Typography>
               </Box>
               <Box className={cx(classes.newsImgBlock, 'grid')}>
@@ -65,8 +486,16 @@ export const Basic: React.FC<IBasicProps> = ({
                     border: '1px solid grey',
                   }}
                 >
-                  {image.image ? null : (
-                    <IconButton onClick={() => console.log('Add img')}>
+                  {item.image ? (
+                    <>
+                      <img
+                        src={item.image}
+                        alt={getAltText(item.image)}
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                      />
+                    </>
+                  ) : (
+                    <IconButton onClick={() => openFileManager('image', index)}>
                       <AddIcon
                         className={cx(
                           classes.addImageIcon,
@@ -76,7 +505,7 @@ export const Basic: React.FC<IBasicProps> = ({
                     </IconButton>
                   )}
                 </Box>
-                {image.image ? (
+                {item.image ? (
                   <Box sx={{ display: 'flex', gap: 3 }}>
                     <IconButton
                       className={cx(classes.newsImgBlockButton)}
@@ -84,7 +513,7 @@ export const Basic: React.FC<IBasicProps> = ({
                       edge="start"
                       color="inherit"
                       aria-label="edit"
-                      onClick={() => console.log('Edit img')}
+                      onClick={() => openFileManager('image', index)}
                     >
                       <EditIcon
                         className={cx(
@@ -99,7 +528,7 @@ export const Basic: React.FC<IBasicProps> = ({
                       edge="start"
                       color="inherit"
                       aria-label="delete"
-                      onClick={() => console.log('Delete img')}
+                      onClick={() => handleDeleteImage('image', index)}
                     >
                       <DeleteIcon
                         className={cx(

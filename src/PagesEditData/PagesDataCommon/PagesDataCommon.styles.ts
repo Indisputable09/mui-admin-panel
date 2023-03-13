@@ -123,7 +123,7 @@ export const usePagesDataCommonStyles = makeStyles<void>()(
       fontSize: '14px',
       lineHeight: '1.15',
     },
-    attributeAutocomplete: {
+    attribute: {
       width: '100%',
       marginTop: '16px',
       '&.dark button': {
@@ -797,7 +797,14 @@ export const usePagesDataCommonStyles = makeStyles<void>()(
         transition: 'all 250ms ease-out',
       },
     },
-    bannerImagesBlock: { display: 'flex', gap: '20%', flexWrap: 'wrap' },
+    bannerImagesBlock: {
+      display: 'flex',
+      gap: '20%',
+      flexWrap: 'wrap',
+      '&.marginBottom': {
+        marginBottom: '16px',
+      },
+    },
     newsImgBlock: {
       width: '500px',
       display: 'flex',

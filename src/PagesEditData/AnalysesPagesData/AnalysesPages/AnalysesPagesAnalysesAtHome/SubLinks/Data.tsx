@@ -1,61 +1,44 @@
 import React from 'react';
-import {
-  Box,
-  IconButton,
-  InputLabel,
-  List,
-  ListItem,
-  Typography,
-} from '@mui/material';
+import { Box, IconButton, InputLabel, Typography } from '@mui/material';
 import ColorizeIcon from '@mui/icons-material/Colorize';
 import CloseIcon from '@mui/icons-material/Close';
 import { SketchPicker } from 'react-color';
 import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
 import StyledField from '../../../../../components/Inputs/StyledField';
 import Editor from '../../../../../components/Inputs/Editor';
+import { LanguagesTabsList } from '../../../../PagesDataCommon/LanguagesTabsList';
+import { fetchFAQ } from '../../../../../services/faqAPI';
+import MultipleAutocomplete from '../../../../../components/Inputs/MultipleAutocomplete';
 
 interface IDataProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
-    data: {
-      id: string;
-      primaryText: {
-        id: string;
-        color: string;
-        text: {
-          code: string;
-          value: string;
-        }[];
-      };
-      additionalText: {
-        id: string;
-        color: string;
-        text: {
-          code: string;
-          value: string;
-        }[];
-      };
-      steps: {
-        id: string;
-        title: {
-          code: string;
-          value: string;
-        }[];
-        description: {
-          code: string;
-          value: string;
-        }[];
-        label: string;
-      }[];
-      description: {
-        code: string;
-        value: string;
-      }[];
+    banner: {
+      additionalColor: string;
+      primaryColor: string;
+      primaryText: { code: string; value: string }[];
+      additionalText: { code: string; value: string }[];
+      image: null | string;
+      imageMobile: null | string;
+      imageDesktop: null | string;
     };
+    faqs: number[] | null;
+    service: {
+      image: string | null;
+      title: { code: string; value: string }[];
+      text: { code: string; value: string }[];
+    };
+    steps: {
+      image: string | null;
+      title: { code: string; value: string }[];
+      text: { code: string; value: string }[];
+    }[];
   };
-  languages: { name: string; id: number; code: string }[];
+  languages: { value: string; code: string }[];
 }
+
+const labels = ['Крок 1', 'Крок 2', 'Крок 3', 'Крок 4'];
 
 export const Data: React.FC<IDataProps> = ({
   darkTheme,
@@ -74,6 +57,25 @@ export const Data: React.FC<IDataProps> = ({
     subIndex: null,
     open: false,
   });
+  const [faqList, setFaqList] = React.useState([]);
+  const [isRendered, setIsRendered] = React.useState(false);
+
+  React.useEffect(() => {
+    const getFaqs = async () => {
+      const list = await fetchFAQ();
+      setFaqList(list);
+    };
+    getFaqs();
+  }, []);
+
+  React.useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setIsRendered(true);
+    }, 100);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   const handleAddColorClick = (subIndex: number) => {
     setOpenColorPicker({ subIndex, open: true });
@@ -88,81 +90,49 @@ export const Data: React.FC<IDataProps> = ({
   };
 
   const handleFieldsChange =
-    (key: string, valuesIndex?: number) => (e: any) => {
+    (key: string, mainKey: string, valuesIndex?: number) => (e: any) => {
       setFieldsValues((prevState: any) => {
-        if (key === 'description') {
-          const newValues = prevState.data[key].map(
-            (subItem: any, subIndex: number) => {
-              if (subIndex === valuesIndex) {
+        const newValues = prevState[mainKey][key].map(
+          (subItem: any, subIndex: number) => {
+            if (subIndex === valuesIndex) {
+              if (e.hasOwnProperty('editor')) {
                 return {
                   ...subItem,
                   value: e.editor.getData(),
                 };
               } else {
-                return subItem;
+                return {
+                  ...subItem,
+                  value: (e.target as HTMLInputElement).value,
+                };
               }
+            } else {
+              return subItem;
             }
-          );
-          return {
-            ...prevState,
-            data: {
-              ...prevState.data,
-              [key]: newValues,
-            },
-          };
-        } else {
-          const newValues = prevState.data[key].text.map(
-            (subItem: any, subIndex: number) => {
-              if (subIndex === valuesIndex) {
-                if (e.hasOwnProperty('editor')) {
-                  return {
-                    ...subItem,
-                    value: e.editor.getData(),
-                  };
-                } else {
-                  return {
-                    ...subItem,
-                    value: (e.target as HTMLInputElement).value,
-                  };
-                }
-              } else {
-                return subItem;
-              }
-            }
-          );
-          return {
-            ...prevState,
-            data: {
-              ...prevState.data,
-              [key]: {
-                ...prevState.data[key],
-                text: newValues,
-              },
-            },
-          };
-        }
+          }
+        );
+        return {
+          ...prevState,
+          [mainKey]: {
+            ...prevState[mainKey],
+            [key]: newValues,
+          },
+        };
       });
     };
 
   const handleStepsChange =
     (index: number, key: string, valuesIndex?: number) => (e: any) => {
       setFieldsValues((prevState: any) => {
-        const newArray = prevState.data.steps.map((item: any, i: number) => {
+        const newArray = prevState.steps.map((item: any, i: number) => {
           if (index === i) {
             const newValues = item[key].map(
               (subItem: any, subIndex: number) => {
                 if (subIndex === valuesIndex) {
-                  if (e.hasOwnProperty('editor')) {
-                    return {
-                      ...subItem,
-                      value: e.editor.getData(),
-                    };
-                  } else {
-                    return {
-                      ...subItem,
-                      value: (e.target as HTMLInputElement).value,
-                    };
-                  }
+                  return {
+                    ...subItem,
+                    value: (e.target as HTMLInputElement).value,
+                  };
                 } else {
                   return subItem;
                 }
@@ -178,10 +148,7 @@ export const Data: React.FC<IDataProps> = ({
         });
         return {
           ...prevState,
-          data: {
-            ...prevState.data,
-            steps: newArray,
-          },
+          steps: newArray,
         };
       });
     };
@@ -190,42 +157,42 @@ export const Data: React.FC<IDataProps> = ({
     setFieldsValues((prevState: typeof fieldsValues) => {
       return {
         ...prevState,
-        data: {
-          ...prevState.data,
-          [key]: {
-            ...prevState.data[key],
-            color: color.hex,
-          },
+        banner: {
+          ...prevState.banner,
+          [key]: color.hex,
         },
       };
     });
   };
 
+  const handleAutocompleteChange =
+    (key: string) => (e: any, values: { id: number; value: string }[]) => {
+      const chosenIds = values.map(item => item.id);
+      setFieldsValues((prevState: any) => {
+        return {
+          ...prevState,
+          [key]: chosenIds,
+        };
+      });
+    };
+
+  const getAutocompleteValue = () => {
+    const array = faqList.filter((item: any) =>
+      fieldsValues.faqs?.includes(item.id)
+    );
+    return array.map((obj: { id: number; value: string }) => obj.value);
+  };
+
+  const autocompleteValue = getAutocompleteValue();
+
   return (
     <>
-      <List className={classes.languagesList}>
-        {languages.map(language => {
-          return (
-            <ListItem
-              key={language.id}
-              className={classes.languagesListItem}
-              onClick={() => handleLanguageClick(language.code)}
-            >
-              <Typography
-                className={cx(
-                  classes.languagesListText,
-                  languageCode === language.code ? 'active' : null,
-                  darkTheme ? 'dark' : null
-                )}
-                component="p"
-              >
-                {language.name.toLocaleUpperCase()}
-              </Typography>
-            </ListItem>
-          );
-        })}
-      </List>
-      {fieldsValues.data.primaryText.text.map((item, textIndex) => {
+      <LanguagesTabsList
+        handleLanguageClick={handleLanguageClick}
+        languageCode={languageCode}
+        languages={languages}
+      />
+      {fieldsValues.banner.primaryText.map((item, textIndex) => {
         return (
           <React.Fragment key={textIndex}>
             {item.code === languageCode && (
@@ -239,15 +206,19 @@ export const Data: React.FC<IDataProps> = ({
                     'noBottomMargin'
                   )}
                 >
-                  Головний текст
+                  Головний текст у банері
                   <StyledField
                     id="primaryText"
                     variant="outlined"
                     sx={{ width: '100%', mt: '16px' }}
                     required
                     darkTheme={darkTheme}
-                    value={item.value}
-                    onChange={handleFieldsChange('primaryText', textIndex)}
+                    value={item.value ? item.value : ''}
+                    onChange={handleFieldsChange(
+                      'primaryText',
+                      'banner',
+                      textIndex
+                    )}
                   />
                 </InputLabel>
                 <Box
@@ -272,7 +243,7 @@ export const Data: React.FC<IDataProps> = ({
                   </Typography>
                   <Box
                     sx={{
-                      backgroundColor: `${fieldsValues.data.primaryText.color}`,
+                      backgroundColor: `${fieldsValues.banner.primaryColor}`,
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
@@ -295,8 +266,8 @@ export const Data: React.FC<IDataProps> = ({
                           classes.colorPicker,
                           darkTheme ? 'dark' : null
                         )}
-                        color={fieldsValues.data.primaryText.color}
-                        onChangeComplete={handleColorChange('primaryText')}
+                        color={fieldsValues.banner.primaryColor}
+                        onChangeComplete={handleColorChange('primaryColor')}
                         disableAlpha
                       />
                       <IconButton
@@ -319,7 +290,7 @@ export const Data: React.FC<IDataProps> = ({
           </React.Fragment>
         );
       })}
-      {fieldsValues.data.additionalText.text.map((item, textIndex) => {
+      {fieldsValues.banner.additionalText.map((item, textIndex) => {
         return (
           <React.Fragment key={textIndex}>
             {item.code === languageCode && (
@@ -333,7 +304,7 @@ export const Data: React.FC<IDataProps> = ({
                     'noBottomMargin'
                   )}
                 >
-                  Додатковий текст
+                  Додатковий текст у банері
                   <StyledField
                     id="additionalText"
                     variant="outlined"
@@ -343,8 +314,12 @@ export const Data: React.FC<IDataProps> = ({
                     }}
                     required
                     darkTheme={darkTheme}
-                    value={item.value}
-                    onChange={handleFieldsChange('additionalText', textIndex)}
+                    value={item.value ? item.value : ''}
+                    onChange={handleFieldsChange(
+                      'additionalText',
+                      'banner',
+                      textIndex
+                    )}
                   />
                 </InputLabel>
                 <Box
@@ -369,7 +344,7 @@ export const Data: React.FC<IDataProps> = ({
                   </Typography>
                   <Box
                     sx={{
-                      backgroundColor: `${fieldsValues.data.additionalText.color}`,
+                      backgroundColor: `${fieldsValues.banner.additionalColor}`,
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
@@ -392,8 +367,8 @@ export const Data: React.FC<IDataProps> = ({
                           classes.colorPicker,
                           darkTheme ? 'dark' : null
                         )}
-                        color={fieldsValues.data.additionalText.color}
-                        onChangeComplete={handleColorChange('additionalText')}
+                        color={fieldsValues.banner.additionalColor}
+                        onChangeComplete={handleColorChange('additionalColor')}
                         disableAlpha
                       />
                       <IconButton
@@ -416,7 +391,7 @@ export const Data: React.FC<IDataProps> = ({
           </React.Fragment>
         );
       })}
-      {fieldsValues.data.steps.map((item, index) => {
+      {fieldsValues.steps.map((item, index) => {
         return (
           <React.Fragment key={index}>
             <InputLabel
@@ -427,7 +402,7 @@ export const Data: React.FC<IDataProps> = ({
                 'noBottomMargin'
               )}
             >
-              {item.label}
+              {labels[index]}
             </InputLabel>
             {item.title.map((title, titleIndex) => {
               return (
@@ -440,83 +415,96 @@ export const Data: React.FC<IDataProps> = ({
                       sx={{ width: '100%', mt: '16px' }}
                       required
                       darkTheme={darkTheme}
-                      value={title.value}
+                      value={title.value ? title.value : ''}
                       onChange={handleStepsChange(index, 'title', titleIndex)}
                     />
                   )}
                 </React.Fragment>
               );
             })}
-            {item.description.map((description, descriptionIndex) => {
+            {item.text.map((text, textIndex) => {
               return (
-                <React.Fragment key={descriptionIndex}>
-                  {description.code === languageCode && (
+                <React.Fragment key={textIndex}>
+                  {text.code === languageCode && (
                     <StyledField
-                      id="description"
+                      id="text"
                       multiline
                       variant="outlined"
                       sx={{ width: '100%', mt: '16px' }}
                       required
                       darkTheme={darkTheme}
-                      value={description.value}
-                      onChange={handleStepsChange(
-                        index,
-                        'description',
-                        descriptionIndex
-                      )}
+                      value={text.value ? text.value : ''}
+                      onChange={handleStepsChange(index, 'text', textIndex)}
                     />
                   )}
                 </React.Fragment>
               );
             })}
-
-            {/* <Typography component="h2" className={classes.descriptionText}>
-              Опис блоку
-            </Typography>
-            {item.description.map((description, descriptionIndex) => {
-              return (
-                <React.Fragment key={descriptionIndex}>
-                  {description.code === languageCode && (
-                    <Editor
-                      debug={false}
-                      initData={description.value}
-                      onChange={handleBannerChange(
-                        index,
-                        'description',
-                        descriptionIndex
-                      )}
-                    />
-                  )}
-                </React.Fragment>
-              );
-            })}
-            {fieldsValues.data.banners.length > 1 ? (
-              <IconButton
-                className={cx(classes.deleteBanner, darkTheme ? 'dark' : null)}
-                onClick={() => handleDeleteBannerClick(item.id)}
-              >
-                <DeleteIcon sx={{ width: '28px', height: '28px' }} />
-              </IconButton>
-            ) : null} */}
           </React.Fragment>
         );
       })}
-      <Typography component="h2" className={classes.descriptionText}>
-        Опис блоку
-      </Typography>
-      {fieldsValues.data.description.map((description, descriptionIndex) => {
+      {fieldsValues.service.title.map((title, index) => {
         return (
-          <React.Fragment key={descriptionIndex}>
-            {description.code === languageCode && (
-              <Editor
-                debug={false}
-                initData={description.value}
-                onChange={handleFieldsChange('description', descriptionIndex)}
-              />
+          <React.Fragment key={index}>
+            {title.code === languageCode && (
+              <InputLabel
+                htmlFor="title"
+                className={cx(
+                  classes.label,
+                  darkTheme ? 'dark' : null,
+                  'topMargin'
+                )}
+              >
+                Заголовок блоку опису
+                <StyledField
+                  id="title"
+                  variant="outlined"
+                  sx={{ width: '100%', mt: '16px' }}
+                  required
+                  darkTheme={darkTheme}
+                  value={title.value ? title.value : ''}
+                  onChange={handleFieldsChange('title', 'service', index)}
+                />
+              </InputLabel>
             )}
           </React.Fragment>
         );
       })}
+      <Typography component="h2" className={classes.descriptionText}>
+        Текст опис
+      </Typography>
+      {isRendered &&
+        fieldsValues.service.text.map((description, descriptionIndex) => {
+          return (
+            <React.Fragment key={descriptionIndex}>
+              {description.code === languageCode && (
+                <Editor
+                  debug={false}
+                  initData={description.value ? description.value : ''}
+                  onChange={handleFieldsChange(
+                    'text',
+                    'service',
+                    descriptionIndex
+                  )}
+                />
+              )}
+            </React.Fragment>
+          );
+        })}
+      <InputLabel
+        htmlFor="faq"
+        className={cx(classes.label, darkTheme ? 'dark' : null, 'topMargin')}
+      >
+        Місто
+        <MultipleAutocomplete
+          id="faq"
+          darkTheme={darkTheme}
+          onChange={handleAutocompleteChange('faqs')}
+          value={autocompleteValue}
+          list={faqList}
+          className={cx(classes.autocomplete, darkTheme ? 'dark' : null)}
+        />
+      </InputLabel>
     </>
   );
 };

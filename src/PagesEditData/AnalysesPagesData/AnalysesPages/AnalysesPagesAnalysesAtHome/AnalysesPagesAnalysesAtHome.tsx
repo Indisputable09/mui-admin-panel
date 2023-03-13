@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
 import PagesDataCommon from '../../../PagesDataCommon';
 import Modal from '../../../../components/Modal';
-// import { useGlobalContext } from '../../../../hooks/GlobalContext';
-// import { Basic, Data, SEO } from './SubLinks';
+import { useGlobalContext } from '../../../../hooks/GlobalContext';
+import { Basic, Data, SEO } from './SubLinks';
 import { haveSameData, Status } from '../../../../constants';
 import { IAnalysesAtHomePage } from '../../../../types/pagesTypes';
 import { fetchLanguages } from '../../../../services/languagesAPI';
@@ -31,7 +31,7 @@ export const AnalysesPagesAnalysesAtHome: React.FC<
 > = ({ initialLink, pageName, parentPageName }) => {
   const { idle, pending, resolved, rejected } = Status;
   const [status, setStatus] = React.useState(idle);
-  // const { darkTheme } = useGlobalContext();
+  const { darkTheme } = useGlobalContext();
   const [linkId, setLinkId] = React.useState<number>(1);
   const [openBackModal, setOpenBackModal] = React.useState<boolean>(false);
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
@@ -41,48 +41,32 @@ export const AnalysesPagesAnalysesAtHome: React.FC<
   const [languagesList, setLanguagesList] = React.useState([]);
   const [initialData, setInitialData] = React.useState<IAnalysesAtHomePage>({
     name: '',
-    images: [
-      { image: null },
-      { image: null },
-      { image: null },
-      { image: null },
-      { image: null },
-      { image: null },
-      { image: null },
-    ],
+    banner: {
+      additionalColor: '',
+      primaryColor: '',
+      primaryText: initialValueWithLanguages,
+      additionalText: initialValueWithLanguages,
+      image: null,
+      imageMobile: null,
+      imageDesktop: null,
+    },
+    faqs: null,
     weekdaysOrdersSchedule: '',
     weekendOrdersSchedule: '',
     weekdaysDrivingSchedule: '',
     weekendDrivingSchedule: '',
-    data: {
-      primaryText: {
-        color: '#ffffff',
-        text: initialValueWithLanguages,
-      },
-      additionalText: {
-        color: '#ffffff',
-        text: initialValueWithLanguages,
-      },
-      steps: [
-        {
-          title: initialValueWithLanguages,
-          description: initialValueWithLanguages,
-        },
-        {
-          title: initialValueWithLanguages,
-          description: initialValueWithLanguages,
-        },
-        {
-          title: initialValueWithLanguages,
-          description: initialValueWithLanguages,
-        },
-        {
-          title: initialValueWithLanguages,
-          description: initialValueWithLanguages,
-        },
-      ],
-      description: initialValueWithLanguages,
+    service: {
+      image: null,
+      title: initialValueWithLanguages,
+      text: initialValueWithLanguages,
     },
+    steps: [
+      {
+        image: null,
+        title: initialValueWithLanguages,
+        text: initialValueWithLanguages,
+      },
+    ],
     metaTitle: initialValueWithLanguages,
     metaDescription: initialValueWithLanguages,
     indexed: false,
@@ -173,29 +157,29 @@ export const AnalysesPagesAnalysesAtHome: React.FC<
               pb: '48px',
             }}
           >
-            {/* {linkId === 1 && (
+            {linkId === 1 && (
               <Basic
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
               />
             )}
-            {linkId === 2 && (
+            {linkId === 2 && languagesList.length > 0 && (
               <Data
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
             )}
-            {linkId === 3 && (
+            {linkId === 3 && languagesList.length > 0 && (
               <SEO
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
-            )} */}
+            )}
           </Box>
           {openBackModal && (
             <Modal
