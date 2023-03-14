@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
 import PagesDataCommon from '../../../PagesDataCommon';
 import Modal from '../../../../components/Modal';
-// import { useGlobalContext } from '../../../../hooks/GlobalContext';
-// import { Basic, SEO } from './SubLinks';
+import { useGlobalContext } from '../../../../hooks/GlobalContext';
+import { Basic, SEO, Data } from './SubLinks';
 import { haveSameData, Status } from '../../../../constants';
 import { ICoworkingPage } from '../../../../types/pagesTypes';
 import {
@@ -22,7 +22,8 @@ interface IAnalysesPagesCoworkingProps {
 
 const links = [
   { name: 'загальне', id: 1 },
-  { name: 'seo', id: 2 },
+  { name: 'дані', id: 2 },
+  { name: 'seo', id: 3 },
 ];
 
 export const AnalysesPagesCoworking: React.FC<IAnalysesPagesCoworkingProps> = ({
@@ -32,7 +33,7 @@ export const AnalysesPagesCoworking: React.FC<IAnalysesPagesCoworkingProps> = ({
 }) => {
   const { idle, pending, resolved, rejected } = Status;
   const [status, setStatus] = React.useState(idle);
-  // const { darkTheme } = useGlobalContext();
+  const { darkTheme } = useGlobalContext();
   const [linkId, setLinkId] = React.useState<number>(1);
   const [openBackModal, setOpenBackModal] = React.useState<boolean>(false);
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
@@ -41,15 +42,13 @@ export const AnalysesPagesCoworking: React.FC<IAnalysesPagesCoworkingProps> = ({
     React.useState([{ code: 'uk', value: '' }]);
   const [languagesList, setLanguagesList] = React.useState([]);
   const [initialData, setInitialData] = React.useState<ICoworkingPage>({
-    image: null,
-    mobileImage: null,
-    primaryText: {
-      color: '#ffffff',
-      text: initialValueWithLanguages,
-    },
-    additionalText: {
-      color: '#ffffff',
-      text: initialValueWithLanguages,
+    banner: {
+      additionalColor: '',
+      primaryColor: '',
+      primaryText: initialValueWithLanguages,
+      additionalText: initialValueWithLanguages,
+      imageMobile: null,
+      imageDesktop: null,
     },
     title: initialValueWithLanguages,
     description: initialValueWithLanguages,
@@ -144,22 +143,29 @@ export const AnalysesPagesCoworking: React.FC<IAnalysesPagesCoworkingProps> = ({
               pb: '48px',
             }}
           >
-            {/* {linkId === 1 && (
+            {linkId === 1 && languagesList.length !== 0 && (
               <Basic
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
               />
             )}
-            {linkId === 2 && (
+            {linkId === 2 && languagesList.length !== 0 && (
+              <Data
+                darkTheme={darkTheme}
+                setFieldsValues={setFieldsValues}
+                fieldsValues={fieldsValues}
+                languages={languagesList}
+              />
+            )}
+            {linkId === 3 && languagesList.length !== 0 && (
               <SEO
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
-            )} */}
+            )}
           </Box>
           {openBackModal && (
             <Modal

@@ -234,7 +234,12 @@ export const advertisementsColumns: GridColDef[] = [
     editable: false,
     sortable: false,
     renderCell: params => {
-      return <CellLink id={params.row.id} name={params.row.name} />;
+      return (
+        <CellLink
+          id={`${params.row.id}/${params.row.type}`}
+          name={params.row.name}
+        />
+      );
     },
   },
   {

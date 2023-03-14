@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
 import PagesDataCommon from '../../../PagesDataCommon';
 import Modal from '../../../../components/Modal';
-// import { useGlobalContext } from '../../../../hooks/GlobalContext';
-// import { Banner, Description, Gallery, SEO } from './SubLinks';
+import { useGlobalContext } from '../../../../hooks/GlobalContext';
+import { Banner, Description, Gallery, SEO } from './SubLinks';
 import { haveSameData, Status } from '../../../../constants';
 import { IAboutLaboratoryPage } from '../../../../types/pagesTypes';
 import {
@@ -32,7 +32,7 @@ const AnalysesPagesAboutLaboratory: React.FC<
 > = ({ initialLink, pageName, parentPageName }) => {
   const { idle, pending, resolved, rejected } = Status;
   const [status, setStatus] = React.useState(idle);
-  // const { darkTheme } = useGlobalContext();
+  const { darkTheme } = useGlobalContext();
   const [linkId, setLinkId] = React.useState<number>(1);
   const [openBackModal, setOpenBackModal] = React.useState<boolean>(false);
   const [openSaveModal, setOpenSaveModal] = React.useState<boolean>(false);
@@ -43,48 +43,47 @@ const AnalysesPagesAboutLaboratory: React.FC<
   const [initialData, setInitialData] = React.useState<IAboutLaboratoryPage>({
     banner: {
       image: null,
-      mobileImage: null,
-      primaryText: {
-        color: '',
-        text: initialValueWithLanguages,
-      },
-      additionalText: {
-        color: '',
-        text: initialValueWithLanguages,
-      },
+      imageMobile: null,
+      imageDesktop: null,
+      primaryText: initialValueWithLanguages,
+      additionalText: initialValueWithLanguages,
+      additionalColor: '',
+      primaryColor: '',
     },
+    aboutImage: null,
     title: initialValueWithLanguages,
     description: initialValueWithLanguages,
-    tabs: [
+    blocks: [
       {
-        quantity: 0,
-        name: initialValueWithLanguages,
+        value: 0,
+        text: initialValueWithLanguages,
       },
       {
-        quantity: 0,
-        name: initialValueWithLanguages,
+        value: 0,
+        text: initialValueWithLanguages,
       },
       {
-        quantity: 0,
-        name: initialValueWithLanguages,
+        value: 0,
+        text: initialValueWithLanguages,
       },
     ],
-    goal: initialValueWithLanguages,
+    bottomText: initialValueWithLanguages,
+    mission: initialValueWithLanguages,
     values: [
       {
-        name: initialValueWithLanguages,
+        text: initialValueWithLanguages,
       },
       {
-        name: initialValueWithLanguages,
+        text: initialValueWithLanguages,
       },
       {
-        name: initialValueWithLanguages,
+        text: initialValueWithLanguages,
       },
       {
-        name: initialValueWithLanguages,
+        text: initialValueWithLanguages,
       },
     ],
-    gallery: [{ image: null }],
+    slider: [''],
     metaTitle: initialValueWithLanguages,
     metaDescription: initialValueWithLanguages,
     indexed: false,
@@ -115,6 +114,7 @@ const AnalysesPagesAboutLaboratory: React.FC<
         try {
           setStatus(pending);
           const pageById = await fetchPageById(id as string);
+          console.log('pageById:', pageById);
           const languages = await fetchLanguages();
           setLanguagesList(languages);
           setFieldsValues(pageById);
@@ -176,20 +176,19 @@ const AnalysesPagesAboutLaboratory: React.FC<
               pb: '48px',
             }}
           >
-            {/* {linkId === 1 && (
+            {linkId === 1 && (
               <Banner
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
               />
             )}
-            {linkId === 2 && (
+            {linkId === 2 && languagesList.length !== 0 && (
               <Description
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
             )}
             {linkId === 3 && (
@@ -199,14 +198,14 @@ const AnalysesPagesAboutLaboratory: React.FC<
                 fieldsValues={fieldsValues}
               />
             )}
-            {linkId === 4 && (
+            {linkId === 4 && languagesList.length !== 0 && (
               <SEO
                 darkTheme={darkTheme}
                 setFieldsValues={setFieldsValues}
                 fieldsValues={fieldsValues}
-                languages={languages}
+                languages={languagesList}
               />
-            )} */}
+            )}
           </Box>
           {openBackModal && (
             <Modal

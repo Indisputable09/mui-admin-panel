@@ -3,50 +3,30 @@ import { Box, IconButton, InputLabel, Typography } from '@mui/material';
 import ColorizeIcon from '@mui/icons-material/Colorize';
 import CloseIcon from '@mui/icons-material/Close';
 import { SketchPicker } from 'react-color';
-import StyledField from '../../../../../components/Inputs/StyledField';
 import { usePagesDataCommonStyles } from '../../../../PagesDataCommon/PagesDataCommon.styles';
+import StyledField from '../../../../../components/Inputs/StyledField';
 import Editor from '../../../../../components/Inputs/Editor';
-import { stopInputScroll } from '../../../../../constants';
 import { LanguagesTabsList } from '../../../../PagesDataCommon/LanguagesTabsList';
 
-interface IDescriptionProps {
+interface IDataProps {
   darkTheme: boolean;
   setFieldsValues: (obj: any) => void;
   fieldsValues: {
     banner: {
       additionalColor: string;
       primaryColor: string;
-      image: string | null;
-      imageMobile: string | null;
+      primaryText: { code: string; value: string }[];
+      additionalText: { code: string; value: string }[];
+      imageMobile: null | string;
       imageDesktop: null | string;
-      primaryText: {
-        code: string;
-        value: string;
-      }[];
-      additionalText: {
-        code: string;
-        value: string;
-      }[];
     };
     title: { code: string; value: string }[];
     description: { code: string; value: string }[];
-    blocks: {
-      value: number | null;
-      text: { code: string; value: string }[];
-    }[];
-    bottomText: { code: string; value: string }[];
-    mission: { code: string; value: string }[];
-    values: {
-      text: { code: string; value: string }[];
-    }[];
   };
-  languages: { code: string; value: string }[];
+  languages: { value: string; code: string }[];
 }
 
-const blocksLabels = ['Блок 1', 'Блок 2', 'Блок 3'];
-const valuesLabels = ['Цінності 1', 'Цінності 2', 'Цінності 3', 'Цінності 4'];
-
-export const Description: React.FC<IDescriptionProps> = ({
+export const Data: React.FC<IDataProps> = ({
   darkTheme,
   setFieldsValues,
   fieldsValues,
@@ -87,86 +67,52 @@ export const Description: React.FC<IDescriptionProps> = ({
   };
 
   const handleFieldsChange =
-    (key?: string, index?: number, mainKey?: string) => (e: any) => {
+    (key: string, valuesIndex?: number) => (e: React.ChangeEvent) => {
       setFieldsValues((prevState: any) => {
-        if (key && mainKey) {
-          const newArray = fieldsValues[mainKey][key].map(
-            (item: any, i: any) => {
-              return { ...item, value: (e.target as HTMLInputElement).value };
-            }
-          );
-          return {
-            ...prevState,
-            [mainKey]: {
-              ...prevState[mainKey],
-              [key]: [...newArray],
-            },
-          };
-        } else if (key) {
-          const newArray = fieldsValues[key].map((item: any, i: any) => {
-            if (index === i) {
-              if (e.hasOwnProperty('editor')) {
-                return {
-                  ...item,
-                  value: e.editor.getData(),
-                };
-              } else {
-                return { ...item, value: (e.target as HTMLInputElement).value };
-              }
-            } else return item;
-          });
-          return {
-            ...prevState,
-            [key]: [...newArray],
-          };
-        } else {
-          return {
-            ...prevState,
-            [e.target.id]: (e.target as HTMLInputElement).value,
-          };
-        }
-      });
-    };
-
-  const handleBlocksChange =
-    (index: number, key: string, mainKey: string, valuesIndex?: number) =>
-    (e: any) => {
-      setFieldsValues((prevState: any) => {
-        const newArray = prevState[mainKey].map((item: any, i: number) => {
-          if (index === i) {
-            if (key === 'value') {
+        const newValues = prevState.banner[key].map(
+          (subItem: any, subIndex: number) => {
+            if (subIndex === valuesIndex) {
               return {
-                ...item,
-                [key]: Number((e.target as HTMLInputElement).value),
+                ...subItem,
+                value: (e.target as HTMLInputElement).value,
               };
             } else {
-              const newValues = item[key].map(
-                (subItem: any, subIndex: number) => {
-                  if (subIndex === valuesIndex) {
-                    return {
-                      ...subItem,
-                      value: (e.target as HTMLInputElement).value,
-                    };
-                  } else {
-                    return subItem;
-                  }
-                }
-              );
-              return {
-                ...item,
-                [key]: [...newValues],
-              };
+              return subItem;
             }
-          } else {
-            return item;
           }
-        });
+        );
         return {
           ...prevState,
-          [mainKey]: newArray,
+          banner: {
+            ...prevState.banner,
+            [key]: newValues,
+          },
         };
       });
     };
+
+  const handleBlockChange = (key: string, valuesIndex?: number) => (e: any) => {
+    setFieldsValues((prevState: any) => {
+      const newValues = prevState[key].map((subItem: any, subIndex: number) => {
+        if (subIndex === valuesIndex) {
+          if (e.hasOwnProperty('editor')) {
+            return { ...subItem, value: e.editor.getData() };
+          } else {
+            return {
+              ...subItem,
+              value: (e.target as HTMLInputElement).value,
+            };
+          }
+        } else {
+          return subItem;
+        }
+      });
+      return {
+        ...prevState,
+        [key]: newValues,
+      };
+    });
+  };
 
   const handleColorChange = (key: string) => (color: any) => {
     setFieldsValues((prevState: typeof fieldsValues) => {
@@ -206,11 +152,7 @@ export const Description: React.FC<IDescriptionProps> = ({
                     required
                     darkTheme={darkTheme}
                     value={item.value ? item.value : ''}
-                    onChange={handleFieldsChange(
-                      'primaryText',
-                      textIndex,
-                      'banner'
-                    )}
+                    onChange={handleFieldsChange('primaryText', textIndex)}
                   />
                 </InputLabel>
                 <Box
@@ -307,11 +249,7 @@ export const Description: React.FC<IDescriptionProps> = ({
                     required
                     darkTheme={darkTheme}
                     value={item.value ? item.value : ''}
-                    onChange={handleFieldsChange(
-                      'additionalText',
-                      textIndex,
-                      'banner'
-                    )}
+                    onChange={handleFieldsChange('additionalText', textIndex)}
                   />
                 </InputLabel>
                 <Box
@@ -404,7 +342,7 @@ export const Description: React.FC<IDescriptionProps> = ({
                   required
                   darkTheme={darkTheme}
                   value={title.value ? title.value : ''}
-                  onChange={handleFieldsChange('title', titleIndex)}
+                  onChange={handleBlockChange('title', titleIndex)}
                 />
               </InputLabel>
             )}
@@ -422,138 +360,12 @@ export const Description: React.FC<IDescriptionProps> = ({
                 <Editor
                   debug={false}
                   initData={description.value ? description.value : ''}
-                  onChange={handleFieldsChange('description', descriptionIndex)}
+                  onChange={handleBlockChange('description', descriptionIndex)}
                 />
               )}
             </React.Fragment>
           );
         })}
-      {fieldsValues.blocks.map((tab, index) => {
-        return (
-          <React.Fragment key={index}>
-            {tab.text.map((item, tabIndex) => {
-              return (
-                <React.Fragment key={tabIndex}>
-                  {item.code === languageCode && (
-                    <InputLabel
-                      className={cx(
-                        classes.label,
-                        darkTheme ? 'dark' : null,
-                        index === 0 ? 'topMargin' : null
-                      )}
-                    >
-                      {blocksLabels[index]}
-                      <Box sx={{ display: 'flex', gap: '16px' }}>
-                        <StyledField
-                          type="number"
-                          onWheel={e => {
-                            stopInputScroll(e);
-                          }}
-                          variant="outlined"
-                          sx={{ width: '100px', mt: '16px' }}
-                          required
-                          darkTheme={darkTheme}
-                          value={Number(tab.value).toString()}
-                          onChange={handleBlocksChange(
-                            index,
-                            'value',
-                            'blocks',
-                            tabIndex
-                          )}
-                        />
-                        <StyledField
-                          variant="outlined"
-                          sx={{ flexGrow: 1, mt: '16px' }}
-                          required
-                          darkTheme={darkTheme}
-                          value={item.value}
-                          onChange={handleBlocksChange(
-                            index,
-                            'text',
-                            'blocks',
-                            tabIndex
-                          )}
-                        />
-                      </Box>
-                    </InputLabel>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </React.Fragment>
-        );
-      })}
-      {fieldsValues.mission.map((item, valueIndex) => {
-        return (
-          <React.Fragment key={valueIndex}>
-            {item.code === languageCode && (
-              <InputLabel
-                className={cx(classes.label, darkTheme ? 'dark' : null)}
-              >
-                Наша місія
-                <StyledField
-                  variant="outlined"
-                  sx={{ width: '100%', mt: '16px' }}
-                  darkTheme={darkTheme}
-                  value={item.value ? item.value : ''}
-                  onChange={handleFieldsChange('mission', valueIndex)}
-                />
-              </InputLabel>
-            )}
-          </React.Fragment>
-        );
-      })}
-      {fieldsValues.values.map((value, index) => {
-        return (
-          <React.Fragment key={index}>
-            {value.text.map((item, valueIndex) => {
-              return (
-                <React.Fragment key={valueIndex}>
-                  {item.code === languageCode && (
-                    <InputLabel
-                      className={cx(classes.label, darkTheme ? 'dark' : null)}
-                    >
-                      {valuesLabels[index]}
-                      <StyledField
-                        variant="outlined"
-                        sx={{ width: '100%', mt: '16px' }}
-                        darkTheme={darkTheme}
-                        value={item.value ? item.value : ''}
-                        onChange={handleBlocksChange(
-                          index,
-                          'text',
-                          'values',
-                          valueIndex
-                        )}
-                      />
-                    </InputLabel>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </React.Fragment>
-        );
-      })}
-      {fieldsValues.bottomText.map((item, valueIndex) => {
-        return (
-          <React.Fragment key={valueIndex}>
-            {item.code === languageCode && (
-              <InputLabel
-                className={cx(classes.label, darkTheme ? 'dark' : null)}
-              >
-                Текст в нижньому блоці
-                <StyledField
-                  variant="outlined"
-                  sx={{ width: '100%', mt: '16px' }}
-                  darkTheme={darkTheme}
-                  value={item.value ? item.value : ''}
-                  onChange={handleFieldsChange('bottomText', valueIndex)}
-                />
-              </InputLabel>
-            )}
-          </React.Fragment>
-        );
-      })}
     </>
   );
 };

@@ -91,7 +91,7 @@ export const SEO: React.FC<ISEOProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={title.value}
+                  value={title.value ? title.value : ''}
                   onChange={handleFieldsChange('metaTitle', index)}
                 />
               </InputLabel>
@@ -115,7 +115,7 @@ export const SEO: React.FC<ISEOProps> = ({
                   sx={{ width: '100%', mt: '16px' }}
                   required
                   darkTheme={darkTheme}
-                  value={description.value}
+                  value={description.value ? description.value : ''}
                   onChange={handleFieldsChange('metaDescription', index)}
                 />
               </InputLabel>

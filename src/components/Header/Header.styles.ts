@@ -23,15 +23,10 @@ export const useHeaderStyles = makeStyles<void>()(
     },
     logo: {
       display: 'flex',
-      fontFamily: 'monospace',
-      fontWeight: 700,
       letterSpacing: '.3rem',
       color: 'inherit',
       textDecoration: 'none',
       transition: 'all linear 250ms',
-      '&.dark': {
-        color: '#ffffff',
-      },
       '&:hover': {
         textDecoration: 'none',
         transform: 'scale(1.1)',

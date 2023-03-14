@@ -14,6 +14,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link } from 'react-router-dom';
 import { fetchUserData, token } from '../../services/authAPI';
 import Modal from '../Modal';
+import LogoIcon from '../LogoIcon';
 
 interface HeaderProps {
   toggleDrawer: (open: boolean) => void;
@@ -81,19 +82,12 @@ const Header: React.FC<HeaderProps> = ({
               className={cx(classes.menuToggler, darkTheme ? 'dark' : null)}
             />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="p"
-            // className={cx(classes.logo, darkTheme ? 'dark' : null)}
+          <Link
+            to="/dashboard"
+            className={cx(classes.logo, darkTheme ? 'dark' : null)}
           >
-            <Link
-              to="/dashboard"
-              className={cx(classes.logo, darkTheme ? 'dark' : null)}
-            >
-              LOGO
-            </Link>
-          </Typography>
+            <LogoIcon />
+          </Link>
           <Box
             sx={{
               display: 'flex',

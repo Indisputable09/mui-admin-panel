@@ -87,15 +87,13 @@ export interface ICovidPage {
 }
 
 export interface ICoworkingPage {
-  image: string | null;
-  mobileImage: string | null;
-  primaryText: {
-    color: string;
-    text: { code: string; value: string }[];
-  };
-  additionalText: {
-    color: string;
-    text: { code: string; value: string }[];
+  banner: {
+    additionalColor: string;
+    primaryColor: string;
+    primaryText: { code: string; value: string }[];
+    additionalText: { code: string; value: string }[];
+    imageMobile: null | string;
+    imageDesktop: null | string;
   };
   title: { code: string; value: string }[];
   description: { code: string; value: string }[];
@@ -106,15 +104,13 @@ export interface ICoworkingPage {
 }
 
 export interface IFranchisePage {
-  image: string | null;
-  mobileImage: string | null;
-  primaryText: {
-    color: string;
-    text: { code: string; value: string }[];
-  };
-  additionalText: {
-    color: string;
-    text: { code: string; value: string }[];
+  banner: {
+    additionalColor: string;
+    primaryColor: string;
+    primaryText: { code: string; value: string }[];
+    additionalText: { code: string; value: string }[];
+    imageMobile: null | string;
+    imageDesktop: null | string;
   };
   title: { code: string; value: string }[];
   description: { code: string; value: string }[];
@@ -126,29 +122,33 @@ export interface IFranchisePage {
 
 export interface IAboutLaboratoryPage {
   banner: {
+    additionalColor: string;
+    primaryColor: string;
     image: string | null;
-    mobileImage: string | null;
+    imageMobile: string | null;
+    imageDesktop: null | string;
     primaryText: {
-      color: string;
-      text: { code: string; value: string }[];
-    };
+      code: string;
+      value: string;
+    }[];
     additionalText: {
-      color: string;
-      text: { code: string; value: string }[];
-    };
+      code: string;
+      value: string;
+    }[];
   };
+  aboutImage: string | null;
   title: { code: string; value: string }[];
   description: { code: string; value: string }[];
-  tabs: {
-    quantity: number;
-    name: { code: string; value: string }[];
+  blocks: {
+    value: number | null;
+    text: { code: string; value: string }[];
   }[];
-
-  goal: { code: string; value: string }[];
+  bottomText: { code: string; value: string }[];
+  mission: { code: string; value: string }[];
   values: {
-    name: { code: string; value: string }[];
+    text: { code: string; value: string }[];
   }[];
-  gallery: { image: string | null }[];
+  slider: string[];
   metaTitle: { code: string; value: string }[];
   metaDescription: { code: string; value: string }[];
   indexed: boolean;

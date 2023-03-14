@@ -19,6 +19,8 @@ export const useFileManager = (
         } else if (key) {
           console.log('with key');
           handleImageChange(files[0].url)(key, index);
+        } else if (typeof index === 'number' && !key) {
+          handleImageChange(files[0].url)(undefined, index);
         } else {
           console.log('no key');
           handleImageChange(files[0].url)();
