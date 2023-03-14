@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import { useGlobalContext } from '../hooks/GlobalContext';
 import { useTableComponentStyles } from '../components/TableComponent/TableComponent.styles';
-import { handleDeleteUser } from '../services/usersAPI';
+import { handleDeleteAdmin } from '../services/adminsAPI';
 
 interface ICellLinkProps {
   id: string;
@@ -597,7 +597,7 @@ export const usersColumns: GridColDef[] = [
     renderCell: params => (
       <BasicActions
         id={params.row.id}
-        handleDeleteData={() => handleDeleteUser(params.row.id)}
+        handleDeleteData={() => handleDeleteAdmin(params.row.id)}
       />
     ),
     width: 120,

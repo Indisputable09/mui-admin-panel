@@ -7,7 +7,7 @@ import { usersColumns } from '../TableColumns/TableColumns';
 import { useGlobalContext } from '../hooks/GlobalContext';
 import { Status } from '../constants';
 import Loader from '../components/Loader';
-import { fetchUsersList } from '../services/usersAPI';
+import { fetchAdminsList } from '../services/adminsAPI';
 
 interface IUsersPageProps {
   pageName: string;
@@ -30,7 +30,7 @@ const UsersPage: React.FC<IUsersPageProps> = ({
     const fetchData = async () => {
       try {
         setStatus(pending);
-        const list = await fetchUsersList();
+        const list = await fetchAdminsList();
         setUsersRows(list);
         setStatus(resolved);
       } catch (error) {

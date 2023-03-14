@@ -10,11 +10,11 @@ import { haveSameData, Status } from '../../constants';
 import Loader from '../../components/Loader';
 import { IUser } from '../../types/userTypes';
 import {
-  fetchUserById,
-  handleAddUser,
-  handleDeleteUser,
-  handleSendUserData,
-} from '../../services/usersAPI';
+  fetchAdminById,
+  handleAddAdmin,
+  handleDeleteAdmin,
+  handleSendAdminData,
+} from '../../services/adminsAPI';
 
 interface IUsersDataProps {
   initialLink: string;
@@ -54,7 +54,7 @@ const UsersData: React.FC<IUsersDataProps> = ({
       const fetchData = async () => {
         try {
           setStatus(pending);
-          const userById = await fetchUserById(id as string);
+          const userById = await fetchAdminById(id as string);
           setFieldsValues(userById);
           setInitialData(userById);
           setStatus(resolved);
@@ -178,7 +178,7 @@ const UsersData: React.FC<IUsersDataProps> = ({
               handleCloseModal={handleCloseModal}
               type={'delete'}
               link={initialLink}
-              handleDeleteData={() => handleDeleteUser(id as string)}
+              handleDeleteData={() => handleDeleteAdmin(id as string)}
             />
           )}
           {openSaveModal && (
@@ -188,9 +188,9 @@ const UsersData: React.FC<IUsersDataProps> = ({
               type={'save'}
               dataToSend={fieldsValues}
               handleEditData={() =>
-                handleSendUserData(id as string, fieldsValues)
+                handleSendAdminData(id as string, fieldsValues)
               }
-              handlePostData={() => handleAddUser(fieldsValues)}
+              handlePostData={() => handleAddAdmin(fieldsValues)}
             />
           )}
         </>

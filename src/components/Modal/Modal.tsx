@@ -52,7 +52,11 @@ const Modal: React.FC<IModalProps> = ({
 
   const handleSave = async () => {
     try {
-      if (chosenAction === 'edit' || activePath.includes('robots')) {
+      if (
+        chosenAction === 'edit' ||
+        activePath.includes('robots') ||
+        activePath.includes('GTM')
+      ) {
         handleEditData!();
       } else {
         handlePostData!();
